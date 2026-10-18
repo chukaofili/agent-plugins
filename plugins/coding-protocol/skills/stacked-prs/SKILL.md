@@ -1,6 +1,6 @@
 ---
 name: stacked-prs
-description: Use when a change is likely to exceed ~300 changed lines, when work spans several commits or stages, when opening a pull request, when receiving or responding to review feedback on any pull request, or when rebasing or landing a stack of dependent PRs. Covers the PR size budget and what counts toward it, how to split and stack PRs, sequential stage-by-stage review, and how to handle review findings: verify them, then fix or push back.
+description: Use when a change is likely to exceed ~300 changed lines, when work spans several commits or stages, when opening a pull request, when receiving or responding to review feedback on any pull request, or when rebasing or landing a stack of dependent PRs. Covers the PR size budget and what counts toward it, how to split and stack PRs, sequential stage-by-stage review, and how to handle review findings by verifying each one, then fixing it or pushing back.
 ---
 
 # Stacked PRs
