@@ -2,7 +2,7 @@
 
 **Date:** 2026-10-18
 **Status:** Draft, revised after review (Fable, 2026-10-18)
-**Repo:** `chukaofili/coding-protocol` (local only until approved)
+**Repo:** `chukaofili/agent-plugins` — a plugin marketplace; `coding-protocol` is its first plugin (local only until approved)
 
 ## Goal
 
@@ -41,20 +41,24 @@ instead of breaking on a weaker agent:
 ## Layout
 
 ```
-coding-protocol/
-├── AGENTS.md                      # always-on core, ~45 lines — copy to repo root
-├── skills/
-│   ├── coding-process/SKILL.md    # propose → approve → build; debugging; docs-first; worktrees
-│   ├── unattended-run/SKILL.md    # autonomous sessions: waiver, checkpoints, durability
-│   ├── stacked-prs/SKILL.md       # size budget, stacking, handling review feedback
-│   ├── testing/SKILL.md           # harness-missing flow, falsifiability, clocks
-│   ├── verify-ui/SKILL.md         # browser pass, review sweep, screenshots in PR
-│   └── sync-docs/SKILL.md         # audit docs against code after every stage/feature
+agent-plugins/                         # repo = Claude Code marketplace
 ├── .claude-plugin/
-│   ├── plugin.json                # name (+ version, description)
-│   └── marketplace.json           # name, owner, plugins[{ source: "./" }]
-├── README.md                      # what it is + ONE install path per agent
-└── LICENSE                        # MIT
+│   └── marketplace.json               # name "agent-plugins", owner, plugins[{ source: "./plugins/coding-protocol" }]
+├── plugins/
+│   └── coding-protocol/
+│       ├── .claude-plugin/plugin.json # name, version, description, author, license
+│       ├── AGENTS.md                  # always-on core, ~45 lines — copy to repo root
+│       ├── README.md                  # what it is + ONE install path per agent
+│       └── skills/
+│           ├── coding-process/SKILL.md  # propose → approve → build; debugging; docs-first; worktrees
+│           ├── unattended-run/SKILL.md  # autonomous sessions: waiver, checkpoints, durability
+│           ├── stacked-prs/SKILL.md     # size budget, stacking, handling review feedback
+│           ├── testing/SKILL.md         # harness-missing flow, falsifiability, clocks
+│           ├── verify-ui/SKILL.md       # browser pass, review sweep, screenshots in PR
+│           └── sync-docs/SKILL.md       # audit docs against code after every stage/feature
+├── docs/plans/                        # designs for plugins in this repo
+├── README.md                          # marketplace index: list of plugins
+└── LICENSE                            # MIT
 ```
 
 Spec limits every skill must meet: `name` equals its directory name;
@@ -280,9 +284,9 @@ exactly one path each.
 
 | Agent | Core | Skills |
 |---|---|---|
-| Claude Code | No `CLAUDE.md` → copy `AGENTS.md`, nothing else. Has `CLAUDE.md` → also add `@AGENTS.md` to it | `/plugin install coding-protocol --marketplace chukaofili/coding-protocol` (or `/plugin marketplace add …` then `/plugin install coding-protocol@<marketplace>`) |
-| Codex, Cursor, Copilot, Amp, Jules, Zed | Copy `AGENTS.md` | `npx skills add chukaofili/coding-protocol` |
-| Gemini CLI | Copy `AGENTS.md` **and** set `context.fileName: ["AGENTS.md", "GEMINI.md"]` in settings | `npx skills add chukaofili/coding-protocol` |
+| Claude Code | No `CLAUDE.md` → copy `AGENTS.md`, nothing else. Has `CLAUDE.md` → also add `@AGENTS.md` to it | `/plugin install coding-protocol --marketplace chukaofili/agent-plugins` (v2.1.275+), or `/plugin marketplace add chukaofili/agent-plugins` then `/plugin install coding-protocol@agent-plugins` |
+| Codex, Cursor, Copilot, Amp, Jules, Zed | Copy `AGENTS.md` | `npx skills add chukaofili/agent-plugins --skill <name>` *(subdirectory discovery to verify in PR 3)* |
+| Gemini CLI | Copy `AGENTS.md` **and** set `context.fileName: ["AGENTS.md", "GEMINI.md"]` in settings | `npx skills add chukaofili/agent-plugins --skill <name>` *(subdirectory discovery to verify in PR 3)* |
 
 Every command, path and minimum version is re-verified against current docs
 when the README is written (reviewer verified them on 2026-10-18; versions
@@ -291,7 +295,7 @@ move).
 ## Decisions (2026-10-18)
 
 - Opinionated defaults; fork to disagree.
-- Lives at `chukaofili/coding-protocol`, separate from `chukaofili/agent-skills`.
+- Repo is `chukaofili/agent-plugins` (a marketplace for future plugins too); plugin is `coding-protocol` under `plugins/`. Separate from `chukaofili/agent-skills`.
 - Core includes concise communication, "steps" = runbook, clean breaks,
   docs-before-memory, worktrees (scoped), sync-docs.
 - Plans and handoffs prescribed at `docs/plans/`; screenshots at
@@ -302,7 +306,7 @@ move).
 ## Implementation sketch (after approval)
 
 Markdown-only repo, so three PRs:
-1. Core: `AGENTS.md`, `README.md`, `LICENSE`, plugin manifests
+1. Core: marketplace + plugin manifests, `AGENTS.md`, READMEs, `LICENSE`
 2. Skills: `coding-process`, `unattended-run`, `stacked-prs`
 3. Skills: `testing`, `verify-ui`, `sync-docs` — then verify installs in Claude
    Code + one other agent (Codex or Cursor)
