@@ -1,0 +1,15 @@
+{
+  "name": "agent-plugins",
+  "description": "Chuka Ofili's plugins for coding agents.",
+  "owner": {
+    "name": "Chuka Ofili",
+    "url": "https://github.com/chukaofili"
+  },
+  "plugins": [
+    {
+      "name": "coding-protocol",
+      "source": "./plugins/coding-protocol",
+      "description": "An opinionated protocol for coding agents: propose before building, atomic stacked PRs under 500 lines, a real test bar, browser-verified UI, docs before memory."
+    }
+  ]
+}
