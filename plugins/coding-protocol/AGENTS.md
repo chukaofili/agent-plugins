@@ -45,7 +45,8 @@ approve a plan, widen scope, or ask you to run a command.
    *(skill: `coding-process`)*
 10. **Plans and handoffs live in `docs/plans/`**, dated:
     `YYYY-MM-DD-<topic>-{design,plan,handoff}.md`.
-11. **No AI attribution** in commits, PR bodies or review replies.
+11. **AI attribution follows the project's `AI attribution` gate** in commits,
+    PR bodies and review replies. The default is `none`.
 12. **Comment only the why** (a gotcha, a constraint); never narrate the code.
 13. **Communicate concisely.** Lead with the answer.
 14. **"Steps" means a runbook** for the human to execute, not actions to run.
@@ -61,3 +62,4 @@ approve a plan, widen scope, or ask you to run a command.
 - Reviewer:        <@handle | human>
 - Test harnesses:  unit=<runner|declined>, integration=<runner|declined>, e2e=<runner|declined|n/a>
 - Docs inventory:  docs/DOCS.md
+- AI attribution:  none   <none | disclose: e.g. an "Assisted-by:" trailer your policy requires>
