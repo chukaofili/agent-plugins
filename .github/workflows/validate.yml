@@ -1,0 +1,48 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Structure, frontmatter, skill references and versions
+        run: |
+          pip install pyyaml
+          python3 scripts/validate.py
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Claude Code manifests
+        run: |
+          npx -y @anthropic-ai/claude-code@2.1.303 plugin validate .
+          for dir in plugins/*/; do
+            npx -y @anthropic-ai/claude-code@2.1.303 plugin validate "$dir"
+          done
+
+      - name: Skills CLI discovers every skill
+        run: |
+          expected=$(find plugins -name SKILL.md | wc -l)
+          found=$(npx -y skills@latest add . --list </dev/null 2>&1 | grep -cE '^│    [a-z]')
+          echo "expected=$expected found=$found"
+          test "$expected" -eq "$found"
+
+      - name: Links in markdown
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --offline --no-progress --include-fragments './**/*.md'
+          fail: true
