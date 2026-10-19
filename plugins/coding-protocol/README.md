@@ -41,11 +41,15 @@ gates** block at the bottom.
 
 ### 2. The skills
 
-**Claude Code** (v2.1.275+):
+**Claude Code:**
 
 ```
-/plugin install coding-protocol --marketplace chukaofili/agent-plugins
+/plugin marketplace add chukaofili/agent-plugins
+/plugin install coding-protocol@agent-plugins
 ```
+
+On Claude Code v2.1.275 or later, one command does both:
+`/plugin install coding-protocol --marketplace chukaofili/agent-plugins`.
 
 Skills are namespaced, for example `/coding-protocol:testing`.
 
@@ -55,12 +59,24 @@ Skills are namespaced, for example `/coding-protocol:testing`.
 npx skills add chukaofili/agent-plugins
 ```
 
+To pick skills, list them with `--list`, then install by name:
+
+```bash
+npx skills add chukaofili/agent-plugins --skill testing stacked-prs
+```
+
 Or copy `skills/*` into your agent's skills directory.
 
 ## Upgrading
 
 `AGENTS.md` is split by a divider. Replace everything above the
 `Project` divider with the new version, and keep your project gates below it.
+For example, your `Full gate:  pnpm run pipeline` line survives the upgrade,
+while the numbered rules above the divider are replaced.
+
+The version is in the header comment of `AGENTS.md`. See
+[`CHANGELOG.md`](CHANGELOG.md) for what changed, and pin a release by its tag,
+for example `chukaofili/agent-plugins#coding-protocol-v1.1.0`.
 
 ## License
 
