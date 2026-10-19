@@ -66,6 +66,10 @@ Or copy `skills/*` into your agent's skills directory.
 `AGENTS.md` is split by a divider. Replace everything above the
 `Project` divider with the new version, and keep your project gates below it.
 
+The version is in the header comment of `AGENTS.md`. See
+[`CHANGELOG.md`](CHANGELOG.md) for what changed, and pin a release by its tag,
+for example `chukaofili/agent-plugins#coding-protocol-v1.1.0`.
+
 ## License
 
 MIT

@@ -1,4 +1,4 @@
-<!-- coding-protocol v1.0.0 — https://github.com/chukaofili/agent-plugins
+<!-- coding-protocol v1.1.0 — https://github.com/chukaofili/agent-plugins
      To upgrade: replace everything above the "Project" divider. Never edit below it from upstream. -->
 
 # Coding protocol
