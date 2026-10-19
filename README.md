@@ -16,7 +16,32 @@ plugin marketplace.
 /plugin install <plugin>@agent-plugins
 ```
 
-Every other agent: see each plugin's README.
+## Every other agent
+
+Install the skills with the [`skills`](https://github.com/vercel-labs/skills)
+CLI, which works across Codex, Cursor, GitHub Copilot, Gemini CLI and other
+agents that read [Agent Skills](https://agentskills.io).
+
+List what's available:
+
+```bash
+npx skills add chukaofili/agent-plugins --list
+```
+
+Install everything:
+
+```bash
+npx skills add chukaofili/agent-plugins
+```
+
+Install a single skill:
+
+```bash
+npx skills add chukaofili/agent-plugins --skill <name>
+```
+
+Each plugin's README covers its non-skill parts, such as the `AGENTS.md` core
+in [`coding-protocol`](plugins/coding-protocol).
 
 ## License
 
