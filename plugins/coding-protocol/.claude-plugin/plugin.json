@@ -1,0 +1,13 @@
+{
+  "name": "coding-protocol",
+  "version": "1.0.0",
+  "description": "An opinionated protocol for coding agents: propose before building, atomic stacked PRs under 500 lines, a real test bar, browser-verified UI, docs before memory.",
+  "author": {
+    "name": "Chuka Ofili",
+    "url": "https://github.com/chukaofili"
+  },
+  "homepage": "https://github.com/chukaofili/agent-plugins/tree/main/plugins/coding-protocol",
+  "repository": "https://github.com/chukaofili/agent-plugins",
+  "license": "MIT",
+  "keywords": ["agents", "workflow", "testing", "pull-requests", "agents-md", "skills"]
+}
