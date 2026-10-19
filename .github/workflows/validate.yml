@@ -36,10 +36,12 @@ jobs:
 
       - name: Skills CLI discovers every skill
         run: |
-          expected=$(find plugins -name SKILL.md | wc -l)
-          found=$(npx -y skills@latest add . --list </dev/null 2>&1 | grep -cE '^│    [a-z]')
-          echo "expected=$expected found=$found"
-          test "$expected" -eq "$found"
+          expected=$(find plugins -name SKILL.md | wc -l | tr -d ' ')
+          # The CLI colours its output under CI=true, so strip ANSI codes before matching.
+          output=$(npx -y skills@1.7.2 add . --list </dev/null 2>&1 | sed 's/\x1b\[[0-9;?]*[a-zA-Z]//g')
+          found=$(echo "$output" | sed -nE 's/.*Found ([0-9]+) skills.*/\1/p' | head -1)
+          echo "expected=$expected found=${found:-none}"
+          test "$expected" = "$found"
 
       - name: Links in markdown
         uses: lycheeverse/lychee-action@v2
