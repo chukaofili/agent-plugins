@@ -41,11 +41,15 @@ gates** block at the bottom.
 
 ### 2. The skills
 
-**Claude Code** (v2.1.275+):
+**Claude Code:**
 
 ```
-/plugin install coding-protocol --marketplace chukaofili/agent-plugins
+/plugin marketplace add chukaofili/agent-plugins
+/plugin install coding-protocol@agent-plugins
 ```
+
+On Claude Code v2.1.275 or later, one command does both:
+`/plugin install coding-protocol --marketplace chukaofili/agent-plugins`.
 
 Skills are namespaced, for example `/coding-protocol:testing`.
 

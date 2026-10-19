@@ -16,6 +16,9 @@ plugin marketplace.
 /plugin install <plugin>@agent-plugins
 ```
 
+On Claude Code v2.1.275 or later, one command does both:
+`/plugin install <plugin> --marketplace chukaofili/agent-plugins`.
+
 ## Every other agent
 
 Install the skills with the [`skills`](https://github.com/vercel-labs/skills)
