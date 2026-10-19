@@ -116,6 +116,9 @@ def main() -> int:
             fail(f"marketplace.json: source {source!r} for {name!r} does not exist")
             continue
         check_plugin(plugin_dir, name)
+        manifest = load_json(plugin_dir / ".claude-plugin" / "plugin.json")
+        if "version" in entry and entry["version"] != manifest.get("version"):
+            fail(f"marketplace.json: {name!r} is {entry['version']}, plugin.json says {manifest.get('version')}")
 
     if errors:
         print("\n".join(f"✘ {e}" for e in errors))

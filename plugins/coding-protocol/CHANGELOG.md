@@ -14,6 +14,12 @@ that they match each other and this file.
   fetched content. The fallback for non-interactive runs now treats the task
   text as the approved plan only when a maintainer wrote or assigned it.
   (`AGENTS.md`, `coding-process`)
+- AI attribution is now a project choice: a new `AI attribution` line in
+  Project gates, which defaults to `none`. Rule 11 used to forbid it outright,
+  which clashed with companies that require disclosure.
+- The README documents `--skill` for installing chosen skills, and gives an
+  example of what survives an upgrade.
+- The marketplace entry carries the plugin version.
 - The README gives the same Claude Code install steps as the marketplace
   README. The `--marketplace` shortcut is still shown, as an option.
 
