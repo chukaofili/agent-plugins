@@ -16,6 +16,10 @@ that they match each other and this file.
   (`stacked-prs`)
 - Agents ask once whether the user wants a specific reviewer, with or without
   `CODEOWNERS`, and request that person on every PR. (`stacked-prs`)
+- Agents offer `gh stack` when starting a new stack. Stacks created with it land
+  through GitHub's stack merge. Agents load the `gh-stack` skill if it's
+  available, and ask before installing the skill or extension if it's missing.
+  (`stacked-prs`)
 - Delegating mechanical work to cheaper models now applies to every session, not
   just unattended runs. `AGENTS.md` gains rule 17, and the details move from
   `unattended-run` to `coding-process`.

@@ -1,6 +1,6 @@
 ---
 name: stacked-prs
-description: Use when a change is likely to exceed ~300 changed lines, when work spans several commits or stages, when opening a pull request, when receiving or responding to review feedback on any pull request, or when rebasing or landing a stack of dependent PRs. Covers the PR size budget and what counts toward it, how to split and stack PRs, how to request review on a stack (CODEOWNERS, or stage by stage when asked), and how to handle review findings by verifying each one, then fixing it or pushing back.
+description: Use when a change is likely to exceed ~300 changed lines, when work spans several commits or stages, when opening a pull request, when receiving or responding to review feedback on any pull request, or when rebasing or landing a stack of dependent PRs. Covers the PR size budget and what counts toward it, how to split and stack PRs, landing stacks made with gh stack, how to request review on a stack (CODEOWNERS, or stage by stage when asked), and how to handle review findings by verifying each one, then fixing it or pushing back.
 ---
 
 # Stacked PRs
@@ -60,7 +60,47 @@ reverted on its own.
 - Fixes from a review or verification pass on a UI surface ship as a new stage
   on top, so the build and the fixes stay separately reviewable.
 - Stacking tools such as `gh stack`, Graphite or git-town are optional. Plain
-  git and `gh` are enough.
+  git and `gh` are enough, unless the stack was created with `gh stack` (see
+  below).
+
+### Using `gh stack`
+
+**Offer it when starting a new stack.** Ask the user once, before creating the
+first branch, whether to use `gh stack`. Use plain git and `gh` if they decline,
+or if nobody is there to answer.
+
+**An existing stack keeps the tool it was created with.** Run
+`gh stack view --json` on a stack branch to check: exit code 2 means there's no
+stack tracked on this machine. For a stack opened elsewhere, use
+`gh stack checkout <pr-number>` to pull it down.
+
+- **Load the `gh-stack` skill** if it's available, before running any
+  `gh stack` command.
+- **If the extension or skill is missing, ask the user before installing it.**
+  Include this in the offer, with the commands:
+  ```bash
+  gh extension install github/gh-stack
+  gh skill install github/gh-stack
+  ```
+  If they decline the extension, use plain git and `gh` for a new stack. An
+  existing `gh stack` stack can't land that way, so leave the merge to them.
+- **Keep commands non-interactive,** because a prompt or TUI will hang. Always
+  use `gh stack view --json` and `gh stack submit --auto`, and pass branch names
+  to `init` and `add`.
+- **Open PRs with `gh stack submit --auto --open`.** Without `--open` they're
+  drafts. In sequential review, leave it off and use `gh pr ready` instead,
+  because `--open` marks every PR ready. Titles and bodies are auto-generated, so
+  fix them afterwards with `gh pr edit`.
+- **Land with GitHub's stack merge, never `gh pr merge`,** which doesn't work on
+  stacked PRs. Merge only what the user approved:
+  ```bash
+  gh stack merge <pr-number> --yes --squash
+  ```
+  This merges everything up to and including that PR, all or nothing. Without a
+  number, `--yes` merges the whole stack. Use the merge method the repo uses
+  (`--squash`, `--rebase` or `--merge`). Run `gh stack sync` afterwards.
+- **Exit code 9 means stacks aren't enabled on the repo.** Tell the user, and use
+  plain git and `gh` instead.
 
 ## Requesting review
 
