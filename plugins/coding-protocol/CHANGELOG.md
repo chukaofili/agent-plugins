@@ -6,6 +6,24 @@ All notable changes to `coding-protocol`. Versions follow
 `.claude-plugin/plugin.json` and the header comment in `AGENTS.md`. CI checks
 that they match each other and this file.
 
+## 1.2.0 — 2026-11-05
+
+### Changed
+- A stack now goes up for review all at once: every PR opens ready for review.
+  Agents don't request review where `CODEOWNERS` already adds reviewers, and
+  request it from the project's reviewer where it doesn't. Sequential,
+  stage-by-stage review now happens only when the user asks for it.
+  (`stacked-prs`)
+- Agents ask once whether the user wants a specific reviewer, with or without
+  `CODEOWNERS`, and request that person on every PR. (`stacked-prs`)
+- Agents offer `gh stack` when starting a new stack. Stacks created with it land
+  through GitHub's stack merge. Agents load the `gh-stack` skill if it's
+  available, and ask before installing the skill or extension if it's missing.
+  (`stacked-prs`)
+- Delegating mechanical work to cheaper models now applies to every session, not
+  just unattended runs. `AGENTS.md` gains rule 17, and the details move from
+  `unattended-run` to `coding-process`.
+
 ## 1.1.0 — 2026-10-19
 
 ### Changed

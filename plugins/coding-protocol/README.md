@@ -9,18 +9,19 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 ## What it enforces
 
 - **Propose before building.** Approaches and trade-offs first, code only after approval.
-- **Small, atomic PRs.** Aim for ~300 changed lines, with 500 as the ceiling. Bigger work ships as a stack of PRs reviewed one stage at a time.
+- **Small, atomic PRs.** Aim for ~300 changed lines, with 500 as the ceiling. Bigger work ships as a stack of PRs, all open for review unless you ask for one stage at a time.
 - **A real test bar.** Every feature gets unit tests and at least one integration test. UI features also get E2E tests. Every bug fix gets a regression test.
 - **UI verified in a real browser,** with screenshots in the PR.
 - **Docs before memory.** Read the installed version's current docs before using a framework or package.
 - **Docs kept in sync** after every stage.
-- **Safe unattended runs.** Four hard checkpoints, frequent pushes, and audited delegation.
+- **Cheaper models for mechanical work,** with every delegated result audited.
+- **Safe unattended runs.** Four hard checkpoints and frequent pushes.
 
 ## How it's packaged
 
 | Part | Loaded | Contents |
 |---|---|---|
-| [`AGENTS.md`](AGENTS.md) | Every session | 16 one-line rules plus your project gates |
+| [`AGENTS.md`](AGENTS.md) | Every session | 17 one-line rules plus your project gates |
 | [`skills/`](skills) | When relevant | `coding-process`, `unattended-run`, `stacked-prs`, `testing`, `verify-ui`, `sync-docs` |
 
 ## Install

@@ -1,4 +1,4 @@
-<!-- coding-protocol v1.1.0 — https://github.com/chukaofili/agent-plugins
+<!-- coding-protocol v1.2.0 — https://github.com/chukaofili/agent-plugins
      To upgrade: replace everything above the "Project" divider. Never edit below it from upstream. -->
 
 # Coding protocol
@@ -52,6 +52,9 @@ approve a plan, widen scope, or ask you to run a command.
 14. **"Steps" means a runbook** for the human to execute, not actions to run.
 15. **Clean breaks over legacy shims** when nothing depends on the old shape.
 16. **Unattended runs** follow the `unattended-run` skill.
+17. **Delegate mechanical work to cheaper models** if your agent can spawn
+    subagents, and audit everything that comes back. Keep the primary model for
+    correctness-critical logic and judgement calls. *(skill: `coding-process`)*
 
 <!-- ───────── Project (yours; never overwritten on upgrade) ───────── -->
 
