@@ -1,6 +1,6 @@
 ---
 name: stacked-prs
-description: Use when a change is likely to exceed ~300 changed lines, when work spans several commits or stages, when opening a pull request, when receiving or responding to review feedback on any pull request, or when rebasing or landing a stack of dependent PRs. Covers the PR size budget and what counts toward it, how to split and stack PRs, sequential stage-by-stage review, and how to handle review findings by verifying each one, then fixing it or pushing back.
+description: Use when a change is likely to exceed ~300 changed lines, when work spans several commits or stages, when opening a pull request, when receiving or responding to review feedback on any pull request, or when rebasing or landing a stack of dependent PRs. Covers the PR size budget and what counts toward it, how to split and stack PRs, how to request review on a stack (CODEOWNERS, or stage by stage when asked), and how to handle review findings by verifying each one, then fixing it or pushing back.
 ---
 
 # Stacked PRs
@@ -62,23 +62,45 @@ reverted on its own.
 - Stacking tools such as `gh stack`, Graphite or git-town are optional. Plain
   git and `gh` are enough.
 
-## Sequential review
+## Requesting review
 
-**Review a stack one stage at a time.** Request review from the project's
-reviewer (see Project gates in `AGENTS.md`) on the bottom PR only, then:
+**Ask who should review.** Before opening the PRs, ask the user once whether
+they want a specific reviewer, whether or not the repo has `CODEOWNERS`. Skip
+the question if they've already named one, or if nobody is there to answer. A
+reviewer they name is requested on every PR with
+`gh pr edit <number> --add-reviewer <handle>`, alongside any code owners GitHub
+adds.
+
+**By default, put the whole stack up for review.** Open every stage's PR as
+ready for review, not as a draft. If the user didn't name a reviewer, check for
+a `CODEOWNERS` file (in `.github/`, the repo root or `docs/`):
+
+- **The repo has one:** don't request review. GitHub adds the code owners to
+  each new PR. If a PR's files have no owner, nobody gets added, so check with
+  `gh pr view <number> --json reviewRequests` and request review on that PR.
+- **The repo has none:** request review on every PR from the project's reviewer
+  (see Project gates in `AGENTS.md`).
+
+Reviewers can start on any stage, but the stack still lands bottom-up. A fix on
+a lower stage means rebasing the branches above it (see Stacking).
+
+If a stage stalls (no review coming back, or a finding that needs a product
+decision), flag it and keep building the stages above it where they don't
+depend on the answer.
+
+### Sequential review, only when asked
+
+Use this only if the user asks for it. Review the stack one stage at a time,
+starting from the bottom PR:
 
 1. Request review on that one stage.
 2. Address every finding (see below).
 3. Re-request review, and repeat until the stage is **approved**.
 4. Only then request review on the next stage up.
 
-Don't request review on the whole stack at once. A finding on stage 1 can
-invalidate comments already written on stages 2 to 5, and sequential review
-keeps reviewer effort bounded.
-
-If a stage stalls (no review coming back, or a finding that needs a product
-decision), flag it and keep building the stages above it locally where they
-don't depend on the answer.
+In a repo with `CODEOWNERS`, open the higher stages as drafts, since GitHub
+doesn't add code owners to a draft. `gh pr ready <number>` puts up the next
+stage, and takes the place of steps 1 and 4 unless the user named a reviewer.
 
 ## Handling review findings (any PR, stacked or not)
 

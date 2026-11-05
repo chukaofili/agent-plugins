@@ -6,6 +6,17 @@ All notable changes to `coding-protocol`. Versions follow
 `.claude-plugin/plugin.json` and the header comment in `AGENTS.md`. CI checks
 that they match each other and this file.
 
+## 1.2.0 — 2026-11-05
+
+### Changed
+- A stack now goes up for review all at once: every PR opens ready for review.
+  Agents don't request review where `CODEOWNERS` already adds reviewers, and
+  request it from the project's reviewer where it doesn't. Sequential,
+  stage-by-stage review now happens only when the user asks for it.
+  (`stacked-prs`)
+- Agents ask once whether the user wants a specific reviewer, with or without
+  `CODEOWNERS`, and request that person on every PR. (`stacked-prs`)
+
 ## 1.1.0 — 2026-10-19
 
 ### Changed

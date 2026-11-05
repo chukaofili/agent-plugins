@@ -9,7 +9,7 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 ## What it enforces
 
 - **Propose before building.** Approaches and trade-offs first, code only after approval.
-- **Small, atomic PRs.** Aim for ~300 changed lines, with 500 as the ceiling. Bigger work ships as a stack of PRs reviewed one stage at a time.
+- **Small, atomic PRs.** Aim for ~300 changed lines, with 500 as the ceiling. Bigger work ships as a stack of PRs, all open for review unless you ask for one stage at a time.
 - **A real test bar.** Every feature gets unit tests and at least one integration test. UI features also get E2E tests. Every bug fix gets a regression test.
 - **UI verified in a real browser,** with screenshots in the PR.
 - **Docs before memory.** Read the installed version's current docs before using a framework or package.
