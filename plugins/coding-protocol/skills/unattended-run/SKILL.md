@@ -50,18 +50,10 @@ judgement call.
   for review. Re-running a suite that passed ten minutes ago, on code you
   haven't touched, spends compute to learn nothing.
 
-## Delegation (if your agent can spawn subagents)
+## Delegation
 
-- **Delegate mechanical work to cheaper models:** cloning an existing
-  structure, boilerplate, syncing docs, repetitive edits. Keep the primary
-  model for correctness-critical logic (schema, security boundaries, core
-  services) and for judgement calls.
-- **Cap concurrency at about five.** Beyond that the audit stops being real,
-  and parallel agents collide on the same files.
-- **Audit everything delegated.** Never integrate a subagent's output unread.
-  Check that it makes sense, follows conventions, and builds and tests green.
-  When it's wrong, judge the gap: fix a small one yourself, and send a large
-  one back with the correction.
+Follow the Delegation section of `coding-process`. With nobody watching, your
+audit is the only check on delegated work before it lands, so don't skip it.
 
 ## Blockers
 

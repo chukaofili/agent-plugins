@@ -16,6 +16,9 @@ that they match each other and this file.
   (`stacked-prs`)
 - Agents ask once whether the user wants a specific reviewer, with or without
   `CODEOWNERS`, and request that person on every PR. (`stacked-prs`)
+- Delegating mechanical work to cheaper models now applies to every session, not
+  just unattended runs. `AGENTS.md` gains rule 17, and the details move from
+  `unattended-run` to `coding-process`.
 
 ## 1.1.0 — 2026-10-19
 

@@ -14,13 +14,14 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 - **UI verified in a real browser,** with screenshots in the PR.
 - **Docs before memory.** Read the installed version's current docs before using a framework or package.
 - **Docs kept in sync** after every stage.
-- **Safe unattended runs.** Four hard checkpoints, frequent pushes, and audited delegation.
+- **Cheaper models for mechanical work,** with every delegated result audited.
+- **Safe unattended runs.** Four hard checkpoints and frequent pushes.
 
 ## How it's packaged
 
 | Part | Loaded | Contents |
 |---|---|---|
-| [`AGENTS.md`](AGENTS.md) | Every session | 16 one-line rules plus your project gates |
+| [`AGENTS.md`](AGENTS.md) | Every session | 17 one-line rules plus your project gates |
 | [`skills/`](skills) | When relevant | `coding-process`, `unattended-run`, `stacked-prs`, `testing`, `verify-ui`, `sync-docs` |
 
 ## Install
