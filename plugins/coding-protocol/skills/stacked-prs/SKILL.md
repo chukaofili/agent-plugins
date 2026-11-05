@@ -80,8 +80,11 @@ stack tracked on this machine. For a stack opened elsewhere, use
   Include this in the offer, with the commands:
   ```bash
   gh extension install github/gh-stack
-  gh skill install github/gh-stack
+  gh skill install github/gh-stack gh-stack --agent <agent> --scope user
   ```
+  `<agent>` is your agent's `--agent` value, such as `claude-code` or `codex`
+  (`gh skill install --help` lists them). Without the skill name and agent, a
+  non-interactive run installs nothing or targets the wrong agent.
   If they decline the extension, use plain git and `gh` for a new stack. An
   existing `gh stack` stack can't land that way, so leave the merge to them.
 - **Keep commands non-interactive,** because a prompt or TUI will hang. Always
