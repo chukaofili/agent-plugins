@@ -34,6 +34,7 @@ exist to catch. If that's the repo, say so in Project gates and treat
 
 **`ssa-ship`** — a feature on an established pattern, an unremarkable bug fix,
 a docs or rules update, a follow-up applying review feedback, a lockfile bump.
+None of these hold when the change touches the ask list below.
 
 **`ssa-show`** — a new approach or pattern worth seeing, a refactor, an
 interesting bug and how it was fixed. Anything where the feedback improves the
@@ -71,6 +72,13 @@ A project's own areas go in the `Ask list` line of the Project gates block in
 **That line only adds.** It can't take migrations or auth off the list. The
 one repo where someone wants to is the repo where it matters.
 
+**The ask list outranks every other rule here,** including the Ship examples
+above and the fix-forward rule below. Label a PR by **what it touches**, not
+by how routine it looks or where it came from. A one-line change to an
+authorization check is an Ask; so is the follow-up that fixes it. Where
+`ssa-ship` is off the table entirely because approval is an audit control, the
+floor for everything is `ssa-show`.
+
 ## Setting it
 
 **At creation, exactly one of the three:**
@@ -102,9 +110,14 @@ safe to re-run and safe to paste into a repo someone else already set up.
 Don't wrap it in `|| true`: the error worth seeing here is the permission one
 below, not "already exists".
 
-**No permission to label?** Creating labels needs write access, and a PR from
-a fork can't be labelled at all. Put the intent in the PR body instead, as its
-first line, and tell the user the repo needs the labels:
+**No permission to label?** Creating a label needs write access to the repo,
+and applying one needs triage access or better **on the base repo**. That's
+about your permissions, not about where the branch lives: working from your own
+fork with triage access on the base repo, label the PR the usual way.
+
+Without those permissions — the ordinary case for an outside contributor — put
+the intent in the PR body instead, as its first line, and ask a maintainer to
+apply the label, and to create the three if the repo hasn't got them:
 
 ```markdown
 **Review intent:** show — feedback welcome, not blocking.
@@ -142,8 +155,13 @@ seriously.
 The Show bargain is that feedback arriving after the merge still gets
 answered:
 
-- Every post-merge finding gets a **fix-forward PR** — `ssa-ship`, since
-  applying review feedback is a Ship — or a **reply saying why not**.
+- Every post-merge finding gets a **fix-forward PR** or a **reply saying why
+  not**. A fix-forward is usually an `ssa-ship`, since applying review feedback
+  is a Ship, but **label it by what the fix touches.** Feedback on a Show can
+  expose a tenant-isolation defect whose repair changes authorization: that
+  one is an `ssa-ask`, because a finding's origin doesn't move auth off the ask
+  list. Sending that repair to a reviewer who was told not to read it is the
+  worst thing this protocol can do.
 - **If a finding shows the change broke something, revert first,** then fix
   forward. Debugging on `main` is how a Show becomes an incident.
 
