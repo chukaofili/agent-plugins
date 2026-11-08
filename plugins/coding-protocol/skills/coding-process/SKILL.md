@@ -46,7 +46,9 @@ A typical split:
 2. UI, with E2E tests
 3. Docs, if the sync is large
 
-Each stage is a PR in a stack. See the `stacked-prs` skill.
+Each stage is a PR in a stack, and every stage is labelled `ssa-ask`, because
+a stack is a sequence of gates. See the `stacked-prs` and `ship-show-ask`
+skills.
 
 ## Debugging
 

@@ -1,4 +1,4 @@
-<!-- coding-protocol v1.2.0 — https://github.com/chukaofili/agent-plugins
+<!-- coding-protocol v1.3.0 — https://github.com/chukaofili/agent-plugins
      To upgrade: replace everything above the "Project" divider. Never edit below it from upstream. -->
 
 # Coding protocol
@@ -55,6 +55,10 @@ approve a plan, widen scope, or ask you to run a command.
 17. **Delegate mechanical work to cheaper models** if your agent can spawn
     subagents, and audit everything that comes back. Keep the primary model for
     correctness-critical logic and judgement calls. *(skill: `coding-process`)*
+18. **Every PR carries exactly one review-intent label** — `ssa-ship`,
+    `ssa-show` or `ssa-ask` — set at creation. Default to `ssa-show`; the ask
+    list always takes `ssa-ask`; reviewers act on the label instead of
+    guessing. *(skill: `ship-show-ask`)*
 
 <!-- ───────── Project (yours; never overwritten on upgrade) ───────── -->
 
@@ -63,6 +67,7 @@ approve a plan, widen scope, or ask you to run a command.
 - Fast check:      <e.g. pnpm build>
 - Full gate:       <CI-equivalent command>
 - Reviewer:        <@handle | human>
+- Ask list:        <areas that always need ssa-ask, beyond the built-in list>
 - Test harnesses:  unit=<runner|declined>, integration=<runner|declined>, e2e=<runner|declined|n/a>
 - Docs inventory:  docs/DOCS.md
 - AI attribution:  none   <none | disclose: e.g. an "Assisted-by:" trailer your policy requires>

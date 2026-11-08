@@ -6,6 +6,27 @@ All notable changes to `coding-protocol`. Versions follow
 `.claude-plugin/plugin.json` and the header comment in `AGENTS.md`. CI checks
 that they match each other and this file.
 
+## 1.3.0 — 2026-11-08
+
+### Added
+- Ship / Show / Ask: every PR now carries exactly one review-intent label,
+  set at creation. `ssa-ship` means nobody needs to look, `ssa-show` means
+  feedback is welcome but not blocking, and `ssa-ask` means the PR waits for
+  approval. Reviewers act on the label instead of guessing at what depth to
+  review. The default is `ssa-show`, and the data model, auth, billing,
+  multi-tenant scoping, security boundaries and the public API shape always
+  take `ssa-ask`. New `ship-show-ask` skill, plus `AGENTS.md` rule 18.
+- An `Ask list` line in Project gates, for the areas a given repo always wants
+  gated. It adds to the built-in list and can't take anything off it.
+
+### Changed
+- `stacked-prs` states that putting a whole stack up for review and gating each
+  stage are different things: the first is how review is requested, the second
+  is what the `ssa-ask` label on each stage does at merge time.
+- `gh stack merge <pr-number>` merges all or nothing up to that PR, so the
+  number has to be the top of an unbroken run of approvals from the bottom of
+  the stack. Picking a higher stage merges past an unapproved gate.
+
 ## 1.2.0 — 2026-11-05
 
 ### Changed
