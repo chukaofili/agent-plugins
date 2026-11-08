@@ -6,32 +6,6 @@ All notable changes to `coding-protocol`. Versions follow
 `.claude-plugin/plugin.json` and the header comment in `AGENTS.md`. CI checks
 that they match each other and this file.
 
-## 1.5.0 — 2026-11-08
-
-### Changed
-- Rule 13 now says what concise means: lead with the answer and stop, explain
-  simply, and spend as little text as does the job. "Lead with the answer"
-  alone left room for a correct answer followed by three paragraphs nobody
-  asked for. It stays in `AGENTS.md` rather than moving into a skill, because
-  a skill loads on a trigger and there is no trigger for writing a sentence.
-
-## 1.4.0 — 2026-11-08
-
-### Changed
-- Agents no longer ask before committing. Rule 2 now says to commit after each
-  logical unit rather than at the end of the task: the pause bought nothing,
-  because review happens on the PR, where a reviewer can see the steps. The
-  `unattended-run` carve-out for committing is gone with it, since there's
-  nothing left to override, and `sync-docs` no longer describes its commits as
-  happening "without asking".
-
-### Added
-- A `Commits` section in `coding-process`, which rule 2 now points at — it was
-  the only rule with no skill behind it. It carries the conventional-commit
-  examples, the type list (`feat`, `fix`, `refactor`, `test`, `docs`, `chore`,
-  `ci`), two tests for whether a commit is one logical change, and why staging
-  by path beats `git add -A`.
-
 ## 1.3.0 — 2026-11-08
 
 ### Added
@@ -44,6 +18,11 @@ that they match each other and this file.
   take `ssa-ask`. New `ship-show-ask` skill, plus `AGENTS.md` rule 18.
 - An `Ask list` line in Project gates, for the areas a given repo always wants
   gated. It adds to the built-in list and can't take anything off it.
+- A `Commits` section in `coding-process`, which rule 2 now points at — it was
+  the only rule with no skill behind it. It carries the conventional-commit
+  examples, the type list (`feat`, `fix`, `refactor`, `test`, `docs`, `chore`,
+  `ci`), two tests for whether a commit is one logical change, and why staging
+  by path beats `git add -A`.
 
 ### Changed
 - `stacked-prs` states that putting a whole stack up for review and gating each
@@ -52,6 +31,16 @@ that they match each other and this file.
 - `gh stack merge <pr-number>` merges all or nothing up to that PR, so the
   number has to be the top of an unbroken run of approvals from the bottom of
   the stack. Picking a higher stage merges past an unapproved gate.
+- Agents no longer ask before committing. Rule 2 now says to commit after each
+  logical unit rather than at the end of the task: the pause bought nothing,
+  because review happens on the PR, where a reviewer can see the steps. The
+  `unattended-run` carve-out for committing is gone with it, since there's
+  nothing left to override, and `sync-docs` no longer describes its commits as
+  happening "without asking".
+- Rule 13 now says what concise means: lead with the answer and stop, explain
+  simply, and spend as little text as does the job. "Lead with the answer"
+  alone left room for a correct answer followed by three paragraphs nobody
+  asked for.
 
 ## 1.2.0 — 2026-11-05
 
