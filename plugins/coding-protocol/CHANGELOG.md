@@ -41,6 +41,8 @@ that they match each other and this file.
   simply, and spend as little text as does the job. "Lead with the answer"
   alone left room for a correct answer followed by three paragraphs nobody
   asked for.
+- `stacked-prs` says release metadata lands once, in the top PR: a version
+  bump in every stage publishes releases nobody ever ran.
 
 ## 1.2.0 — 2026-11-05
 

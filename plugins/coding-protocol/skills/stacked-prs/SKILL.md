@@ -55,6 +55,11 @@ reverted on its own.
   (`gh pr create --label ssa-ask`). The stack exists because the change was too
   big to take in at once, so each stage is its own gate and approval on one
   says nothing about the next. See `ship-show-ask`.
+- **Release metadata lands once, in the top PR:** a version bump, a changelog
+  heading, a tag. The stack merges as one set of changes, so doing it per
+  stage publishes versions nobody ever ran. Lower stages leave the version
+  alone and add their notes under the same unreleased heading. If a lower
+  stage ends up shipping on its own after all, the bump moves to it.
 - **Land bottom-up.** When a base branch changes (a review fix, or the base
   merging), rebase the branches above it and force-push *those*. Force-pushing
   your own unmerged stack branches is routine. Force-pushing `main` or a
