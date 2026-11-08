@@ -8,8 +8,8 @@ description: Use when a PR stage or feature is finished and before its PR opens;
 Docs drift silently. Nothing fails when a README names a file that moved. Run
 this after every stacked-PR stage or completed feature, before the PR opens.
 
-**This skill's contract includes committing.** It may commit without asking,
-always to the **current branch, never `main`**.
+**This skill's contract includes committing,** always to the **current branch,
+never `main`**.
 
 ## When to skip
 

@@ -10,6 +10,7 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 
 - **Propose before building.** Approaches and trade-offs first, code only after approval.
 - **Small, atomic PRs.** Aim for ~300 changed lines, with 500 as the ceiling. Bigger work ships as a stack of PRs, all open for review unless you ask for one stage at a time.
+- **A review intent on every PR.** One of three labels says whether the PR wants a rubber stamp, non-blocking feedback, or a gate — and the reviewer acts on it rather than guessing.
 - **A real test bar.** Every feature gets unit tests and at least one integration test. UI features also get E2E tests. Every bug fix gets a regression test.
 - **UI verified in a real browser,** with screenshots in the PR.
 - **Docs before memory.** Read the installed version's current docs before using a framework or package.
@@ -21,8 +22,8 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 
 | Part | Loaded | Contents |
 |---|---|---|
-| [`AGENTS.md`](AGENTS.md) | Every session | 17 one-line rules plus your project gates |
-| [`skills/`](skills) | When relevant | `coding-process`, `unattended-run`, `stacked-prs`, `testing`, `verify-ui`, `sync-docs` |
+| [`AGENTS.md`](AGENTS.md) | Every session | 14 one-line rules plus your project gates |
+| [`skills/`](skills) | When relevant | `coding-process`, `unattended-run`, `stacked-prs`, `ship-show-ask`, `testing`, `verify-ui`, `sync-docs` |
 
 ## Install
 
@@ -77,7 +78,7 @@ while the numbered rules above the divider are replaced.
 
 The version is in the header comment of `AGENTS.md`. See
 [`CHANGELOG.md`](CHANGELOG.md) for what changed, and pin a release by its tag,
-for example `chukaofili/agent-plugins#coding-protocol-v1.2.0`.
+for example `chukaofili/agent-plugins#coding-protocol-v1.3.0`.
 
 ## License
 

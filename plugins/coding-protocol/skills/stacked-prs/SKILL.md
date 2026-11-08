@@ -51,6 +51,15 @@ reverted on its own.
   ```
 - Note the position in each PR body (`Stacked on #123`) so a reviewer who opens
   one out of order knows what they're looking at.
+- **Every stage is `ssa-ask`,** labelled at creation
+  (`gh pr create --label ssa-ask`). The stack exists because the change was too
+  big to take in at once, so each stage is its own gate and approval on one
+  says nothing about the next. See `ship-show-ask`.
+- **Release metadata lands once, in the top PR:** a version bump, a changelog
+  heading, a tag. The stack merges as one set of changes, so doing it per
+  stage publishes versions nobody ever ran. Lower stages leave the version
+  alone and add their notes under the same unreleased heading. If a lower
+  stage ends up shipping on its own after all, the bump moves to it.
 - **Land bottom-up.** When a base branch changes (a review fix, or the base
   merging), rebase the branches above it and force-push *those*. Force-pushing
   your own unmerged stack branches is routine. Force-pushing `main` or a
@@ -99,8 +108,17 @@ stack tracked on this machine. For a stack opened elsewhere, use
   ```bash
   gh stack merge <pr-number> --yes --squash
   ```
-  This merges everything up to and including that PR, all or nothing. Without a
-  number, `--yes` merges the whole stack. Use the merge method the repo uses
+  This merges everything up to and including that PR, all or nothing. **So
+  `<pr-number>` has to be the top of an unbroken run of approvals from the
+  bottom.** Every stage is `ssa-ask`, so an unapproved stage 3 means merging
+  stage 2 and stopping — picking stage 4 would carry stage 3 in with it and
+  merge straight past its gate. Walk up from the bottom with
+  `gh pr view <number> --json reviewDecision` and stop at the first stage that
+  isn't `APPROVED`. Branch protection refuses this too where it's configured
+  to; don't count on it being configured.
+
+  Without a number, `--yes` merges the whole stack, so only leave the number
+  off when every stage is approved. Use the merge method the repo uses
   (`--squash`, `--rebase` or `--merge`). Run `gh stack sync` afterwards.
 - **Exit code 9 means stacks aren't enabled on the repo.** Tell the user, and use
   plain git and `gh` instead.
@@ -115,8 +133,15 @@ reviewer they name is requested on every PR with
 adds.
 
 **By default, put the whole stack up for review.** Open every stage's PR as
-ready for review, not as a draft. If the user didn't name a reviewer, check for
-a `CODEOWNERS` file (in `.github/`, the repo root or `docs/`):
+ready for review, not as a draft.
+
+Putting the stack up is how review is **requested**; the `ssa-ask` label on
+each stage is what gates that stage's **merge**. They read as a contradiction
+and aren't: a reviewer can start on any stage, and no stage lands before its
+own approval arrives (see `ship-show-ask`).
+
+If the user didn't name a reviewer, check for a `CODEOWNERS` file (in
+`.github/`, the repo root or `docs/`):
 
 - **The repo has one:** don't request review. GitHub adds the code owners to
   each new PR. If a PR's files have no owner, nobody gets added, so check with

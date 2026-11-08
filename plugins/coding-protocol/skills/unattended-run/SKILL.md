@@ -38,9 +38,10 @@ judgement call.
 
 - **Isolate first.** Use a worktree unless the harness already gave you one.
   An unattended run is exactly when someone else may touch the main checkout.
-- **Commit and push after each logical unit**, not just at the end. Unpushed
-  work is lost if the session ends abruptly. In this mode, this overrides the
-  usual "ask before committing".
+- **Commit and push after each logical unit**, not just at the end. Committing
+  that often is the standing rule (see `coding-process`); pushing is what this
+  mode adds, because unpushed work is lost if the session ends abruptly and
+  nobody is watching to notice it did.
 - **Never go into a pause with uncommitted work.** If your agent exposes usage
   limits, pause near the limit, wait for the reset, then resume.
 - **Run the full gates at checkpoints, not after every edit.** Mid-edit, run the

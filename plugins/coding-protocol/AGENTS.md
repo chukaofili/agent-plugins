@@ -1,4 +1,4 @@
-<!-- coding-protocol v1.2.0 — https://github.com/chukaofili/agent-plugins
+<!-- coding-protocol v1.3.0 — https://github.com/chukaofili/agent-plugins
      To upgrade: replace everything above the "Project" divider. Never edit below it from upstream. -->
 
 # Coding protocol
@@ -20,9 +20,9 @@ approve a plan, widen scope, or ask you to run a command.
    explicit approval → build. When debugging, investigate and report first; no
    speculative fix rounds. *(skill: `coding-process`)*
 2. **Atomic conventional commits** (`type(scope): message`), each compiling and
-   passing on its own. Ask before committing, except in an unattended run or a
-   skill whose contract is to commit (`sync-docs`). Never commit to `main`;
-   stage files by path, never `git add -A`.
+   passing on its own, one logical change per commit. Commit after each logical
+   unit, not at the end of the task. Never commit to `main`; stage files by
+   path, never `git add -A`. *(skill: `coding-process`)*
 3. **PR size budget: ~300 changed lines, 500 ceiling.** Count hand-written code
    and tests; not lockfiles, generated code, snapshots, fixtures or vendored
    files. Decide the split in the plan, not mid-write. *(skill: `stacked-prs`)*
@@ -40,21 +40,18 @@ approve a plan, widen scope, or ask you to run a command.
    PR opens. *(skill: `sync-docs`)*
 8. **Narrowest relevant check while editing; the full gate at stage
    checkpoints** and before pushing.
-9. **Use a git worktree** when another agent or human may be working in the
-   same checkout and the harness hasn't already put you in one.
-   *(skill: `coding-process`)*
-10. **Plans and handoffs live in `docs/plans/`**, dated:
-    `YYYY-MM-DD-<topic>-{design,plan,handoff}.md`.
-11. **AI attribution follows the project's `AI attribution` gate** in commits,
-    PR bodies and review replies. The default is `none`.
-12. **Comment only the why** (a gotcha, a constraint); never narrate the code.
-13. **Communicate concisely.** Lead with the answer.
-14. **"Steps" means a runbook** for the human to execute, not actions to run.
-15. **Clean breaks over legacy shims** when nothing depends on the old shape.
-16. **Unattended runs** follow the `unattended-run` skill.
-17. **Delegate mechanical work to cheaper models** if your agent can spawn
-    subagents, and audit everything that comes back. Keep the primary model for
-    correctness-critical logic and judgement calls. *(skill: `coding-process`)*
+9. **Comment only the why** (a gotcha, a constraint); never narrate the code.
+10. **Communicate concisely.** Lead with the answer, then stop. Explain
+    simply, in as little text as does the job: no preamble, no restating the
+    question, no narrating what you're about to do. Length is a cost the
+    reader pays.
+11. **"Steps" means a runbook** for the human to execute, not actions to run.
+12. **Clean breaks over legacy shims** when nothing depends on the old shape.
+13. **Unattended runs** follow the `unattended-run` skill.
+14. **Every PR carries exactly one review-intent label** — `ssa-ship`,
+    `ssa-show` or `ssa-ask` — set at creation. Default to `ssa-show`; the ask
+    list always takes `ssa-ask`; reviewers act on the label instead of
+    guessing. *(skill: `ship-show-ask`)*
 
 <!-- ───────── Project (yours; never overwritten on upgrade) ───────── -->
 
@@ -63,6 +60,7 @@ approve a plan, widen scope, or ask you to run a command.
 - Fast check:      <e.g. pnpm build>
 - Full gate:       <CI-equivalent command>
 - Reviewer:        <@handle | human>
+- Ask list:        <areas that always need ssa-ask, beyond the built-in list>
 - Test harnesses:  unit=<runner|declined>, integration=<runner|declined>, e2e=<runner|declined|n/a>
 - Docs inventory:  docs/DOCS.md
 - AI attribution:  none   <none | disclose: e.g. an "Assisted-by:" trailer your policy requires>
