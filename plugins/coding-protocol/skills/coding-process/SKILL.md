@@ -107,6 +107,9 @@ This applies to every session, interactive or unattended.
 
 ## Handoffs
 
+Plans and handoffs live in `docs/plans/`, dated and suffixed by what they are:
+`YYYY-MM-DD-<topic>-{design,plan,handoff}.md`.
+
 When context is running long, or work stops mid-task, write
 `docs/plans/YYYY-MM-DD-<topic>-handoff.md` covering the goal, what's done
 (with commits and branches), what's left, and any open questions. Someone

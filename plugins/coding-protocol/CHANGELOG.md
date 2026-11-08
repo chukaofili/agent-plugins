@@ -15,7 +15,7 @@ that they match each other and this file.
   approval. Reviewers act on the label instead of guessing at what depth to
   review. The default is `ssa-show`, and the data model, auth, billing,
   multi-tenant scoping, security boundaries and the public API shape always
-  take `ssa-ask`. New `ship-show-ask` skill, plus `AGENTS.md` rule 18.
+  take `ssa-ask`. New `ship-show-ask` skill, plus `AGENTS.md` rule 14.
 - An `Ask list` line in Project gates, for the areas a given repo always wants
   gated. It adds to the built-in list and can't take anything off it.
 - A `Commits` section in `coding-process`, which rule 2 now points at — it was
@@ -37,12 +37,18 @@ that they match each other and this file.
   `unattended-run` carve-out for committing is gone with it, since there's
   nothing left to override, and `sync-docs` no longer describes its commits as
   happening "without asking".
-- Rule 13 now says what concise means: lead with the answer and stop, explain
+- Rule 10 (rule 13 before this release renumbered them) now says what
+  concise means: lead with the answer and stop, explain
   simply, and spend as little text as does the job. "Lead with the answer"
   alone left room for a correct answer followed by three paragraphs nobody
   asked for.
 - `stacked-prs` says release metadata lands once, in the top PR: a version
   bump in every stage publishes releases nobody ever ran.
+- The always-on list drops from 18 rules to 14. Worktrees, the `docs/plans/`
+  naming, AI attribution and delegation now live only in `coding-process`,
+  which already carried all four in full and whose own description fires on
+  the work each one applies to. A rule stays in `AGENTS.md` when nothing would
+  trigger the skill that holds it.
 
 ## 1.2.0 — 2026-11-05
 

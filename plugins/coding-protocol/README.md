@@ -22,7 +22,7 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 
 | Part | Loaded | Contents |
 |---|---|---|
-| [`AGENTS.md`](AGENTS.md) | Every session | 18 one-line rules plus your project gates |
+| [`AGENTS.md`](AGENTS.md) | Every session | 14 one-line rules plus your project gates |
 | [`skills/`](skills) | When relevant | `coding-process`, `unattended-run`, `stacked-prs`, `ship-show-ask`, `testing`, `verify-ui`, `sync-docs` |
 
 ## Install
