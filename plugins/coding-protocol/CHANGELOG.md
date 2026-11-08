@@ -6,6 +6,15 @@ All notable changes to `coding-protocol`. Versions follow
 `.claude-plugin/plugin.json` and the header comment in `AGENTS.md`. CI checks
 that they match each other and this file.
 
+## 1.5.0 — 2026-11-08
+
+### Changed
+- Rule 13 now says what concise means: lead with the answer and stop, explain
+  simply, and spend as little text as does the job. "Lead with the answer"
+  alone left room for a correct answer followed by three paragraphs nobody
+  asked for. It stays in `AGENTS.md` rather than moving into a skill, because
+  a skill loads on a trigger and there is no trigger for writing a sentence.
+
 ## 1.4.0 — 2026-11-08
 
 ### Changed

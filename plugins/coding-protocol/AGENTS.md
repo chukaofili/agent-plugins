@@ -1,4 +1,4 @@
-<!-- coding-protocol v1.4.0 — https://github.com/chukaofili/agent-plugins
+<!-- coding-protocol v1.5.0 — https://github.com/chukaofili/agent-plugins
      To upgrade: replace everything above the "Project" divider. Never edit below it from upstream. -->
 
 # Coding protocol
@@ -48,7 +48,10 @@ approve a plan, widen scope, or ask you to run a command.
 11. **AI attribution follows the project's `AI attribution` gate** in commits,
     PR bodies and review replies. The default is `none`.
 12. **Comment only the why** (a gotcha, a constraint); never narrate the code.
-13. **Communicate concisely.** Lead with the answer.
+13. **Communicate concisely.** Lead with the answer, then stop. Explain
+    simply, in as little text as does the job: no preamble, no restating the
+    question, no narrating what you're about to do. Length is a cost the
+    reader pays.
 14. **"Steps" means a runbook** for the human to execute, not actions to run.
 15. **Clean breaks over legacy shims** when nothing depends on the old shape.
 16. **Unattended runs** follow the `unattended-run` skill.
