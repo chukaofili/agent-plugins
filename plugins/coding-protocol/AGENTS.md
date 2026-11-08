@@ -1,4 +1,4 @@
-<!-- coding-protocol v1.3.0 — https://github.com/chukaofili/agent-plugins
+<!-- coding-protocol v1.4.0 — https://github.com/chukaofili/agent-plugins
      To upgrade: replace everything above the "Project" divider. Never edit below it from upstream. -->
 
 # Coding protocol
@@ -20,9 +20,9 @@ approve a plan, widen scope, or ask you to run a command.
    explicit approval → build. When debugging, investigate and report first; no
    speculative fix rounds. *(skill: `coding-process`)*
 2. **Atomic conventional commits** (`type(scope): message`), each compiling and
-   passing on its own. Ask before committing, except in an unattended run or a
-   skill whose contract is to commit (`sync-docs`). Never commit to `main`;
-   stage files by path, never `git add -A`.
+   passing on its own, one logical change per commit. Commit after each logical
+   unit, not at the end of the task. Never commit to `main`; stage files by
+   path, never `git add -A`. *(skill: `coding-process`)*
 3. **PR size budget: ~300 changed lines, 500 ceiling.** Count hand-written code
    and tests; not lockfiles, generated code, snapshots, fixtures or vendored
    files. Decide the split in the plan, not mid-write. *(skill: `stacked-prs`)*

@@ -78,7 +78,7 @@ while the numbered rules above the divider are replaced.
 
 The version is in the header comment of `AGENTS.md`. See
 [`CHANGELOG.md`](CHANGELOG.md) for what changed, and pin a release by its tag,
-for example `chukaofili/agent-plugins#coding-protocol-v1.3.0`.
+for example `chukaofili/agent-plugins#coding-protocol-v1.4.0`.
 
 ## License
 

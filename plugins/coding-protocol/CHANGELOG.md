@@ -6,6 +6,23 @@ All notable changes to `coding-protocol`. Versions follow
 `.claude-plugin/plugin.json` and the header comment in `AGENTS.md`. CI checks
 that they match each other and this file.
 
+## 1.4.0 — 2026-11-08
+
+### Changed
+- Agents no longer ask before committing. Rule 2 now says to commit after each
+  logical unit rather than at the end of the task: the pause bought nothing,
+  because review happens on the PR, where a reviewer can see the steps. The
+  `unattended-run` carve-out for committing is gone with it, since there's
+  nothing left to override, and `sync-docs` no longer describes its commits as
+  happening "without asking".
+
+### Added
+- A `Commits` section in `coding-process`, which rule 2 now points at — it was
+  the only rule with no skill behind it. It carries the conventional-commit
+  examples, the type list (`feat`, `fix`, `refactor`, `test`, `docs`, `chore`,
+  `ci`), two tests for whether a commit is one logical change, and why staging
+  by path beats `git add -A`.
+
 ## 1.3.0 — 2026-11-08
 
 ### Added

@@ -50,6 +50,37 @@ Each stage is a PR in a stack, and every stage is labelled `ssa-ask`, because
 a stack is a sequence of gates. See the `stacked-prs` and `ship-show-ask`
 skills.
 
+## Commits
+
+Conventional, `type(scope): message`:
+
+```
+feat(connections): add create endpoint
+fix(ingest): handle missing header
+refactor(auth): extract token parsing
+```
+
+The types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `ci`.
+
+**One logical change per commit,** compiling and passing on its own. Two tests
+for whether you have one: the commit builds green by itself, and its message
+doesn't need the word "and". A fix plus the unrelated typo you noticed while
+reading the file is two commits — someone bisecting later has to separate them
+anyway, with less context than you have now.
+
+**Commit after each logical unit,** not once at the end of the task. Don't ask
+first. A single end-of-task commit throws away the history that makes a bad
+change findable, and the review you were waiting for happens on the PR, where
+a reviewer can see the steps.
+
+**Stage by path, never `git add -A`.** It picks up scratch files, another
+agent's work in a shared checkout, and anything you didn't mean to track.
+
+**Never commit to `main`.**
+
+AI attribution follows the project's `AI attribution` gate in Project gates.
+The default is `none`.
+
 ## Debugging
 
 - **Investigate first; don't code.** Reproduce the problem, trace it through the
