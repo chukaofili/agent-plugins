@@ -34,6 +34,12 @@ jobs:
             npx -y @anthropic-ai/claude-code@2.1.303 plugin validate "$dir"
           done
 
+      # Older clients reject keys newer ones accept (2.1.119 fails on a
+      # top-level marketplace "description"), and users install with whatever
+      # version they have.
+      - name: Marketplace manifest on an older Claude Code
+        run: npx -y @anthropic-ai/claude-code@2.1.119 plugin validate .
+
       - name: Skills CLI discovers every skill
         run: |
           expected=$(find plugins -name SKILL.md | wc -l | tr -d ' ')
