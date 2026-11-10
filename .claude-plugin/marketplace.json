@@ -1,9 +1,11 @@
 {
   "name": "agent-plugins",
-  "description": "Chuka Ofili's plugins for coding agents.",
   "owner": {
     "name": "Chuka Ofili",
     "url": "https://github.com/chukaofili"
+  },
+  "metadata": {
+    "description": "Chuka Ofili's plugins for coding agents."
   },
   "plugins": [
     {
