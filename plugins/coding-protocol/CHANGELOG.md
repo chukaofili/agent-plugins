@@ -79,6 +79,15 @@ the PR body of the release has the full mapping.
   user. It is a guardrail in `AGENTS.md`, not a skill, because nothing would
   trigger a skill at the end of every response. Adapted from Builder.io's
   `quick-recap` skill (MIT).
+- A `handoff` skill, grown out of four lines in `coding-process`. An agent
+  whose context is running long writes a handoff at 70% of the window
+  instead of waiting to be compacted, and a shorter one past 80%. A helper
+  returns status `handoff` and the lead briefs a fresh helper from it. A
+  lead commits and pushes the handoff, then gets a new session started on
+  it: a wake tool, an automation a maintainer set up, or a 🟡 status naming
+  the file. Unattended runs refresh the handoff at every stage checkpoint,
+  so a hard stop loses one stage at most. The next session verifies what it
+  inherits before building on it.
 - A `setup` skill that installs or upgrades the core, labels, config and
   workflow, and reports the branch protection settings it can't change. It
   infers the Project gates from the repo and writes them only after you
@@ -106,6 +115,10 @@ the PR body of the release has the full mapping.
   requires the workflow closes the gap; `setup` explains how.
 - On a stack, rewriting a lower stage removes `merge-auto` from the stages
   above it when the rewrite touches lines those stages build on.
+- A lead agent can't start its own successor. `handoff` relies on a wake
+  tool, an existing automation or a person, and on the harness reporting
+  context use. Where it reports none, the checkpoint refresh is the
+  safeguard.
 
 ## 1.3.0 — 2026-11-08
 
