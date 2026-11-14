@@ -16,7 +16,7 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 - **UI verified in a real browser,** with screenshots in the PR.
 - **Docs before memory.** Read the installed version's current docs before using a framework or package.
 - **Docs kept in sync** after every stage.
-- **Cheaper models for mechanical work,** with every delegated result audited.
+- **Cheaper models for mechanical work,** by default. The lead agent says how the work splits, reviews what helpers return, and states in the PR what was delegated.
 - **Safe unattended runs.** Four hard checkpoints and frequent pushes.
 
 ## How it's packaged
@@ -24,8 +24,8 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 | Part | Loaded | Contents |
 |---|---|---|
 | [`AGENTS.md`](AGENTS.md) | Every session | Eight guardrails plus your project gates |
-| [`skills/run`](skills/run) | When code changes, or on `/coding-protocol:run` | The eight working rules, and a table that matches the task to the skills below |
-| [`skills/`](skills) | When relevant | `coding-process`, `unattended-run`, `stacked-prs`, `ship-show-ask`, `merge-gate`, `testing`, `verify-ui`, `sync-docs`, `setup`, `uninstall` |
+| [`skills/run`](skills/run) | When code changes, or on `/coding-protocol:run` | The nine working rules, and a table that matches the task to the skills below |
+| [`skills/`](skills) | When relevant | `coding-process`, `unattended-run`, `stacked-prs`, `ship-show-ask`, `merge-gate`, `delegate`, `testing`, `verify-ui`, `sync-docs`, `setup`, `uninstall` |
 
 The guardrails are the rules that have to hold when nobody typed a command:
 who can give instructions, how commits are made, the review label on every PR,

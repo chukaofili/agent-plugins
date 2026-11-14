@@ -52,7 +52,15 @@ the PR body of the release has the full mapping.
   or stops because the spec is wrong or stale. The trust rule gains one
   narrow exception for this. (`coding-process`, `AGENTS.md`)
 - A `run` skill: the front door. It matches the task to the skills it needs
-  and carries the eight working rules.
+  and carries the nine working rules.
+- A `delegate` skill. Delegation was four bullets in `coding-process` that
+  an agent could read and then do everything itself. It is now the default
+  with something to check: the agent says how the work splits before it
+  builds, sets a cheaper model on every helper, sends a self-contained
+  handoff, treats what comes back as evidence, and states in the PR what was
+  delegated or why nothing was. A `Delegation` line in Project gates names
+  the helper models, or turns it `off`; so can the user, for a task. Adapted from Builder.io's `efficient-orchestrator`
+  skill (MIT), which is opt-in; this one is not.
 - A `setup` skill that installs or upgrades the core, labels, config and
   workflow, and reports the branch protection settings it can't change. It
   infers the Project gates from the repo and writes them only after you
@@ -65,7 +73,7 @@ the PR body of the release has the full mapping.
 - The always-on list drops from 14 rules to eight guardrails. Propose before
   building, the PR size budget, the test bar, browser-verified UI, docs before
   memory, docs sync, check cadence and clean breaks moved to `run`, which rule
-  1 loads before any code change. What stays is what has to hold when nobody
+  1 loads before any code change. `run` adds a ninth, delegation. What stays is what has to hold when nobody
   typed a command.
 - Label creation moved from `ship-show-ask` to `setup`.
 - The `gh stack merge` walk in `stacked-prs` stops at the first stage that
