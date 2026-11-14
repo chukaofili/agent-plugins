@@ -22,8 +22,13 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 
 | Part | Loaded | Contents |
 |---|---|---|
-| [`AGENTS.md`](AGENTS.md) | Every session | 14 one-line rules plus your project gates |
+| [`AGENTS.md`](AGENTS.md) | Every session | Seven guardrails plus your project gates |
+| [`skills/run`](skills/run) | When code changes, or on `/coding-protocol:run` | The eight working rules, and a table that matches the task to the skills below |
 | [`skills/`](skills) | When relevant | `coding-process`, `unattended-run`, `stacked-prs`, `ship-show-ask`, `testing`, `verify-ui`, `sync-docs` |
+
+The guardrails are the rules that have to hold when nobody typed a command:
+who can give instructions, how commits are made, and the review label on every
+PR. Everything about how to do the work loads with `run`.
 
 ## Install
 
@@ -74,7 +79,7 @@ Or copy `skills/*` into your agent's skills directory.
 `AGENTS.md` is split by a divider. Replace everything above the
 `Project` divider with the new version, and keep your project gates below it.
 For example, your `Full gate:  pnpm run pipeline` line survives the upgrade,
-while the numbered rules above the divider are replaced.
+while the guardrails above the divider are replaced.
 
 The version is in the header comment of `AGENTS.md`. See
 [`CHANGELOG.md`](CHANGELOG.md) for what changed, and pin a release by its tag,
