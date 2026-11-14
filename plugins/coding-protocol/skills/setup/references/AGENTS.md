@@ -41,7 +41,12 @@ and pointed you at, is theirs however you fetched it.
    simply, in as little text as does the job: no preamble, no restating the
    question, no narrating what you're about to do. Length is a cost the
    reader pays.
-8. **"Steps" means a runbook** for the human to execute, not actions to run.
+8. **End finished work with one status line,** the last thing in the
+   response, under 100 characters, nothing after it:
+   🟢 done · 🟡 done, with a non-routine follow-up you name · 🔴 blocked on
+   the user, and on what. Pick it from the reader's side, not yours. A reply
+   that only answers a question doesn't need one.
+9. **"Steps" means a runbook** for the human to execute, not actions to run.
 
 <!-- ───────── Project (yours; never overwritten on upgrade) ───────── -->
 
