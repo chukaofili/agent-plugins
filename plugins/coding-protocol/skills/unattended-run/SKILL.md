@@ -48,8 +48,11 @@ judgement call.
   that often is the standing rule (see `coding-process`); pushing is what this
   mode adds, because unpushed work is lost if the session ends abruptly and
   nobody is watching to notice it did.
-- **Never go into a pause with uncommitted work.** If your agent exposes usage
-  limits, pause near the limit, wait for the reset, then resume.
+- **Never go into a pause with uncommitted work.**
+- **Stay inside the usage limits.** Find out at the start how this harness
+  reports usage, check between waves and at checkpoints, pause near the cap,
+  and resume only once the window has really cleared. *(skill:
+  `usage-limits`)*
 - **Run the full gates at checkpoints, not after every edit.** Mid-edit, run the
   narrowest check that would catch what you just changed: one package's type
   check, or one test file. Run the build, lint, full test suite and

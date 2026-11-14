@@ -118,6 +118,8 @@ something its brief asked for, that thing is unverified.
 ## Limits
 
 - **Five helpers at once, at most.** Past that the review stops being real.
+- **Check usage between waves** (see `usage-limits`). Parallel helpers burn a
+  window several times faster than you do alone.
 - **Helpers don't spawn helpers.** One level, so one place where the work is
   audited.
 - **One writer per file.** Two helpers on the same file is a merge conflict

@@ -25,7 +25,7 @@ changes mid-way (an investigation turns into a fix), match again.
 | Anything a user sees | The row for the task, plus `verify-ui` |
 | Opening a PR | `stacked-prs`, `ship-show-ask`, `sync-docs` |
 | Reviewing a PR, or answering review findings | `ship-show-ask`, `merge-gate`, `stacked-prs` |
-| Unattended run | `unattended-run`, `delegate`, plus the row for the task |
+| Unattended run | `unattended-run`, `delegate`, `usage-limits`, plus the row for the task |
 
 A row names where to start, not a limit. Each skill's own description still
 loads it when its subject comes up.
