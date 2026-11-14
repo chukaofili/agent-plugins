@@ -2,7 +2,8 @@
 // decides anything is in decide.mjs.
 import { readFileSync, appendFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
-import { parseConfig, labelCheck, mergeGate, latestApproval, fingerprint, samePatch } from './decide.mjs';
+import { parseConfig, labelCheck, mergeGate, latestApproval } from './decide.mjs';
+import { replayMatches, fetchCommits } from './replay.mjs';
 
 const MAX_FILES = 3000; // the API stops listing a PR's files here
 
@@ -14,7 +15,7 @@ export function githubApi({ token, repo, fetchImpl = fetch }) {
       body: body ? JSON.stringify(body) : undefined,
     });
     if (!res.ok) throw new Error(`${method} ${path}: HTTP ${res.status}`);
-    return accept.endsWith('diff') ? res.text() : res.status === 204 ? null : res.json();
+    return res.status === 204 ? null : res.json();
   };
   const pages = async (path) => {
     const all = [];
@@ -39,30 +40,31 @@ export function githubApi({ token, repo, fetchImpl = fetch }) {
       (await pages(`/pulls/${n}/reviews`))
         .filter((r) => r.user && r.submitted_at)
         .map((r) => ({ actor: r.user.login, state: r.state, commit: r.commit_id, at: r.submitted_at })),
-    diff: (base, head) => call(`/compare/${base}...${head}`, { accept: 'application/vnd.github.diff' }),
+    mergeBase: async (base, head) => (await call(`/compare/${base}...${head}?per_page=1`)).merge_base_commit.sha,
     removeLabel: (n, label) => call(`/issues/${n}/labels/${label}`, { method: 'DELETE' }),
     comment: (n, body) => call(`/issues/${n}/comments`, { method: 'POST', body: { body } }),
   };
 }
 
-// Whether the approved commit is the head, or carries the same patch against
-// the current base. A diff that cannot be fetched covers nothing.
-async function covers({ api, approval, pr }) {
+// Whether the approval still stands for this head: the same commit, or that
+// commit replayed onto a base that moved. Anything that cannot be fetched or
+// compared covers nothing.
+async function covers({ api, fetchGit, approval, pr }) {
   if (approval.commit === pr.head.sha) return true;
-  const print = async (sha) => {
-    try {
-      return fingerprint(await api.diff(pr.base.sha, sha));
-    } catch {
-      return null;
-    }
-  };
-  return samePatch(await print(approval.commit), await print(pr.head.sha));
+  try {
+    const oldBase = await api.mergeBase(pr.base.sha, approval.commit);
+    const newBase = await api.mergeBase(pr.base.sha, pr.head.sha);
+    const git = fetchGit([oldBase, newBase, approval.commit, pr.head.sha]);
+    return replayMatches({ git, oldBase, newBase, approved: approval.commit, head: pr.head.sha });
+  } catch {
+    return false;
+  }
 }
 
 // Every call rules on the pull request as it stands now. Nothing here depends
 // on which event triggered it, so a failed or missed run cannot leave an old
 // clearance standing: the next run reaches the same verdict from scratch.
-export async function run({ check, eventName, event, api, configPath, defaultBranch }) {
+export async function run({ check, eventName, event, api, fetchGit, configPath, defaultBranch }) {
   if (eventName === 'merge_group') {
     return { ok: true, reason: 'merge group: the gate was checked when the pull request was queued', removed: false };
   }
@@ -79,7 +81,7 @@ export async function run({ check, eventName, event, api, configPath, defaultBra
   if (check === 'label-check') return { ok: lc.ok, reason: lc.reason, removed: false };
 
   const approval = latestApproval(await api.reviews(n), config);
-  const covered = Boolean(approval) && labels.includes('merge-auto') && (await covers({ api, approval, pr }));
+  const covered = Boolean(approval) && labels.includes('merge-auto') && (await covers({ api, fetchGit, approval, pr }));
   const mg = mergeGate({ labels, events: await api.labelEvents(n), config, labelCheckResult: lc, approval, covered });
 
   let removed = false;
@@ -108,6 +110,12 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
     eventName: env.GITHUB_EVENT_NAME,
     event,
     api: githubApi({ token: env.GITHUB_TOKEN, repo: env.GITHUB_REPOSITORY }),
+    fetchGit: (shas) =>
+      fetchCommits({
+        url: `${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}`,
+        shas,
+        extraHeader: `AUTHORIZATION: basic ${Buffer.from(`x-access-token:${env.GITHUB_TOKEN}`).toString('base64')}`,
+      }),
     configPath: env.GATE_CONFIG_PATH,
     defaultBranch: event.repository.default_branch,
   }).catch((e) => ({ ok: false, reason: `the gate could not run: ${e.message}` }));

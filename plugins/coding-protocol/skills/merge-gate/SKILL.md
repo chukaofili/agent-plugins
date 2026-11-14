@@ -106,13 +106,16 @@ the gate re-checks it:
   `merge-auto` is removed, with a comment saying why. The reviewer reviews
   the new head, approves it, and adds the label again.
 
-"Unchanged" is decided by comparing the PR's whole diff at the commit the
-reviewer approved with its diff now, not by anyone's judgement of how small
-the push was. The comparison ignores only what a rebase moves (line numbers
-and blob ids) and keeps every character of every changed line. **Whitespace
-counts.** A `return` moved out of an `if` by four spaces is a different
-program, and tools that ignore whitespace, `git patch-id` among them, call
-it the same patch.
+"Unchanged" is not anyone's judgement of how small the push was, and it is
+not a comparison of diffs. The gate takes the commit the reviewer approved,
+replays it onto the base the new head sits on, and requires the result to be
+the new head exactly, file for file. If the replay conflicts, or the result
+differs by one byte anywhere, the patch changed.
+
+Comparing diffs is what goes wrong here. A diff that ignores whitespace, as
+`git patch-id` does, can't tell a `return` inside an `if` from one moved out
+of it. A diff that ignores position can't tell an edit to `allow_admin()`
+from the same edit to `allow_anonymous()`. The replay has neither blind spot.
 
 The gate makes this comparison every time it runs, not only when it sees a
 push. A missed event can't leave an old clearance standing.

@@ -1,7 +1,6 @@
 // Pure decisions for the merge gate. No I/O here: main.mjs gathers the facts
 // and these functions rule on them, so every rule can be tested directly.
 import { matchesGlob } from 'node:path';
-import { createHash } from 'node:crypto';
 
 export const SSA = ['ssa-ship', 'ssa-show', 'ssa-ask'];
 // A PR that edits the gate or its config must itself be an Ask.
@@ -79,24 +78,8 @@ export function latestApproval(reviews, config) {
   return approvals.sort((a, b) => Date.parse(a.at) - Date.parse(b.at)).at(-1) ?? null;
 }
 
-// A fingerprint of a whole diff that survives a clean rebase and nothing
-// else. It drops blob ids and hunk positions, which a rebase moves, and keeps
-// every content line byte for byte. git patch-id is not used: it strips
-// whitespace, so it reads a re-indented `return` as no change.
-// null means "cannot be compared", which never equals anything.
-export function fingerprint(diff) {
-  if (!diff) return null;
-  if (/^(Binary files |GIT binary patch)/m.test(diff)) return null; // content is not in the diff
-  const lines = diff.split('\n').filter((l) => !l.startsWith('index ')).map((l) => (l.startsWith('@@') ? '@@' : l));
-  return createHash('sha256').update(lines.join('\n')).digest('hex');
-}
-
-export function samePatch(a, b) {
-  return a !== null && b !== null && a === b;
-}
-
 // approval: latestApproval(), or null. covered: whether that approval's
-// commit is the head or carries the same patch. remove: merge-auto no longer
+// commit is the head, or the head is that commit replayed on a moved base. remove: merge-auto no longer
 // stands for a reviewed head and should come off the PR.
 export function mergeGate({ labels, events, config, labelCheckResult, approval, covered }) {
   const no = (reason, remove = false) => ({ ok: false, reason, remove });

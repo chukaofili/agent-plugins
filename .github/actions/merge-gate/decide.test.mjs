@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseConfig, labelCheck, mergeGate, mergeHumanInForce, latestApproval, fingerprint, samePatch } from './decide.mjs';
+import { parseConfig, labelCheck, mergeGate, mergeHumanInForce, latestApproval } from './decide.mjs';
 
 const config = parseConfig(JSON.stringify({
   merge_approvers: ['anton', 'Chuka'],
@@ -115,27 +115,4 @@ test('approval: each approver\'s latest verdict counts, and only approvers count
   assert.equal(latestApproval([rev('anton', 'APPROVED', 'c1', 1), rev('anton', 'DISMISSED', 'c1', 2)], config), null);
   assert.equal(latestApproval([rev('anton', 'APPROVED', 'c1', 1), rev('anton', 'COMMENTED', 'c2', 2)], config).commit, 'c1');
   assert.equal(latestApproval([rev('anton', 'APPROVED', 'c1', 1), rev('Chuka', 'APPROVED', 'c2', 2)], config).commit, 'c2');
-});
-
-const diff = (body, index = 'index 1111111..2222222 100644', hunk = '@@ -1,2 +1,5 @@') =>
-  `diff --git a/a.py b/a.py\n${index}\n--- a/a.py\n+++ b/a.py\n${hunk}\n def allowed(admin):\n${body} return False\n`;
-
-test('fingerprint: ignores what a rebase moves', () => {
-  const body = '+    if admin:\n+        return True\n';
-  assert.equal(fingerprint(diff(body)), fingerprint(diff(body, 'index 3333333..4444444 100644', '@@ -40,2 +44,5 @@ class X:')));
-});
-
-test('fingerprint: whitespace counts, unlike git patch-id', () => {
-  // Dedenting the return makes allowed(False) true. Same words, different program.
-  const inside = '+    if admin:\n+        pass\n+        return True\n';
-  const outside = '+    if admin:\n+        pass\n+    return True\n';
-  assert.notEqual(fingerprint(diff(inside)), fingerprint(diff(outside)));
-  assert.equal(samePatch(fingerprint(diff(inside)), fingerprint(diff(outside))), false);
-});
-
-test('fingerprint: a changed word, an empty diff and binary content never match', () => {
-  assert.notEqual(fingerprint(diff('+    return admin\n')), fingerprint(diff('+    return True\n')));
-  assert.equal(fingerprint(''), null);
-  assert.equal(fingerprint('diff --git a/x.png b/x.png\nindex 1..2 100644\nBinary files a/x.png and b/x.png differ\n'), null);
-  assert.equal(samePatch(null, null), false);
 });
