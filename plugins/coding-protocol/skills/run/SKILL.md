@@ -21,7 +21,7 @@ changes mid-way (an investigation turns into a fix), match again.
 | Feature, or any new or changed behaviour | `coding-process`, `testing`, `stacked-prs`, `delegate` |
 | Bug fix | `coding-process` (Debugging), `testing` |
 | Refactor | `coding-process`, `testing`, `delegate` |
-| Choosing, adopting or upgrading a dependency or API | `coding-process` (Docs before memory) |
+| Choosing, adopting or upgrading a dependency or API | `docs-before-memory` |
 | Anything a user sees | The row for the task, plus `verify-ui` |
 | Opening a PR | `stacked-prs`, `ship-show-ask`, `sync-docs` |
 | Reviewing a PR, or answering review findings | `ship-show-ask`, `merge-gate`, `stacked-prs` |
@@ -53,7 +53,7 @@ the answer turns into a change.
    what was verified instead. *(skill: `verify-ui`)*
 5. **Docs before memory.** Never trust training knowledge for a framework,
    package or API. Read the installed version's current docs online before
-   adopting or implementing against it. *(skill: `coding-process`)*
+   adopting or implementing against it. *(skill: `docs-before-memory`)*
 6. **Sync docs** after every stacked-PR stage or completed feature, before the
    PR opens. *(skill: `sync-docs`)*
 7. **Narrowest relevant check while editing; the full gate at stage

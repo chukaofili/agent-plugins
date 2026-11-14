@@ -1,6 +1,6 @@
 ---
 name: coding-process
-description: Use when starting a feature, refactor or bug fix; when handed a ticket, issue, story or plan to build from; when asked to plan, spec, design or debug something; when writing a plan or handoff document; when choosing, adopting or upgrading a dependency, framework or external API; when work could be handed to subagents; or when starting work that will become its own branch. Covers propose-before-building and when a spec you were handed already settles it, scoping work to the PR size budget, debugging discipline, when to delegate (see the delegate skill), reading current docs instead of trusting memory, and when and how to use a git worktree.
+description: Use when starting a feature, refactor or bug fix; when handed a ticket, issue, story or plan to build from; when asked to plan, spec, design or debug something; when writing a plan or handoff document; when work could be handed to subagents; or when starting work that will become its own branch. Covers propose-before-building and when a spec you were handed already settles it, scoping work to the PR size budget, debugging discipline, when to delegate (see the delegate skill), and when and how to use a git worktree.
 ---
 
 # Coding process
@@ -64,7 +64,7 @@ done check is one question, not a new proposal.
 - **The split.** Plan it against the size budget and state it. A spec decides
   what to build, rarely how many PRs it is.
 - **Docs before memory.** Check the APIs it names against the installed
-  version. Specs go stale faster than code.
+  version (see `docs-before-memory`). Specs go stale faster than code.
 - **The test bar,** and browser verification for anything a user sees.
 
 **Scope cuts both ways.** A ready spec means no bonus features. It also means
@@ -185,23 +185,10 @@ starting fresh should be able to continue from that file alone.
 
 ## Docs before memory
 
-Training knowledge about frameworks, packages and APIs is stale by
-construction: versions move, APIs get renamed, defaults flip. Treat what you
-remember as a hypothesis, not a fact.
-
-- **Find the installed version first** in the lockfile or manifest. The docs
-  that matter are for *that* version, not the newest one.
-- **Read the primary sources online** before choosing a package, writing code
-  against an API, or upgrading: the official docs, the changelog or release
-  notes, and the migration guide. Prefer them over blog posts and answers on
-  forums.
-- **Check before you propose.** If a plan names a library API, verify it
-  exists and behaves as described before presenting the plan, not after it's
-  approved.
-- **When docs and memory disagree, the docs win.** When the docs are silent,
-  verify by running it: a scratch script or a test, not an assertion.
-- **No web access?** Say so, and flag every API you could not verify instead of
-  writing from memory without saying so.
+Never write against a framework, package or API from memory. Find the
+installed version, read its current primary docs, then code. The
+`docs-before-memory` skill has when it applies, what counts as a source, and
+what to do when the docs can't be reached.
 
 ## Worktrees
 

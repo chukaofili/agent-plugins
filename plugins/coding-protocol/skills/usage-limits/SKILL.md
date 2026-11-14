@@ -21,8 +21,8 @@ Do this once, at the start of the work, before you need the answer.
    harness provides itself.
 3. **You don't know.** Then ground yourself: read the current official docs
    for the harness you're running in, the pages on usage, rate limits and
-   quotas (see Docs before memory in `coding-process`; don't answer this from
-   memory, because plans and limits change). Find out which windows exist, how to read
+   quotas (see `docs-before-memory`; don't answer this from memory, because
+   plans and limits change). Find out which windows exist, how to read
    where you are in each, and what the error looks like when one is hit.
 
 Write down what you found: the command, the windows, the reset rule. It goes
