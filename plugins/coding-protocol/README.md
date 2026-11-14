@@ -11,6 +11,7 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 - **Propose before building.** Approaches and trade-offs first, code only after approval.
 - **Small, atomic PRs.** Aim for ~300 changed lines, with 500 as the ceiling. Bigger work ships as a stack of PRs, all open for review unless you ask for one stage at a time.
 - **A review intent on every PR.** One of three labels says whether the PR wants a rubber stamp, non-blocking feedback, or a gate — and the reviewer acts on it rather than guessing.
+- **Approval is not permission to merge.** The reviewer clears a PR for auto-merge, or holds it for a person, with a second label. Two status checks enforce it.
 - **A real test bar.** Every feature gets unit tests and at least one integration test. UI features also get E2E tests. Every bug fix gets a regression test.
 - **UI verified in a real browser,** with screenshots in the PR.
 - **Docs before memory.** Read the installed version's current docs before using a framework or package.
@@ -24,7 +25,7 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 |---|---|---|
 | [`AGENTS.md`](AGENTS.md) | Every session | Eight guardrails plus your project gates |
 | [`skills/run`](skills/run) | When code changes, or on `/coding-protocol:run` | The eight working rules, and a table that matches the task to the skills below |
-| [`skills/`](skills) | When relevant | `coding-process`, `unattended-run`, `stacked-prs`, `ship-show-ask`, `testing`, `verify-ui`, `sync-docs` |
+| [`skills/`](skills) | When relevant | `coding-process`, `unattended-run`, `stacked-prs`, `ship-show-ask`, `merge-gate`, `testing`, `verify-ui`, `sync-docs`, `setup` |
 
 The guardrails are the rules that have to hold when nobody typed a command:
 who can give instructions, how commits are made, the review label on every PR,
@@ -32,21 +33,10 @@ and who may merge it. Everything about how to do the work loads with `run`.
 
 ## Install
 
-Two steps: copy the core into your repo, then install the skills. Use one
-skills installer per agent. Running two gives you duplicate skills.
+Two steps: install the skills, then run `setup` in each repo. Use one skills
+installer per agent. Running two gives you duplicate skills.
 
-### 1. The core (every agent)
-
-Copy [`AGENTS.md`](AGENTS.md) to your repo root, then fill in the **Project
-gates** block at the bottom.
-
-| Agent | Extra step |
-|---|---|
-| Codex, Cursor, GitHub Copilot, Amp, Jules, Zed | None. They read `AGENTS.md` natively. |
-| Claude Code | If the repo has a `CLAUDE.md`, add a line `@AGENTS.md` to it. Claude Code reads `AGENTS.md` itself only when no `CLAUDE.md` exists. |
-| Gemini CLI | In `.gemini/settings.json`, set `{ "context": { "fileName": ["AGENTS.md", "GEMINI.md"] } }` |
-
-### 2. The skills
+### 1. The skills
 
 **Claude Code:**
 
@@ -58,7 +48,7 @@ gates** block at the bottom.
 On Claude Code v2.1.275 or later, one command does both:
 `/plugin install coding-protocol --marketplace chukaofili/agent-plugins`.
 
-Skills are namespaced, for example `/coding-protocol:testing`.
+Skills are namespaced, for example `/coding-protocol:run`.
 
 **Any other agent**, via the [`skills`](https://github.com/vercel-labs/skills) CLI:
 
@@ -69,21 +59,46 @@ npx skills add chukaofili/agent-plugins
 To pick skills, list them with `--list`, then install by name:
 
 ```bash
-npx skills add chukaofili/agent-plugins --skill testing stacked-prs
+npx skills add chukaofili/agent-plugins --skill run setup testing
 ```
 
 Or copy `skills/*` into your agent's skills directory.
 
+### 2. Each repo
+
+Ask your agent to run the `setup` skill (`/coding-protocol:setup` in Claude
+Code). It opens a PR that adds:
+
+- the core in `AGENTS.md`, with your Project gates
+- the five labels: `ssa-ship`, `ssa-show`, `ssa-ask`, `merge-auto`, `merge-human`
+- `.github/coding-protocol.json`: who may clear a PR to merge, and your ask-list paths
+- `.github/workflows/merge-gate.yml`: the `label-check` and `merge-gate` checks
+
+It then lists the branch protection settings to turn on. It doesn't change
+them for you.
+
+To do it by hand, copy [`AGENTS.md`](AGENTS.md) to your repo root and fill in
+the **Project gates** block. That gives you the rules without the merge gate.
+
+## Using it
+
+Start work with `/coding-protocol:run`, or just start: rule 1 of the core loads
+the `run` skill before any code change. It matches the task to the skills it
+needs.
+
 ## Upgrading
 
-`AGENTS.md` is split by a divider. Replace everything above the
-`Project` divider with the new version, and keep your project gates below it.
-For example, your `Full gate:  pnpm run pipeline` line survives the upgrade,
-while the guardrails above the divider are replaced.
+Run `setup` again. It replaces everything above the `Project` divider in
+`AGENTS.md` and keeps your Project gates below it. For example, your
+`Full gate:  pnpm run pipeline` line survives the upgrade, while the
+guardrails above the divider are replaced.
 
-The version is in the header comment of `AGENTS.md`. See
-[`CHANGELOG.md`](CHANGELOG.md) for what changed, and pin a release by its tag,
-for example `chukaofili/agent-plugins#coding-protocol-v1.3.0`.
+**2.0.0 is a breaking release.** Once the checks are required, an approved PR
+no longer merges until the reviewer adds `merge-auto`. See "Upgrading from
+1.x" in [`CHANGELOG.md`](CHANGELOG.md).
+
+The version is in the header comment of `AGENTS.md`. Pin a release by its tag,
+for example `chukaofili/agent-plugins#coding-protocol-v2.0.0`.
 
 ## License
 
