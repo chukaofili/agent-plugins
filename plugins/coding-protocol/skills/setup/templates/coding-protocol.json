@@ -1,0 +1,10 @@
+{
+  "merge_approvers": [],
+  "humans": [],
+  "ask_paths": [
+    "**/migrations/**",
+    "**/auth/**",
+    "**/billing/**"
+  ],
+  "max_review_rounds": 3
+}

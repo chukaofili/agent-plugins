@@ -99,6 +99,11 @@ def check_plugin(plugin_dir: Path, expected_name: str) -> None:
         fail(f"{rel}/AGENTS.md: header comment has no '{expected_name} vX.Y.Z'")
     elif header.group(1) != version:
         fail(f"{rel}: AGENTS.md says v{header.group(1)}, plugin.json says {version}")
+    # setup installs the core from its own copy, because the skills CLI ships
+    # skill directories and nothing else. The two must not drift.
+    copy = skills_dir / "setup" / "references" / "AGENTS.md"
+    if copy.is_file() and copy.read_text() != text:
+        fail(f"{rel}: skills/setup/references/AGENTS.md differs from AGENTS.md (copy it across)")
     changelog = plugin_dir / "CHANGELOG.md"
     if version and changelog.is_file() and f"## {version}" not in changelog.read_text():
         fail(f"{rel}/CHANGELOG.md: no entry for {version}")
