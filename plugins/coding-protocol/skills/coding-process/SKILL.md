@@ -1,6 +1,6 @@
 ---
 name: coding-process
-description: Use when starting a feature, refactor or bug fix; when handed a ticket, issue, story or plan to build from; when asked to plan, spec, design or debug something; when writing a plan or handoff document; when work could be handed to subagents; or when starting work that will become its own branch. Covers propose-before-building and when a spec you were handed already settles it, scoping work to the PR size budget, debugging discipline, when to delegate (see the delegate skill), and when and how to use a git worktree.
+description: Use when starting a feature, refactor or bug fix; when handed a ticket, issue, story or plan to build from; when asked to plan, spec, design or debug something; when writing a plan or handoff document; when work could be handed to subagents; or when starting work that will become its own branch. Covers propose-before-building and when a spec you were handed already settles it, scoping work to the PR size budget, debugging discipline, when to delegate (see the delegate skill), handing off before context runs out (see the handoff skill), and when and how to use a git worktree.
 ---
 
 # Coding process
@@ -179,9 +179,11 @@ Plans and handoffs live in `docs/plans/`, dated and suffixed by what they are:
 `YYYY-MM-DD-<topic>-{design,plan,handoff}.md`.
 
 When context is running long, or work stops mid-task, write
-`docs/plans/YYYY-MM-DD-<topic>-handoff.md` covering the goal, what's done
-(with commits and branches), what's left, and any open questions. Someone
-starting fresh should be able to continue from that file alone.
+`docs/plans/YYYY-MM-DD-<topic>-handoff.md`. Someone starting fresh should be
+able to continue from that file alone. Don't wait to be compacted: the line
+is 70% of the context window. The `handoff` skill has what the file
+carries, how a helper hands back to its lead, how a lead gets a fresh
+session started, and how the next session picks up.
 
 ## Docs before memory
 

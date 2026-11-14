@@ -53,6 +53,11 @@ judgement call.
   reports usage, check between waves and at checkpoints, pause near the cap,
   and resume only once the window has really cleared. *(skill:
   `usage-limits`)*
+- **Refresh the handoff at every stage checkpoint,** and hand off at 70% of
+  your context window instead of waiting to be compacted. Find out at the
+  start how this harness reports context and how a next session gets
+  started. Then a compaction or a hard stop loses one stage at most.
+  *(skill: `handoff`)*
 - **Run the full gates at checkpoints, not after every edit.** Mid-edit, run the
   narrowest check that would catch what you just changed: one package's type
   check, or one test file. Run the build, lint, full test suite and
@@ -99,4 +104,4 @@ End it with the status line from the core, chosen honestly. An unattended
 run that left assumptions to confirm, something unverified or a blocker
 flagged is 🟡 or 🔴, however much of the plan shipped. 🟢 means the person
 coming back has nothing to do but review. Write it
-to a handoff in `docs/plans/` if the session is ending.
+to the handoff in `docs/plans/` if the session is ending (see `handoff`).

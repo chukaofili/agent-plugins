@@ -81,6 +81,9 @@ default. A `Usage check` line or a maintainer can set an earlier threshold.
    - a background timer, for a fixed wait a process can sit out
    - a schedule, only for work that recurs
    - none of those: write the resume to a handoff in `docs/plans/` and stop
+
+   Either way the resume is a handoff. `handoff` has what it carries and how
+   the next session picks it up.
 4. **Say what happened:** which window, the usage you observed, when the next
    check is, and what's left.
 
