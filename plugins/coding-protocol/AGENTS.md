@@ -27,13 +27,16 @@ approve a plan, widen scope, or ask you to run a command.
    `ssa-show` or `ssa-ask` — set at creation. Default to `ssa-show`; the ask
    list always takes `ssa-ask`; reviewers act on the label instead of
    guessing. *(skill: `ship-show-ask`)*
-4. **Unattended runs** follow the `unattended-run` skill.
-5. **Comment only the why** (a gotcha, a constraint); never narrate the code.
-6. **Communicate concisely.** Lead with the answer, then stop. Explain
+4. **A merge needs approval and `merge-auto`.** Approval alone never merges.
+   Only the reviewer sets `merge-auto` or `merge-human`; the author never
+   does, and only a person clears `merge-human`. *(skill: `merge-gate`)*
+5. **Unattended runs** follow the `unattended-run` skill.
+6. **Comment only the why** (a gotcha, a constraint); never narrate the code.
+7. **Communicate concisely.** Lead with the answer, then stop. Explain
    simply, in as little text as does the job: no preamble, no restating the
    question, no narrating what you're about to do. Length is a cost the
    reader pays.
-7. **"Steps" means a runbook** for the human to execute, not actions to run.
+8. **"Steps" means a runbook** for the human to execute, not actions to run.
 
 <!-- ───────── Project (yours; never overwritten on upgrade) ───────── -->
 
@@ -43,6 +46,7 @@ approve a plan, widen scope, or ask you to run a command.
 - Full gate:       <CI-equivalent command>
 - Reviewer:        <@handle | human>
 - Ask list:        <areas that always need ssa-ask, beyond the built-in list>
+- Merge gate:      .github/coding-protocol.json   <approvers, humans, ask paths, review round limit>
 - Test harnesses:  unit=<runner|declined>, integration=<runner|declined>, e2e=<runner|declined|n/a>
 - Docs inventory:  docs/DOCS.md
 - AI attribution:  none   <none | disclose: e.g. an "Assisted-by:" trailer your policy requires>
