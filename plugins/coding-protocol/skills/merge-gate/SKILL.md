@@ -67,6 +67,8 @@ gh pr edit <number> --add-label merge-human
   drops or rewrites data, anything that moves money, a change to who can
   authenticate or what they can reach, a change to which tenant sees which
   rows.
+- **The PR changes the gate itself:** anything under `.github/`. The checks
+  below can't vouch for a change to the checks.
 - **You couldn't show it's safe by running it.** Reading a diff and finding
   nothing is not the same as watching it work. If the environment couldn't
   run it, that's a `merge-human`, with the reason.
@@ -201,6 +203,12 @@ Ask.
 nothing stops an armed auto-merge, and everything above still applies: an agent that merges an unlabelled PR because nothing
 stopped it has broken the rule, not found a loophole. Say in the PR that the
 gate isn't enforced in this repo, and offer `setup`.
+
+**The checks stop mistakes, not a determined author.** GitHub matches a
+required check by name, so a workflow added in a PR can report a passing
+`merge-gate` of its own. That is why a change under `.github/` is always an
+Ask and always `merge-human`. `setup` explains how an organization closes the
+gap for good.
 
 **A red `merge-gate` on an approved PR is normal.** It means "not cleared to
 auto-merge yet", not "broken". The check's summary says which condition

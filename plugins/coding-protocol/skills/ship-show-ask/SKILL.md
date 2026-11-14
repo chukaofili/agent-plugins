@@ -1,6 +1,6 @@
 ---
 name: ship-show-ask
-description: Use when opening a pull request and choosing its review intent, when the ssa-ship/ssa-show/ssa-ask labels are missing from a repo, when reviewing anyone's PR, when deciding whether a finding blocks a merge or ships as a follow-up, or when a PR's scope changes mid-review. Covers the three review-intent labels, what belongs under each, the project ask list that always forces ssa-ask, setting exactly one label at creation, what a reviewer does with each label, and what the author owes a finding that arrives after an ssa-show has merged.
+description: Use when opening a pull request and choosing its review intent, when reviewing anyone's PR, when deciding whether a finding blocks a merge or ships as a follow-up, or when a PR's scope changes mid-review. Covers the three review-intent labels, what belongs under each, the project ask list that always forces ssa-ask, setting exactly one label at creation, what a reviewer does with each label, and what the author owes a finding that arrives after an ssa-show has merged.
 ---
 
 # Ship / Show / Ask
@@ -97,22 +97,9 @@ nothing at all — `gh pr view <number> --json labels` shows what's actually on
 a PR.
 
 **`gh pr create --label` fails outright when the label doesn't exist in the
-repo,** and takes the PR creation down with it. Create all three once per
-repo, before the first PR:
-
-```bash
-gh label create ssa-ship --force --color 0E8A16 \
-  --description "Merge when green. Approve without reviewing."
-gh label create ssa-show --force --color 1D76DB \
-  --description "Feedback welcome, not blocking. Approve, then comment."
-gh label create ssa-ask --force --color D93F0B \
-  --description "Blocking review. Address every finding before merge."
-```
-
-`--force` updates a label that already exists instead of failing, so this is
-safe to re-run and safe to paste into a repo someone else already set up.
-Don't wrap it in `|| true`: the error worth seeing here is the permission one
-below, not "already exists".
+repo,** and takes the PR creation down with it. The `setup` skill creates all
+three, with the two merge labels, once per repo. If they're missing, run it
+before the first PR.
 
 **No permission to label?** Creating a label needs write access to the repo,
 and applying one needs triage access or better **on the base repo**. That's
