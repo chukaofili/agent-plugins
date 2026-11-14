@@ -32,7 +32,7 @@ it doesn't:
 
 Review the change against the design and framework guidelines the repo uses
 (design system, accessibility, framework best practices). If your agent can
-spawn subagents, run one reviewer per guideline in parallel on a cheaper
+spawn subagents, run one reviewer per guideline in parallel (see `delegate`) on a cheaper
 model. It's pattern-matching work, not judgement.
 
 - **Give reviewers the repo's own rules.** A reviewer who hasn't read them will

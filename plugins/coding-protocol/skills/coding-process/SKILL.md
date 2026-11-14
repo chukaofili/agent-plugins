@@ -1,6 +1,6 @@
 ---
 name: coding-process
-description: Use when starting a feature, refactor or bug fix; when handed a ticket, issue, story or plan to build from; when asked to plan, spec, design or debug something; when writing a plan or handoff document; when choosing, adopting or upgrading a dependency, framework or external API; when work could be handed to subagents; or when starting work that will become its own branch. Covers propose-before-building and when a spec you were handed already settles it, scoping work to the PR size budget, debugging discipline, delegating mechanical work to cheaper models, reading current docs instead of trusting memory, and when and how to use a git worktree.
+description: Use when starting a feature, refactor or bug fix; when handed a ticket, issue, story or plan to build from; when asked to plan, spec, design or debug something; when writing a plan or handoff document; when choosing, adopting or upgrading a dependency, framework or external API; when work could be handed to subagents; or when starting work that will become its own branch. Covers propose-before-building and when a spec you were handed already settles it, scoping work to the PR size budget, debugging discipline, when to delegate (see the delegate skill), reading current docs instead of trusting memory, and when and how to use a git worktree.
 ---
 
 # Coding process
@@ -163,20 +163,15 @@ The default is `none`.
 - When asked to "check" or "confirm" something, report what you found. Don't
   apply a fix the user hasn't approved.
 
-## Delegation (if your agent can spawn subagents)
+## Delegation
 
-This applies to every session, interactive or unattended.
+If your agent can spawn subagents, the `delegate` skill applies to every
+session, interactive or unattended. Load it once the plan is settled.
 
-- **Delegate mechanical work to cheaper models:** cloning an existing
-  structure, boilerplate, syncing docs, repetitive edits. Keep the primary
-  model for correctness-critical logic (schema, security boundaries, core
-  services) and for judgement calls.
-- **Cap concurrency at about five.** Beyond that the audit stops being real,
-  and parallel agents collide on the same files.
-- **Audit everything delegated.** Never integrate a subagent's output unread.
-  Check that it makes sense, follows conventions, and builds and tests green.
-  When it's wrong, judge the gap: fix a small one yourself, and send a large
-  one back with the correction.
+The short version: you keep design, the ask list, judgement calls and the
+final review. Helpers on cheaper models take the mechanical, token-heavy
+work. You say up front how the work splits, review what comes back as
+evidence, and state in the PR what was delegated.
 
 ## Handoffs
 

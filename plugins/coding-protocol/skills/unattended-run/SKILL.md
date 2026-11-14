@@ -59,8 +59,13 @@ judgement call.
 
 ## Delegation
 
-Follow the Delegation section of `coding-process`. With nobody watching, your
-audit is the only check on delegated work before it lands, so don't skip it.
+Follow the `delegate` skill, and decide the split before the first commit. A
+long run is where doing everything on the lead model costs the most, and
+where the bulk fills your context soonest.
+
+With nobody watching, your review is the only check on delegated work before
+it lands, so don't skip it. A helper never passes one of the four checkpoints
+for you.
 
 ## Blockers
 
@@ -84,5 +89,6 @@ section: name what blocked it and what was verified instead. Silence reads as
 ## When you finish
 
 Report the state of the work: what shipped (PRs and branches), what's
-waiting on review, every assumption made, and every flagged blocker. Write it
+waiting on review, every assumption made, every flagged blocker, and how the
+work split between you and helpers (see `delegate`). Write it
 to a handoff in `docs/plans/` if the session is ending.

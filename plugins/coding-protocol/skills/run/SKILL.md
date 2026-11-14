@@ -1,6 +1,6 @@
 ---
 name: run
-description: Use at the start of any task that changes code or docs in a repo, such as a feature, bug fix, refactor, dependency change, opening or reviewing a pull request, or an unattended run. Also when asked to "follow the protocol" or "run the protocol". Matches the task to the skills it needs and carries the working rules that apply across them, covering propose-before-building, the PR size budget, the test bar, browser-verified UI, docs before memory, docs sync, check cadence and clean breaks.
+description: Use at the start of any task that changes code or docs in a repo, such as a feature, bug fix, refactor, dependency change, opening or reviewing a pull request, or an unattended run. Also when asked to "follow the protocol" or "run the protocol". Matches the task to the skills it needs and carries the working rules that apply across them, covering propose-before-building, the PR size budget, the test bar, browser-verified UI, docs before memory, docs sync, check cadence, clean breaks and delegation.
 ---
 
 # Run
@@ -18,14 +18,14 @@ changes mid-way (an investigation turns into a fix), match again.
 
 | Task | Load |
 |---|---|
-| Feature, or any new or changed behaviour | `coding-process`, `testing`, `stacked-prs` |
+| Feature, or any new or changed behaviour | `coding-process`, `testing`, `stacked-prs`, `delegate` |
 | Bug fix | `coding-process` (Debugging), `testing` |
-| Refactor | `coding-process`, `testing` |
+| Refactor | `coding-process`, `testing`, `delegate` |
 | Choosing, adopting or upgrading a dependency or API | `coding-process` (Docs before memory) |
 | Anything a user sees | The row for the task, plus `verify-ui` |
 | Opening a PR | `stacked-prs`, `ship-show-ask`, `sync-docs` |
 | Reviewing a PR, or answering review findings | `ship-show-ask`, `merge-gate`, `stacked-prs` |
-| Unattended run | `unattended-run`, plus the row for the task |
+| Unattended run | `unattended-run`, `delegate`, plus the row for the task |
 
 A row names where to start, not a limit. Each skill's own description still
 loads it when its subject comes up.
@@ -60,6 +60,11 @@ the answer turns into a change.
    checkpoints** and before pushing. The commands are in the Project gates
    block of `AGENTS.md`.
 8. **Clean breaks over legacy shims** when nothing depends on the old shape.
+9. **Delegate the mechanical work, keep the judgement.** This is the default,
+   not something to be asked for: if your agent can spawn subagents and
+   nobody has turned it off, say how the work splits before you build, put helpers on
+   cheaper models, and review what they return. The PR says what was
+   delegated. *(skill: `delegate`)*
 
 ## The usual order
 
@@ -67,7 +72,8 @@ For work that ends in a PR:
 
 1. Propose, and get approval (rule 1). Handed a spec? Read it first; it may
    already be the approval.
-2. Plan the split against the size budget (rule 2).
+2. Plan the split against the size budget (rule 2), and the split between you
+   and helpers (rule 9).
 3. Build one atomic commit at a time, running the narrowest check as you go
    (rule 7).
 4. Meet the test bar for the change (rule 3), and drive any UI in a browser
