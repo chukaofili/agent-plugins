@@ -39,7 +39,10 @@ Enforcement).
 
 ## What the reviewer does
 
-Every review ends with a verdict **and** a merge label.
+Every review ends with a verdict **and** a merge label, **in that order:
+approve first, then add the label.** The gate ties `merge-auto` to the
+approval it follows. A label added before the approval doesn't count, and the
+check says so.
 
 **`ssa-ship`:** check the `label-check` status first.
 - Green: approve, add `merge-auto`. Don't read the diff; that's the label
@@ -100,19 +103,41 @@ the gate re-checks it:
 - **The patch is unchanged** (a clean rebase onto a moved base): `merge-auto`
   stays. The reviewer already saw exactly this change.
 - **Anything else** (a new commit, a conflict resolution, a fixup):
-  `merge-auto` is removed, with a comment saying why. The reviewer looks at
-  the new head before adding it again.
+  `merge-auto` is removed, with a comment saying why. The reviewer reviews
+  the new head, approves it, and adds the label again.
 
-"Unchanged" is decided by `git patch-id` over the PR's whole diff, not by
-anyone's judgement of how small the push was.
+"Unchanged" is decided by comparing the PR's whole diff at the commit the
+reviewer approved with its diff now, not by anyone's judgement of how small
+the push was. The comparison ignores only what a rebase moves (line numbers
+and blob ids) and keeps every character of every changed line. **Whitespace
+counts.** A `return` moved out of an `if` by four spaces is a different
+program, and tools that ignore whitespace, `git patch-id` among them, call
+it the same patch.
+
+The gate makes this comparison every time it runs, not only when it sees a
+push. A missed event can't leave an old clearance standing.
 
 `merge-human` survives every push. Only a person clears it.
 
 ## The author's side
 
-- **Arm auto-merge when you open the PR** if the repo uses it
-  (`gh pr merge <number> --auto --squash`, with the repo's merge method). It
-  does nothing until the gate opens, so arming it early is safe.
+- **Arm auto-merge only where the gate is enforced.** Auto-merge waits for
+  what branch protection requires, not for these labels. If the PR's base
+  branch doesn't require the `merge-gate` check, an armed PR merges on
+  approval and green CI alone, straight past a `merge-human`. So check first:
+  ```bash
+  gh api repos/{owner}/{repo}/rules/branches/<base> \
+    --jq '.[] | select(.type == "required_status_checks") | .parameters.required_status_checks[].context'
+  gh api repos/{owner}/{repo}/branches/<base>/protection/required_status_checks \
+    --jq '.contexts[]'
+  ```
+  The first covers rulesets, the second classic branch protection, which
+  needs admin rights to read. If neither prints `merge-gate`, don't arm it;
+  an error counts as "not required", not as "probably fine". That includes every stage of a stack
+  above the bottom one, whose base is an unprotected stage branch.
+- **Merging without auto-merge is four checks, on the current head:**
+  approved, `merge-auto` present, no `merge-human`, CI green. Re-read all
+  four right before merging; a push in between changes the answer.
 - **Approved with no merge label means wait,** not merge. Ask the reviewer
   for the label if it looks forgotten.
 - **`merge-human` is a blocker to flag, not a problem to solve.** Report it,
@@ -147,8 +172,11 @@ protection:
 
 **`merge-gate`** passes when:
 - `label-check` passes
-- `merge-auto` is on the PR and `merge-human` is not in force
-- `merge-auto` was last added by an account in `merge_approvers`
+- `merge-human` is not in force
+- `merge-auto` is on the PR, last added by an account in `merge_approvers`
+- the latest approval from a merge approver covers the current head: the
+  same commit, or the same patch
+- `merge-auto` was added at or after that approval
 
 Both run from the copy of the workflow on the default branch, so a PR can't
 edit its own gate. The config is read from the default branch too:
@@ -166,8 +194,8 @@ It lives at `.github/coding-protocol.json`. Changes under `.github/` always
 count as an ask-list path, so a PR that edits the gate or its config is an
 Ask.
 
-**Checks not installed?** Then the labels are a convention, and everything
-above still applies: an agent that merges an unlabelled PR because nothing
+**Checks not installed, or not required?** Then the labels are a convention,
+nothing stops an armed auto-merge, and everything above still applies: an agent that merges an unlabelled PR because nothing
 stopped it has broken the rule, not found a loophole. Say in the PR that the
 gate isn't enforced in this repo, and offer `setup`.
 
