@@ -22,13 +22,13 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 
 | Part | Loaded | Contents |
 |---|---|---|
-| [`AGENTS.md`](AGENTS.md) | Every session | Seven guardrails plus your project gates |
+| [`AGENTS.md`](AGENTS.md) | Every session | Eight guardrails plus your project gates |
 | [`skills/run`](skills/run) | When code changes, or on `/coding-protocol:run` | The eight working rules, and a table that matches the task to the skills below |
 | [`skills/`](skills) | When relevant | `coding-process`, `unattended-run`, `stacked-prs`, `ship-show-ask`, `testing`, `verify-ui`, `sync-docs` |
 
 The guardrails are the rules that have to hold when nobody typed a command:
-who can give instructions, how commits are made, and the review label on every
-PR. Everything about how to do the work loads with `run`.
+who can give instructions, how commits are made, the review label on every PR,
+and who may merge it. Everything about how to do the work loads with `run`.
 
 ## Install
 
