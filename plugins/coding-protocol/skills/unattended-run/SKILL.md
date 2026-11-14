@@ -93,5 +93,10 @@ section: name what blocked it and what was verified instead. Silence reads as
 
 Report the state of the work: what shipped (PRs and branches), what's
 waiting on review, every assumption made, every flagged blocker, and how the
-work split between you and helpers (see `delegate`). Write it
+work split between you and helpers (see `delegate`).
+
+End it with the status line from the core, chosen honestly. An unattended
+run that left assumptions to confirm, something unverified or a blocker
+flagged is 🟡 or 🔴, however much of the plan shipped. 🟢 means the person
+coming back has nothing to do but review. Write it
 to a handoff in `docs/plans/` if the session is ending.
