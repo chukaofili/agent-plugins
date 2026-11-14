@@ -32,20 +32,48 @@ From that, say which case this is before changing anything:
 On an upgrade or repair, a file that already exists is somebody's decision.
 Steps 5 and 6 never overwrite one.
 
-## 2. Ask once
+## 2. Infer, then confirm once
 
-Ask these together, and only the ones the repo doesn't already answer:
+Most of what the Project gates need is already in the repo. Read it, fill in
+what you can, and show the result before writing anything.
 
-- Which accounts review PRs and may clear them to merge (`merge_approvers`)?
-- Which of those are people, who may clear a `merge-human` hold (`humans`)?
-- Which paths are on the ask list here, beyond the built-in list?
-- The fast check, the full gate, and the test harnesses (Project gates).
+| Gate | Where to look |
+|---|---|
+| Fast check | The quickest build or type-check script in the manifest (`package.json` scripts, `Makefile`, `justfile`, `pyproject.toml`) |
+| Full gate | What CI runs: the steps in `.github/workflows/`, as one local command if the manifest has one |
+| Test harnesses | Dev dependencies and config files: a unit runner, a test database or containers for integration, a browser driver for E2E |
+| Reviewer | `CODEOWNERS` (in `.github/`, the root or `docs/`) |
+| Ask list and `ask_paths` | Directories that hold migrations, schemas, auth, billing and tenant scoping. `git ls-files` for each candidate glob |
+| Docs inventory | Whether `docs/DOCS.md` exists |
+| AI attribution | Trailers on recent commits: `git log -20 --format=%b` |
+| `merge_approvers`, `humans` | Candidates only: `CODEOWNERS` and whoever reviewed recent PRs |
 
-**Never guess an account name.** A wrong name in `merge_approvers` either
-locks the gate or hands it to a stranger. If nobody is there to answer, leave
-the lists empty, say so at the top of the PR, and stop before step 7. An empty
-`merge_approvers` fails the gate closed, which is the safe way to be
-unfinished.
+Then show one block, every line with its value and where it came from:
+
+```
+- Fast check:      pnpm typecheck          (package.json "typecheck")
+- Full gate:       pnpm run pipeline       (.github/workflows/ci.yml)
+- Test harnesses:  unit=vitest, integration=none found, e2e=playwright
+- Reviewer:        @alex                   (CODEOWNERS)
+- Ask paths:       prisma/migrations/**, src/auth/**   (3 and 14 files)
+- Merge approvers: ?  candidates: @alex, @review-bot
+- Humans:          ?  candidates: @alex
+```
+
+Ask once: is this right, and what goes in the lines marked `?`. Write only
+what they confirm. "Looks fine" confirms the lines you filled in; it doesn't
+fill in the ones you couldn't.
+
+- **Say "none found", not "declined".** `declined` in the harness line means
+  a person said no to setting one up (see `testing`). You not finding one is a
+  different fact.
+- **Never write an account you weren't given.** A candidate is a suggestion to
+  show, not a value to save. A wrong name in `merge_approvers` either locks
+  the gate or hands it to a stranger.
+- **Nobody to confirm?** Write the lines you inferred from files, each marked
+  `(inferred, unconfirmed)`. Leave both account lists empty, say so at the top
+  of the PR, and stop before step 7. An empty `merge_approvers` fails the gate
+  closed, which is the safe way to be unfinished.
 
 ## 3. The core and Project gates
 
@@ -59,8 +87,8 @@ The core is `references/AGENTS.md` in this skill.
   `Merge gate`.
 - **Repair:** leave it alone.
 
-Fill in the Project gates from step 2. Leave a placeholder where you have no
-answer; a placeholder is visible, a guess isn't.
+Fill in the Project gates with what step 2 confirmed. Leave a placeholder
+where you have no answer; a placeholder is visible, a guess isn't.
 
 Then make sure the agent in use reads it:
 
