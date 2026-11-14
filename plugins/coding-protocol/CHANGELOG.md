@@ -19,7 +19,8 @@ changes shape, and installing is now a skill.
    labels, and opens a PR with the gate config and workflow.
 3. Fill in `merge_approvers` and `humans` in `.github/coding-protocol.json`.
 4. Teach your reviewer the new step: every review ends with `merge-auto` or
-   `merge-human`. A reviewer that only approves will leave every PR waiting.
+   `merge-human`, added after the approval. A reviewer that only approves
+   will leave every PR waiting.
 5. Only then require the `label-check` and `merge-gate` checks in branch
    protection. Until you do, nothing about how PRs merge changes.
 
@@ -35,10 +36,13 @@ the PR body of the release has the full mapping.
 - Two status checks that enforce it, shipped as an action in this repo.
   `label-check` fails a PR whose `ssa-*` label doesn't match what it touches:
   ask-list paths force `ssa-ask`. `merge-gate` passes only when `merge-auto`
-  was added by an account in `merge_approvers` and no `merge-human` hold is in
-  force.
+  was added by an account in `merge_approvers`, at or after an approval that
+  covers the current head, and no `merge-human` hold is in force.
 - `merge-auto` survives a push that leaves the patch unchanged, such as a
-  clean rebase, and is removed by any other push.
+  clean rebase, and is removed by any other push. Whitespace counts as a
+  change, so the comparison doesn't use `git patch-id`.
+- A person on the `humans` list lands a `merge-human` PR by removing that
+  label and adding `merge-auto`. A removal by anyone else is ignored.
 - `.github/coding-protocol.json`: who may clear a PR to merge, who counts as a
   person, the ask-list paths, and the review round limit.
 - A `run` skill: the front door. It matches the task to the skills it needs

@@ -121,7 +121,10 @@ even with admin rights. They change who can merge.
 - Require a pull request, with at least one approval.
 - Require status checks: `label-check`, `merge-gate`, and the repo's CI.
 - Do not allow bypassing the above, administrators included.
-- Allow auto-merge, if the repo wants approved PRs to land on their own.
+- Allow auto-merge, if the repo wants cleared PRs to land on their own.
+- Leave "dismiss stale approvals" off if a clean rebase should keep its
+  clearance. The gate already voids a clearance when the patch changes, and
+  that setting would void it on every push.
 - **Stacks:** upper stages target stage branches, which a rule on the default
   branch doesn't cover. Use a ruleset whose target includes those branches,
   or land stacks one stage at a time from the bottom.
@@ -132,9 +135,15 @@ On a throwaway PR, after the settings are in place:
 
 1. Approved, no merge label: `merge-gate` is red and the PR does not merge.
 2. The author adds `merge-auto`: still red, and the summary names the author.
-3. An account in `merge_approvers` adds it: green, and the PR can merge.
+3. An account in `merge_approvers` approves, then adds it: green, and the PR
+   can merge.
+4. Push a commit that only re-indents a line: red again, and the label is
+   gone.
+5. On a second PR, the reviewer approves and adds `merge-human`: red, and
+   neither auto-merge nor the merge button lands it. A person on `humans`
+   removes `merge-human` and adds `merge-auto`: green, and it merges.
 
-Three outcomes, three lines in the setup PR or a follow-up comment. If you
+Five outcomes, five lines in the setup PR or a follow-up comment. If you
 couldn't run this (no second account, no admin to set step 7), say that.
 
 ## What this gate doesn't stop
