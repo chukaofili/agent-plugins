@@ -29,6 +29,9 @@ From that, say which case this is before changing anything:
 - **Upgrade:** the header names an older version.
 - **Repair:** the version is current and something below is missing.
 
+On an upgrade or repair, a file that already exists is somebody's decision.
+Steps 5 and 6 never overwrite one.
+
 ## 2. Ask once
 
 Ask these together, and only the ones the repo doesn't already answer:
@@ -104,9 +107,26 @@ with the accounts and paths from step 2.
 
 ## 6. The workflow
 
-Copy `templates/merge-gate.yml` to `.github/workflows/merge-gate.yml`
-unchanged. It calls the action at the `coding-protocol-v2` tag, which moves
-with gate fixes. To pin an exact release, change the tag in both jobs.
+**If `.github/workflows/merge-gate.yml` already exists, don't write to it.**
+Someone may have pinned it to an exact release, changed its runner or
+permissions, or added jobs, and it decides which gate code the repo runs.
+Show how it differs from the template and ask before changing anything:
+
+```bash
+diff .github/workflows/merge-gate.yml <this skill>/templates/merge-gate.yml
+```
+
+If nobody is there to answer, leave the file as it is and list the
+differences in the PR. When they do want it migrated, change only what they
+agreed to, and keep their pins.
+
+**If it doesn't exist,** copy `templates/merge-gate.yml` there unchanged. It
+calls the action at the `coding-protocol-v2` tag, which moves with gate
+fixes. To pin an exact release, change the tag in both jobs.
+
+On an upgrade or repair, check you kept your hands off it before committing:
+`git status --short .github/workflows/merge-gate.yml` prints nothing unless
+they asked for a change.
 
 Commit steps 3, 5 and 6 on a branch, one commit each, and open the PR as
 `ssa-ask`: it touches `.github/`, and it installs the thing that would say so.

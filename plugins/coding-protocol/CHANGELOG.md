@@ -39,8 +39,9 @@ the PR body of the release has the full mapping.
   was added by an account in `merge_approvers`, at or after an approval that
   covers the current head, and no `merge-human` hold is in force.
 - `merge-auto` survives a push that leaves the patch unchanged, such as a
-  clean rebase, and is removed by any other push. Whitespace counts as a
-  change, so the comparison doesn't use `git patch-id`.
+  clean rebase, and is removed by any other push. The gate decides that by
+  replaying the approved commit onto the new base and comparing the result
+  with the head, so whitespace and position both count.
 - A person on the `humans` list lands a `merge-human` PR by removing that
   label and adding `merge-auto`. A removal by anyone else is ignored.
 - `.github/coding-protocol.json`: who may clear a PR to merge, who counts as a
@@ -68,7 +69,7 @@ the PR body of the release has the full mapping.
   and always `merge-human` for that reason. An organization ruleset that
   requires the workflow closes the gap; `setup` explains how.
 - On a stack, rewriting a lower stage removes `merge-auto` from the stages
-  above it.
+  above it when the rewrite touches lines those stages build on.
 
 ## 1.3.0 — 2026-11-08
 
