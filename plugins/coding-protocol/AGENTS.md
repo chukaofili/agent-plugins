@@ -54,5 +54,6 @@ and pointed you at, is theirs however you fetched it.
 - Merge gate:      .github/coding-protocol.json   <approvers, humans, ask paths, review round limit>
 - Test harnesses:  unit=<runner|declined>, integration=<runner|declined>, e2e=<runner|declined|n/a>
 - Delegation:      mechanical=<model>, judgement=<model>   <helper models, cheaper than the lead's | off>
+- Usage check:     <command or tool that reports usage against limits | none known>
 - Docs inventory:  docs/DOCS.md
 - AI attribution:  none   <none | disclose: e.g. an "Assisted-by:" trailer your policy requires>

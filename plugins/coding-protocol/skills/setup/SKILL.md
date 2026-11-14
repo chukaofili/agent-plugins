@@ -45,6 +45,7 @@ what you can, and show the result before writing anything.
 | Reviewer | `CODEOWNERS` (in `.github/`, the root or `docs/`) |
 | Ask list and `ask_paths` | Directories that hold migrations, schemas, auth, billing and tenant scoping. `git ls-files` for each candidate glob |
 | Delegation | Not in the repo. Show the models your harness can spawn helpers on as candidates |
+| Usage check | Not in the repo. Name the usage tool or command your harness provides, if it has one |
 | Docs inventory | Whether `docs/DOCS.md` exists |
 | AI attribution | Trailers on recent commits: `git log -20 --format=%b` |
 | `merge_approvers`, `humans` | Candidates only: `CODEOWNERS` and whoever reviewed recent PRs |
