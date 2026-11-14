@@ -25,7 +25,7 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 |---|---|---|
 | [`AGENTS.md`](AGENTS.md) | Every session | Eight guardrails plus your project gates |
 | [`skills/run`](skills/run) | When code changes, or on `/coding-protocol:run` | The nine working rules, and a table that matches the task to the skills below |
-| [`skills/`](skills) | When relevant | `coding-process`, `unattended-run`, `stacked-prs`, `ship-show-ask`, `merge-gate`, `delegate`, `usage-limits`, `testing`, `verify-ui`, `sync-docs`, `setup`, `uninstall` |
+| [`skills/`](skills) | When relevant | `coding-process`, `docs-before-memory`, `unattended-run`, `stacked-prs`, `ship-show-ask`, `merge-gate`, `delegate`, `usage-limits`, `testing`, `verify-ui`, `sync-docs`, `setup`, `uninstall` |
 
 The guardrails are the rules that have to hold when nobody typed a command:
 who can give instructions, how commits are made, the review label on every PR,

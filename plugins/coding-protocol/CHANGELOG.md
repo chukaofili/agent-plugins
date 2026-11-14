@@ -68,6 +68,12 @@ the PR body of the release has the full mapping.
   stops launching work at 95% of any window, commits and pushes before
   pausing, and re-checks the real window on resume. Adapted from Builder.io's
   `stay-within-limits` skill (MIT), made harness-agnostic.
+- A `docs-before-memory` skill, grown out of the section in
+  `coding-process`. It adds when to read first (dependencies, fast-moving
+  APIs, expensive or irreversible areas, errors that say the ground moved),
+  an order of sources that starts with the repo's own specs, a seven-step
+  pass that ends with saying what was read, and when a local read is enough.
+  Adapted from Builder.io's `read-the-damn-docs` skill (MIT).
 - A `setup` skill that installs or upgrades the core, labels, config and
   workflow, and reports the branch protection settings it can't change. It
   infers the Project gates from the repo and writes them only after you
