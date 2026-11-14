@@ -46,6 +46,11 @@ the PR body of the release has the full mapping.
   label and adding `merge-auto`. A removal by anyone else is ignored.
 - `.github/coding-protocol.json`: who may clear a PR to merge, who counts as a
   person, the ask-list paths, and the review round limit.
+- Building from a spec. A ticket, issue or plan a maintainer hands you is
+  the proposal, already approved, so the agent doesn't propose it back. It
+  reads the spec against four questions, then builds, proposes only the gaps,
+  or stops because the spec is wrong or stale. The trust rule gains one
+  narrow exception for this. (`coding-process`, `AGENTS.md`)
 - A `run` skill: the front door. It matches the task to the skills it needs
   and carries the eight working rules.
 - A `setup` skill that installs or upgrades the core, labels, config and
