@@ -74,6 +74,11 @@ the PR body of the release has the full mapping.
   an order of sources that starts with the repo's own specs, a seven-step
   pass that ends with saying what was read, and when a local read is enough.
   Adapted from Builder.io's `read-the-damn-docs` skill (MIT).
+- A status line. A response that finishes a unit of work ends with one line:
+  🟢 done, 🟡 done with a named non-routine follow-up, or 🔴 blocked on the
+  user. It is a guardrail in `AGENTS.md`, not a skill, because nothing would
+  trigger a skill at the end of every response. Adapted from Builder.io's
+  `quick-recap` skill (MIT).
 - A `setup` skill that installs or upgrades the core, labels, config and
   workflow, and reports the branch protection settings it can't change. It
   infers the Project gates from the repo and writes them only after you
@@ -83,7 +88,7 @@ the PR body of the release has the full mapping.
   unless a maintainer names the ones to delete.
 
 ### Changed
-- The always-on list drops from 14 rules to eight guardrails. Propose before
+- The always-on list drops from 14 rules to nine guardrails. Propose before
   building, the PR size budget, the test bar, browser-verified UI, docs before
   memory, docs sync, check cadence and clean breaks moved to `run`, which rule
   1 loads before any code change. `run` adds a ninth, delegation. What stays is what has to hold when nobody

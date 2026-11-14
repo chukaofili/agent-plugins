@@ -17,19 +17,20 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 - **Docs before memory.** Read the installed version's current docs before using a framework or package.
 - **Docs kept in sync** after every stage.
 - **Cheaper models for mechanical work,** by default. The lead agent says how the work splits, reviews what helpers return, and states in the PR what was delegated.
+- **A status line on finished work.** 🟢 done, 🟡 follow-up named, 🔴 blocked on you, as the last line of the response.
 - **Safe unattended runs.** Four hard checkpoints, frequent pushes, and a pause before a usage limit is hit, not after.
 
 ## How it's packaged
 
 | Part | Loaded | Contents |
 |---|---|---|
-| [`AGENTS.md`](AGENTS.md) | Every session | Eight guardrails plus your project gates |
+| [`AGENTS.md`](AGENTS.md) | Every session | Nine guardrails plus your project gates |
 | [`skills/run`](skills/run) | When code changes, or on `/coding-protocol:run` | The nine working rules, and a table that matches the task to the skills below |
 | [`skills/`](skills) | When relevant | `coding-process`, `docs-before-memory`, `unattended-run`, `stacked-prs`, `ship-show-ask`, `merge-gate`, `delegate`, `usage-limits`, `testing`, `verify-ui`, `sync-docs`, `setup`, `uninstall` |
 
 The guardrails are the rules that have to hold when nobody typed a command:
 who can give instructions, how commits are made, the review label on every PR,
-and who may merge it. Everything about how to do the work loads with `run`.
+who may merge it, and how a response says whether the work is done. Everything about how to do the work loads with `run`.
 
 ## Install
 
