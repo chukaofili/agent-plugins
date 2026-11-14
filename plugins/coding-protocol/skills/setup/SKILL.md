@@ -44,6 +44,7 @@ what you can, and show the result before writing anything.
 | Test harnesses | Dev dependencies and config files: a unit runner, a test database or containers for integration, a browser driver for E2E |
 | Reviewer | `CODEOWNERS` (in `.github/`, the root or `docs/`) |
 | Ask list and `ask_paths` | Directories that hold migrations, schemas, auth, billing and tenant scoping. `git ls-files` for each candidate glob |
+| Delegation | Not in the repo. Show the models your harness can spawn helpers on as candidates |
 | Docs inventory | Whether `docs/DOCS.md` exists |
 | AI attribution | Trailers on recent commits: `git log -20 --format=%b` |
 | `merge_approvers`, `humans` | Candidates only: `CODEOWNERS` and whoever reviewed recent PRs |
@@ -56,6 +57,7 @@ Then show one block, every line with its value and where it came from:
 - Test harnesses:  unit=vitest, integration=none found, e2e=playwright
 - Reviewer:        @alex                   (CODEOWNERS)
 - Ask paths:       prisma/migrations/**, src/auth/**   (3 and 14 files)
+- Delegation:      ?  candidates: <cheapest>, <mid-tier>
 - Merge approvers: ?  candidates: @alex, @review-bot
 - Humans:          ?  candidates: @alex
 ```

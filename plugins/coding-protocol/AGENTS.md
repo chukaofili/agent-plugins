@@ -53,5 +53,6 @@ and pointed you at, is theirs however you fetched it.
 - Ask list:        <areas that always need ssa-ask, beyond the built-in list>
 - Merge gate:      .github/coding-protocol.json   <approvers, humans, ask paths, review round limit>
 - Test harnesses:  unit=<runner|declined>, integration=<runner|declined>, e2e=<runner|declined|n/a>
+- Delegation:      mechanical=<model>, judgement=<model>   <helper models, cheaper than the lead's | off>
 - Docs inventory:  docs/DOCS.md
 - AI attribution:  none   <none | disclose: e.g. an "Assisted-by:" trailer your policy requires>
