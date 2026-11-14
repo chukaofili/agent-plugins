@@ -24,7 +24,7 @@ changes mid-way (an investigation turns into a fix), match again.
 | Choosing, adopting or upgrading a dependency or API | `coding-process` (Docs before memory) |
 | Anything a user sees | The row for the task, plus `verify-ui` |
 | Opening a PR | `stacked-prs`, `ship-show-ask`, `sync-docs` |
-| Reviewing a PR, or answering review findings | `ship-show-ask`, `stacked-prs` |
+| Reviewing a PR, or answering review findings | `ship-show-ask`, `merge-gate`, `stacked-prs` |
 | Unattended run | `unattended-run`, plus the row for the task |
 
 A row names where to start, not a limit. Each skill's own description still
@@ -71,6 +71,7 @@ For work that ends in a PR:
    (rule 4).
 5. Run the full gate.
 6. Sync docs (rule 6).
-7. Open the PR with its review-intent label.
+7. Open the PR with its review-intent label. Whether it may auto-merge is
+   the reviewer's call, not yours (see `merge-gate`).
 
 Steps 3 to 7 repeat for each stage of a stack.

@@ -32,7 +32,9 @@ judgement call.
 3. **Anything that spends money:** paid APIs, provisioned infrastructure,
    anything metered.
 4. **Anything destructive or irreversible:** data loss, force-pushes to shared
-   branches, production.
+   branches, production. A reviewer holds a change like this with
+   `merge-human` (see `merge-gate`). That label is this checkpoint: flag it,
+   and never clear it or merge around it.
 
 ## Keep the work durable
 
