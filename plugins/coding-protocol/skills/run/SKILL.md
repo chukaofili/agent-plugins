@@ -37,8 +37,10 @@ the answer turns into a change.
 ## The working rules
 
 1. **Propose before building.** Problem → approaches with trade-offs →
-   explicit approval → build. When debugging, investigate and report first; no
-   speculative fix rounds. *(skill: `coding-process`)*
+   explicit approval → build. A spec a maintainer handed you is that approval
+   for everything it decides: build what's ready, propose only the gaps. When
+   debugging, investigate and report first; no speculative fix rounds.
+   *(skill: `coding-process`)*
 2. **PR size budget: ~300 changed lines, 500 ceiling.** Count hand-written code
    and tests; not lockfiles, generated code, snapshots, fixtures or vendored
    files. Decide the split in the plan, not mid-write. *(skill: `stacked-prs`)*
@@ -63,7 +65,8 @@ the answer turns into a change.
 
 For work that ends in a PR:
 
-1. Propose, and get approval (rule 1).
+1. Propose, and get approval (rule 1). Handed a spec? Read it first; it may
+   already be the approval.
 2. Plan the split against the size budget (rule 2).
 3. Build one atomic commit at a time, running the narrowest check as you go
    (rule 7).

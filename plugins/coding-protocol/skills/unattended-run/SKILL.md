@@ -13,7 +13,8 @@ answer a question.
 ## It presupposes an approved plan
 
 This mode does not waive propose-before-building (see `coding-process`). It is
-what happens **after** approval. Inside the approved plan, decide reversible
+what happens **after** approval. A spec a maintainer handed you counts, for
+what it decides; a gap in it is a blocker to surface, not a call to make. Inside the approved plan, decide reversible
 implementation details yourself and write each assumption down. A documented
 assumption beats a session that spent the night waiting. That is the whole of
 the waiver.
