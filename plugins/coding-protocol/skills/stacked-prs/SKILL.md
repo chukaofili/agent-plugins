@@ -109,16 +109,18 @@ stack tracked on this machine. For a stack opened elsewhere, use
   gh stack merge <pr-number> --yes --squash
   ```
   This merges everything up to and including that PR, all or nothing. **So
-  `<pr-number>` has to be the top of an unbroken run of approvals from the
-  bottom.** Every stage is `ssa-ask`, so an unapproved stage 3 means merging
-  stage 2 and stopping — picking stage 4 would carry stage 3 in with it and
-  merge straight past its gate. Walk up from the bottom with
-  `gh pr view <number> --json reviewDecision` and stop at the first stage that
-  isn't `APPROVED`. Branch protection refuses this too where it's configured
+  `<pr-number>` has to be the top of an unbroken run, from the bottom, of
+  stages that are approved and carry `merge-auto`.** Every stage is
+  `ssa-ask`, so an unapproved stage 3 means merging stage 2 and stopping —
+  picking stage 4 would carry stage 3 in with it and merge straight past its
+  gate. Walk up from the bottom with
+  `gh pr view <number> --json reviewDecision,labels` and stop at the first
+  stage that isn't `APPROVED`, lacks `merge-auto`, or carries `merge-human`
+  (see `merge-gate`). Branch protection refuses this too where it's configured
   to; don't count on it being configured.
 
   Without a number, `--yes` merges the whole stack, so only leave the number
-  off when every stage is approved. Use the merge method the repo uses
+  off when every stage is approved and carries `merge-auto`. Use the merge method the repo uses
   (`--squash`, `--rebase` or `--merge`). Run `gh stack sync` afterwards.
 - **Exit code 9 means stacks aren't enabled on the repo.** Tell the user, and use
   plain git and `gh` instead.

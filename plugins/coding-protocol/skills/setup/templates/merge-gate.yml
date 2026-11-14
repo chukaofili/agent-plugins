@@ -1,0 +1,36 @@
+# Installed by the coding-protocol `setup` skill. The two jobs are the
+# `label-check` and `merge-gate` status checks; require both in branch
+# protection. See the `merge-gate` skill for what they decide.
+name: merge-gate
+
+on:
+  # pull_request_target, not pull_request: the workflow then always comes from
+  # the default branch, so a pull request cannot edit its own gate.
+  pull_request_target:
+    types: [opened, reopened, synchronize, edited, labeled, unlabeled, ready_for_review]
+  merge_group:
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: write
+
+concurrency:
+  group: merge-gate-${{ github.event.pull_request.number || github.ref }}
+
+jobs:
+  label-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: chukaofili/agent-plugins/.github/actions/merge-gate@coding-protocol-v2
+        with:
+          check: label-check
+          github-token: ${{ github.token }}
+
+  merge-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: chukaofili/agent-plugins/.github/actions/merge-gate@coding-protocol-v2
+        with:
+          check: merge-gate
+          github-token: ${{ github.token }}

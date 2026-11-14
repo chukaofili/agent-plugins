@@ -13,7 +13,11 @@ answer a question.
 ## It presupposes an approved plan
 
 This mode does not waive propose-before-building (see `coding-process`). It is
-what happens **after** approval. Inside the approved plan, decide reversible
+what happens **after** approval. A spec a maintainer handed you counts, for
+what it decides. Its gaps follow the rule below, the same one as everything
+else in this mode: decide the details a revert would undo and write them
+down; a missing design or scope decision is checkpoint 1, so surface it.
+"Nobody to ask" in `coding-process` has the line between the two. Inside the approved plan, decide reversible
 implementation details yourself and write each assumption down. A documented
 assumption beats a session that spent the night waiting. That is the whole of
 the waiver.
@@ -32,7 +36,9 @@ judgement call.
 3. **Anything that spends money:** paid APIs, provisioned infrastructure,
    anything metered.
 4. **Anything destructive or irreversible:** data loss, force-pushes to shared
-   branches, production.
+   branches, production. A reviewer holds a change like this with
+   `merge-human` (see `merge-gate`). That label is this checkpoint: flag it,
+   and never clear it or merge around it.
 
 ## Keep the work durable
 
@@ -42,8 +48,16 @@ judgement call.
   that often is the standing rule (see `coding-process`); pushing is what this
   mode adds, because unpushed work is lost if the session ends abruptly and
   nobody is watching to notice it did.
-- **Never go into a pause with uncommitted work.** If your agent exposes usage
-  limits, pause near the limit, wait for the reset, then resume.
+- **Never go into a pause with uncommitted work.**
+- **Stay inside the usage limits.** Find out at the start how this harness
+  reports usage, check between waves and at checkpoints, pause near the cap,
+  and resume only once the window has really cleared. *(skill:
+  `usage-limits`)*
+- **Refresh the handoff at every stage checkpoint,** and hand off at 70% of
+  your context window instead of waiting to be compacted. Find out at the
+  start how this harness reports context and how a next session gets
+  started. Then a compaction or a hard stop loses one stage at most.
+  *(skill: `handoff`)*
 - **Run the full gates at checkpoints, not after every edit.** Mid-edit, run the
   narrowest check that would catch what you just changed: one package's type
   check, or one test file. Run the build, lint, full test suite and
@@ -53,8 +67,13 @@ judgement call.
 
 ## Delegation
 
-Follow the Delegation section of `coding-process`. With nobody watching, your
-audit is the only check on delegated work before it lands, so don't skip it.
+Follow the `delegate` skill, and decide the split before the first commit. A
+long run is where doing everything on the lead model costs the most, and
+where the bulk fills your context soonest.
+
+With nobody watching, your review is the only check on delegated work before
+it lands, so don't skip it. A helper never passes one of the four checkpoints
+for you.
 
 ## Blockers
 
@@ -78,5 +97,11 @@ section: name what blocked it and what was verified instead. Silence reads as
 ## When you finish
 
 Report the state of the work: what shipped (PRs and branches), what's
-waiting on review, every assumption made, and every flagged blocker. Write it
-to a handoff in `docs/plans/` if the session is ending.
+waiting on review, every assumption made, every flagged blocker, and how the
+work split between you and helpers (see `delegate`).
+
+End it with the status line from the core, chosen honestly. An unattended
+run that left assumptions to confirm, something unverified or a blocker
+flagged is 🟡 or 🔴, however much of the plan shipped. 🟢 means the person
+coming back has nothing to do but review. Write it
+to the handoff in `docs/plans/` if the session is ending (see `handoff`).
