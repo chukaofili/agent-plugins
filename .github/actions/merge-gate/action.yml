@@ -1,0 +1,28 @@
+name: coding-protocol merge gate
+description: >-
+  Reports the label-check or merge-gate status for a pull request, and removes
+  merge-auto when a push changes the patch. Run it from pull_request_target so
+  the workflow and this action come from the default branch, never the PR.
+inputs:
+  check:
+    description: Which check this job reports. One of label-check or merge-gate.
+    required: true
+  github-token:
+    description: Token with pull-requests write and contents read.
+    required: true
+  config-path:
+    description: Path of the gate config on the default branch.
+    default: .github/coding-protocol.json
+runs:
+  using: composite
+  steps:
+    # path.matchesGlob needs Node 22.5 or later; don't depend on the runner's default.
+    - uses: actions/setup-node@v7
+      with:
+        node-version: "24"
+    - shell: bash
+      env:
+        GATE_CHECK: ${{ inputs.check }}
+        GATE_CONFIG_PATH: ${{ inputs.config-path }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      run: node "$GITHUB_ACTION_PATH/main.mjs"
