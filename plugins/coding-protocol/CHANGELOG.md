@@ -2,9 +2,69 @@
 
 All notable changes to `coding-protocol`. Versions follow
 [Semantic Versioning](https://semver.org). Each release is tagged
-`coding-protocol-v<version>`. The version appears in two places:
-`.claude-plugin/plugin.json` and the header comment in `AGENTS.md`. CI checks
-that they match each other and this file.
+`coding-protocol-v<version>`. The version appears in
+`.claude-plugin/plugin.json`, the marketplace entry and the header comment in
+`AGENTS.md`. CI checks that they match each other and this file.
+
+## 2.0.0 — 2026-11-14
+
+Breaking. Approval stops being permission to merge, the always-on core
+changes shape, and installing is now a skill.
+
+### Upgrading from 1.x
+
+1. Update the skills (reinstall the plugin, or `npx skills add` again).
+2. Run the `setup` skill in each repo. It replaces the core in `AGENTS.md`,
+   keeps your Project gates, adds the `Merge gate` line, creates the two new
+   labels, and opens a PR with the gate config and workflow.
+3. Fill in `merge_approvers` and `humans` in `.github/coding-protocol.json`.
+4. Teach your reviewer the new step: every review ends with `merge-auto` or
+   `merge-human`. A reviewer that only approves will leave every PR waiting.
+5. Only then require the `label-check` and `merge-gate` checks in branch
+   protection. Until you do, nothing about how PRs merge changes.
+
+Rule numbers changed. Anything that cites "rule 14" needs the new reference:
+the PR body of the release has the full mapping.
+
+### Added
+- A merge gate. Two labels set by the reviewer say who may land a PR:
+  `merge-auto` (automation, once approved and green) or `merge-human` (a
+  person). No label means nothing auto-merges. An agent reviewer can now
+  approve an irreversible change and still hold its merge for a person. New
+  `merge-gate` skill, and a guardrail in `AGENTS.md`.
+- Two status checks that enforce it, shipped as an action in this repo.
+  `label-check` fails a PR whose `ssa-*` label doesn't match what it touches:
+  ask-list paths force `ssa-ask`. `merge-gate` passes only when `merge-auto`
+  was added by an account in `merge_approvers` and no `merge-human` hold is in
+  force.
+- `merge-auto` survives a push that leaves the patch unchanged, such as a
+  clean rebase, and is removed by any other push.
+- `.github/coding-protocol.json`: who may clear a PR to merge, who counts as a
+  person, the ask-list paths, and the review round limit.
+- A `run` skill: the front door. It matches the task to the skills it needs
+  and carries the eight working rules.
+- A `setup` skill that installs or upgrades the core, labels, config and
+  workflow, and reports the branch protection settings it can't change.
+
+### Changed
+- The always-on list drops from 14 rules to eight guardrails. Propose before
+  building, the PR size budget, the test bar, browser-verified UI, docs before
+  memory, docs sync, check cadence and clean breaks moved to `run`, which rule
+  1 loads before any code change. What stays is what has to hold when nobody
+  typed a command.
+- Label creation moved from `ship-show-ask` to `setup`.
+- The `gh stack merge` walk in `stacked-prs` stops at the first stage that
+  isn't approved, lacks `merge-auto`, or carries `merge-human`.
+- Review past the round limit ends in `merge-human` with a summary, not
+  another round.
+
+### Known limits
+- GitHub matches a required check by name, so a workflow added in a PR can
+  report a passing `merge-gate`. Changes under `.github/` are always an Ask
+  and always `merge-human` for that reason. An organization ruleset that
+  requires the workflow closes the gap; `setup` explains how.
+- On a stack, rewriting a lower stage removes `merge-auto` from the stages
+  above it.
 
 ## 1.3.0 — 2026-11-08
 
