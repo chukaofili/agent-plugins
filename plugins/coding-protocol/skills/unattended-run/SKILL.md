@@ -14,7 +14,10 @@ answer a question.
 
 This mode does not waive propose-before-building (see `coding-process`). It is
 what happens **after** approval. A spec a maintainer handed you counts, for
-what it decides; a gap in it is a blocker to surface, not a call to make. Inside the approved plan, decide reversible
+what it decides. Its gaps follow the rule below, the same one as everything
+else in this mode: decide the details a revert would undo and write them
+down; a missing design or scope decision is checkpoint 1, so surface it.
+"Nobody to ask" in `coding-process` has the line between the two. Inside the approved plan, decide reversible
 implementation details yourself and write each assumption down. A documented
 assumption beats a session that spent the night waiting. That is the whole of
 the waiver.

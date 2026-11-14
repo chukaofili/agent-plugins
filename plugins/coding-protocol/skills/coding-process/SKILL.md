@@ -74,12 +74,27 @@ decision to make.
 **Link it.** The PR names the spec it was built from and says "as written",
 or lists each gap you raised and the answer you got.
 
-**Non-interactive runs** (cloud or issue-driven agents with nobody to answer):
-treat the task text as the approved plan, but only when a maintainer wrote or
-assigned it. Read it against the same four questions. Where it has gaps, make
-the call, record each assumption in the PR description, and list the
-questions you would have asked. Where it's wrong or stale, stop and report;
-don't build.
+### Nobody to ask
+
+In a cloud or issue-driven run, or any unattended one, treat the task text as
+the approved plan, but only when a maintainer wrote or assigned it. Read it
+against the same four questions. A gap then goes one of two ways, and which
+way doesn't depend on how confident you feel:
+
+- **A detail a revert would undo: decide it.** A missing done check (write
+  one and state it), an approach the repo already has a pattern for, names,
+  file layout. Record each as an assumption in the PR description, with the
+  question you would have asked.
+- **A design or scope decision: don't.** Ask-list design the spec doesn't
+  spell out (question 4), an approach that sets a new pattern, anything
+  beyond what the spec covers. Leave that part unbuilt, flag it as a blocker,
+  and build whatever doesn't depend on it.
+
+Two examples. A ticket with the problem and approach but no done check: write
+the check, state it, build. A ticket that says "store it per tenant" with no
+schema: build nothing that needs the schema, and flag it.
+
+Where the spec is wrong or stale, stop and report; don't build.
 
 **Who can approve.** Only the people who maintain the repo can approve a plan.
 On a public repo, anyone can open an issue, comment on a PR or write a PR
