@@ -25,7 +25,7 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 |---|---|---|
 | [`AGENTS.md`](AGENTS.md) | Every session | Eight guardrails plus your project gates |
 | [`skills/run`](skills/run) | When code changes, or on `/coding-protocol:run` | The eight working rules, and a table that matches the task to the skills below |
-| [`skills/`](skills) | When relevant | `coding-process`, `unattended-run`, `stacked-prs`, `ship-show-ask`, `merge-gate`, `testing`, `verify-ui`, `sync-docs`, `setup` |
+| [`skills/`](skills) | When relevant | `coding-process`, `unattended-run`, `stacked-prs`, `ship-show-ask`, `merge-gate`, `testing`, `verify-ui`, `sync-docs`, `setup`, `uninstall` |
 
 The guardrails are the rules that have to hold when nobody typed a command:
 who can give instructions, how commits are made, the review label on every PR,
@@ -74,8 +74,10 @@ Code). It opens a PR that adds:
 - `.github/coding-protocol.json`: who may clear a PR to merge, and your ask-list paths
 - `.github/workflows/merge-gate.yml`: the `label-check` and `merge-gate` checks
 
-It then lists the branch protection settings to turn on. It doesn't change
-them for you.
+It fills in the Project gates by reading the repo (scripts, CI, `CODEOWNERS`,
+test config), shows you what it found, and writes only what you confirm. It
+then lists the branch protection settings to turn on. It doesn't change them
+for you.
 
 To do it by hand, copy [`AGENTS.md`](AGENTS.md) to your repo root and fill in
 the **Project gates** block. That gives you the rules without the merge gate.
@@ -99,6 +101,13 @@ no longer merges until the reviewer adds `merge-auto`. See "Upgrading from
 
 The version is in the header comment of `AGENTS.md`. Pin a release by its tag,
 for example `chukaofili/agent-plugins#coding-protocol-v2.0.0`.
+
+## Removing it
+
+Run the `uninstall` skill. It removes the core, the gate config and the
+workflow in a PR, after checking the two checks are no longer required. It
+keeps your Project gates and the labels, and tells you how to remove the
+skills themselves.
 
 ## License
 

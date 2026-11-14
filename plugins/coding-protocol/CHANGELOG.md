@@ -54,7 +54,12 @@ the PR body of the release has the full mapping.
 - A `run` skill: the front door. It matches the task to the skills it needs
   and carries the eight working rules.
 - A `setup` skill that installs or upgrades the core, labels, config and
-  workflow, and reports the branch protection settings it can't change.
+  workflow, and reports the branch protection settings it can't change. It
+  infers the Project gates from the repo and writes them only after you
+  confirm.
+- An `uninstall` skill that removes what `setup` installed. It won't delete
+  the workflow while the checks are still required, and it keeps the labels
+  unless a maintainer names the ones to delete.
 
 ### Changed
 - The always-on list drops from 14 rules to eight guardrails. Propose before
