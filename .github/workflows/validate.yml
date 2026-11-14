@@ -27,6 +27,9 @@ jobs:
         with:
           node-version: "24"
 
+      - name: Merge gate tests
+        run: node --test '.github/actions/merge-gate/*.test.mjs'
+
       - name: Claude Code manifests
         run: |
           npx -y @anthropic-ai/claude-code@2.1.303 plugin validate .
