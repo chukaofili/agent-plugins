@@ -61,6 +61,13 @@ the PR body of the release has the full mapping.
   delegated or why nothing was. A `Delegation` line in Project gates names
   the helper models, or turns it `off`; so can the user, for a task. Adapted from Builder.io's `efficient-orchestrator`
   skill (MIT), which is opt-in; this one is not.
+- A `usage-limits` skill, replacing one sentence in `unattended-run`. The
+  agent first finds out how its harness reports usage, from the new
+  `Usage check` line in Project gates, the harness's own tool, or its current
+  docs. It checks before substantial work and between waves of helpers,
+  stops launching work at 95% of any window, commits and pushes before
+  pausing, and re-checks the real window on resume. Adapted from Builder.io's
+  `stay-within-limits` skill (MIT), made harness-agnostic.
 - A `setup` skill that installs or upgrades the core, labels, config and
   workflow, and reports the branch protection settings it can't change. It
   infers the Project gates from the repo and writes them only after you
