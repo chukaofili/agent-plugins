@@ -37,15 +37,33 @@ gh api repos/{owner}/{repo}/branches/<default-branch>/protection/required_status
   --jq '.contexts[]'
 ```
 
-The first covers rulesets, the second classic branch protection, which needs
-admin rights to read.
+The first covers rulesets, the second classic branch protection. A repo can
+use either or both, so **both have to come back clear.** One clean answer
+says nothing about the other mechanism.
 
-- **Either prints `label-check` or `merge-gate`:** stop. Ask a maintainer to
-  stop requiring both, then run this step again.
-- **Both error, so you can't tell:** ask a maintainer to confirm they're not
-  required. An error is not a "no".
-- **Nobody to ask:** stop here and report it. Don't remove the workflow on a
-  guess.
+| Rulesets lookup | Classic lookup | Do |
+|---|---|---|
+| Lists either check | Anything | Stop. Still required. |
+| Anything | Lists either check | Stop. Still required. |
+| Succeeds, lists neither | Succeeds, lists neither | Go on. |
+| Succeeds, lists neither | Errors | Stop. Classic is unverified. |
+| Errors | Succeeds, lists neither | Stop. Rulesets are unverified. |
+| Errors | Errors | Stop. Nothing is verified. |
+
+An error is not a "no". The classic lookup needs admin rights, and without
+them it answers 403 or 404 whether or not protection exists. It answers 404
+for a branch with no classic protection too, so expect this row often.
+
+**When you stopped on an error,** ask a maintainer to check the mechanism you
+couldn't read and tell you it doesn't require `label-check` or `merge-gate`.
+Their answer clears that row. Name which mechanism you need checked; "is it
+safe?" gets a yes that verifies nothing.
+
+**When you stopped because a check is still required,** ask a maintainer to
+stop requiring both, then run this step again.
+
+**Nobody to ask:** stop here and report which row you hit. Don't remove the
+workflow on a guess.
 
 Don't change the setting yourself, even with admin rights. It decides who can
 merge.
