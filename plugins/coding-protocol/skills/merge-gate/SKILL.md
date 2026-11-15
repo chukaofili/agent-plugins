@@ -31,6 +31,9 @@ merge by itself, however green it is.
 - **The reviewer sets `merge-*`** (who may land it).
 - **The author never sets a `merge-*` label,** on their own PR or anyone
   else's. An author who can open the gate has no gate.
+  The gate enforces this for every author not on `humans`, approvers
+  included. A person on `humans` can still clear their own PR, since in a
+  one-maintainer repo nobody else could.
 - **Only a person clears `merge-human`.** An agent reviewer can add it and
   can't take it back off.
 
@@ -179,7 +182,7 @@ protection:
 - `label-check` passes
 - `merge-human` is not in force
 - `merge-auto` is on the PR, last added by an account in `merge_approvers`
-  that is not the PR's author
+  that is not the PR's author, unless that author is on `humans`
 - the latest approval from a merge approver covers the current head: the
   same commit, or the same patch
 - `merge-auto` was added at or after that approval

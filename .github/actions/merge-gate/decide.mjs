@@ -90,10 +90,12 @@ export function mergeGate({ author, labels, events, config, labelCheckResult, ap
   if (!labels.includes('merge-auto')) return no('no merge-auto label yet');
   const e = last(events, 'merge-auto', ['labeled']);
   if (!e) return no('merge-auto is present but its label event was not found');
-  // Being on merge_approvers doesn't let an author clear their own PR.
+  // Being on merge_approvers doesn't let an agent author clear its own PR.
+  // A person on the humans list may: with one maintainer, nobody else could.
   if (!author) return no('the pull request author is unknown, so merge-auto cannot be checked against it');
-  if (e.actor.toLowerCase() === author.toLowerCase()) {
-    return no(`merge-auto was added by ${e.actor}, the pull request's author; the reviewer sets it`);
+  const self = e.actor.toLowerCase() === author.toLowerCase();
+  if (self && !config.humans.includes(author.toLowerCase())) {
+    return no(`merge-auto was added by ${e.actor}, the pull request's author, who is not on the humans list; the reviewer sets it`);
   }
   if (!config.mergeApprovers.includes(e.actor.toLowerCase())) {
     return no(`merge-auto was added by ${e.actor}, who is not in merge_approvers`);
