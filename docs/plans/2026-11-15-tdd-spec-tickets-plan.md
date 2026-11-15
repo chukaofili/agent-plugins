@@ -19,10 +19,12 @@ ours conflict, ours win.
 
 ## Decisions made
 
-1. **Commits may be red.** AGENTS.md rule 2 and `coding-process` drop
-   "compiling and passing on its own". A slice's failing test can be its own
-   commit. Still required: conventional, one logical change, staged by path,
-   never on `main`.
+1. **One kind of red commit is allowed: TDD's red step.** It holds only the
+   new failing test for the current slice, and the very next commit makes it
+   green. Every other commit still compiles and passes on its own, and so
+   does the existing suite inside the red commit: only the new test fails.
+   AGENTS.md rule 2 and `coding-process` say exactly this. Still required:
+   conventional, one logical change, staged by path, never on `main`.
 2. **The full gate runs before every PR opens**, and before every push to an
    open PR (`run` rule 7). The narrowest check while editing is unchanged.
 3. **Seams are agreed in the proposal or plan.** One approval covers them. A
