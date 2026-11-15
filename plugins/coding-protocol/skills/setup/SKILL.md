@@ -167,7 +167,7 @@ differences in the PR. When they do want it migrated, change only what they
 agreed to, and keep their pins.
 
 **If it doesn't exist,** copy `templates/merge-gate.yml` there unchanged. It
-calls the action at the `coding-protocol-v2` tag, which moves with gate
+calls the action at the `v2` tag, which moves with gate
 fixes. To pin an exact release, change the tag in both jobs.
 
 On an upgrade or repair, check you kept your hands off it before committing:

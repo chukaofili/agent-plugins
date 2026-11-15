@@ -2,7 +2,8 @@
 
 All notable changes to `coding-protocol`. Versions follow
 [Semantic Versioning](https://semver.org). Each release is tagged
-`coding-protocol-v<version>`. The version appears in
+`v<version>`, and a moving `v<major>` tag points at the latest release of
+that major. The version appears in
 `.claude-plugin/plugin.json`, the marketplace entry and the header comment in
 `AGENTS.md`. CI checks that they match each other and this file.
 
