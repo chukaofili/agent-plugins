@@ -18,6 +18,15 @@ All notable changes to `coding-protocol`. Versions follow
   every layer that works on its own. A new working rule in `run`, and a
   section in `coding-process`.
 - `AGENTS.md` rule 10: build every change to behaviour test-first.
+- A `codebase-design` skill: the deep-module vocabulary (module, interface,
+  depth, seam, adapter, leverage, locality), the deletion test, deepening by
+  dependency category, and design it twice, which runs only when asked and
+  on the lead's model. Adapted from `mattpocock/skills`.
+- A `code-review` skill: before a PR opens, and once over a whole spec,
+  helpers review the diff against the repo's standards (plus a baseline of
+  Fowler smells) and against the spec, reported side by side. Findings are
+  fixed in one pass as `refactor` and `fix` commits. Adapted from
+  `mattpocock/skills`.
 
 ### Changed
 - `AGENTS.md` rule 2 allows one kind of failing commit: a TDD red step that
