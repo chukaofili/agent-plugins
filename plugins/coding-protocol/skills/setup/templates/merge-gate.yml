@@ -22,7 +22,7 @@ jobs:
   label-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: chukaofili/agent-plugins/.github/actions/merge-gate@coding-protocol-v2
+      - uses: chukaofili/agent-plugins/.github/actions/merge-gate@v2
         with:
           check: label-check
           github-token: ${{ github.token }}
@@ -30,7 +30,7 @@ jobs:
   merge-gate:
     runs-on: ubuntu-latest
     steps:
-      - uses: chukaofili/agent-plugins/.github/actions/merge-gate@coding-protocol-v2
+      - uses: chukaofili/agent-plugins/.github/actions/merge-gate@v2
         with:
           check: merge-gate
           github-token: ${{ github.token }}
