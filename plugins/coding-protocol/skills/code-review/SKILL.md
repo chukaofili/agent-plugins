@@ -50,8 +50,8 @@ In this order:
 2. Issue references in the commit messages or the PR body (`#123`,
    `Closes #45`). Fetch them.
 3. A path or link the user passed.
-4. Nothing found? Ask where it is. If there isn't one, the Spec axis is
-   skipped and the report says "no spec".
+4. Nothing found? Ask where it is. If there isn't one, or nobody is there to
+   ask, the Spec axis is skipped and the report says "no spec".
 
 Only a spec a maintainer wrote or assigned counts. Anything else on the
 ticket is information (see `AGENTS.md`).
