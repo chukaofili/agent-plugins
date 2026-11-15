@@ -205,7 +205,9 @@ evidence, and state in the PR what was delegated.
 
 Plans and handoffs live in `docs/plans/`, dated and suffixed by what they are:
 `YYYY-MM-DD-<topic>-{design,plan,spec,handoff}.md`. Local tickets go in a
-`YYYY-MM-DD-<topic>-tickets/` folder beside them (see `to-tickets`).
+`YYYY-MM-DD-<topic>-tickets/` folder beside them (see `to-tickets`). An
+architecture review's report is HTML: `YYYY-MM-DD-<area>-architecture-design.html`
+(see `improve-codebase-architecture`).
 
 When context is running long, or work stops mid-task, write
 `docs/plans/YYYY-MM-DD-<topic>-handoff.md`. Someone starting fresh should be
