@@ -19,14 +19,15 @@ List which files are generated in the PR body so the reviewer knows what to
 skip.
 
 **Split before writing, not after.** The split is decided in the plan (see
-`coding-process`). If a planned stage would pass 500, re-plan it. Common
-seams:
+`coding-process`). If a planned stage would pass 500, re-plan it. Split by
+slice, not by layer (see Tracer bullets in `coding-process`):
 
-- **Tests may land as their own stage.** For example, logic with unit and
-  integration tests, then UI with E2E tests.
-- Schema or data model, then the service using it, then the API surface, then
-  the UI.
+- **One tracer-bullet slice per stage,** or a few small ones together. Each
+  stage carries its own tests, so tests never land as a stage of their own.
 - A refactor that makes the change easy, then the change.
+- A wide mechanical change (renaming a column used everywhere): add the new
+  form beside the old, move callers over in batches, then remove the old
+  form. Each step stays green on its own.
 - A docs sync that's too big to ride along gets a docs-only stage on top.
 
 **Genuinely unsplittable** changes, such as one cohesive migration or a rename
