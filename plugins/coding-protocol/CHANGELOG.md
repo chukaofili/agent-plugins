@@ -25,8 +25,11 @@ All notable changes to `coding-protocol`. Versions follow
 - An `improve-codebase-architecture` skill: scans an area (or the commit
   hot spots) for shallow modules, proposes deepening candidates with a
   strength rating, and stops for you to pick one. Nothing is refactored
-  until you approve the chosen candidate's design, and an unattended run
-  ends at the proposal. The refactor is built test-first at the deepened
+  until you approve the chosen candidate's design. An unattended run, or
+  "pick for you", builds the top recommendation only when it is `Strong`,
+  off the ask list, sets no new pattern and fits the size budget, and opens
+  it as an `ssa-ask` PR that shows the choice. Otherwise it ends at the
+  report. The refactor is built test-first at the deepened
   interface, replacing the old shallow tests. Adapted from
   `mattpocock/skills`.
 - A `code-review` skill: before a PR opens, and once over a whole spec,

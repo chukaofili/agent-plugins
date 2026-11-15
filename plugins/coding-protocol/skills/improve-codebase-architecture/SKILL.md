@@ -1,6 +1,6 @@
 ---
 name: improve-codebase-architecture
-description: Use when asked to improve a codebase's architecture, find refactoring or deepening opportunities, review an area for shallow modules, make code easier to test or for agents to navigate, prepare an area before a big build ("how can we make this change easy?"), audit a brownfield or legacy repo, or find the missing seams before writing tests for untestable code. Covers scoping the scan by commit hot spots, the deletion test, presenting candidates with a strength rating and ask-list flags, stopping for the user to pick one, proposing the deepened interface before any code changes, design it twice on request, and building an approved deepening test-first in tracer-bullet slices within the PR size budget. Not for a bug (see coding-process, Debugging) or for designing a module already chosen (see codebase-design).
+description: Use when asked to improve a codebase's architecture, find refactoring or deepening opportunities, review an area for shallow modules, make code easier to test or for agents to navigate, prepare an area before a big build ("how can we make this change easy?"), audit a brownfield or legacy repo, or find the missing seams before writing tests for untestable code. Covers scoping the scan by commit hot spots, the deletion test, presenting candidates with a strength rating and ask-list flags, stopping for the user to pick one (or picking the top recommendation when unattended, under strict conditions), proposing the deepened interface before any code changes, design it twice on request, and building an approved deepening test-first in tracer-bullet slices within the PR size budget. Not for a bug (see coding-process, Debugging) or for designing a module already chosen (see codebase-design).
 ---
 
 # Improve codebase architecture
@@ -77,7 +77,8 @@ flag. End with the one you'd do first and why.
   list every refactor an ADR rules out.
 
 Then ask which candidate the user wants to explore, and stop. Nothing has
-been decided and no code has changed.
+been decided and no code has changed. The exception is when nobody is there
+to pick, or the user says "pick for you" (see Unattended runs below).
 
 **Where the report goes.** In a live session, in the reply. In an unattended
 run, write it to `docs/plans/YYYY-MM-DD-<area>-architecture-design.md`,
@@ -132,13 +133,35 @@ One candidate per build. The rest wait for their own session.
 
 ## Unattended runs
 
-An unattended run of this skill ends at the report. A refactor nobody
-approved is checkpoint 1 in `unattended-run`, however strong the candidate.
-Write the report, list the open picks as questions, and stop. Filing issues
-is checkpoint 2: leave it as a question too.
+With nobody to pick, you pick: take your top recommendation and build it.
+The same applies in a live session when the user says "pick for you". The
+PR is the proposal. It can't merge until a reviewer approves it (see
+`merge-gate`), so picking costs a revert at worst.
 
-A maintainer who later approves a candidate and its design has given you an
-approved plan. Building it then, attended or not, is the Refactor row.
+**Pick only when all of these hold:**
+
+- the task asked for improvement, not only a review. "Review this area"
+  ends at the report.
+- the candidate is `Strong`
+- it carries no ask-list flag. An interface that is a package export or an
+  endpoint counts as public API shape.
+- it sets no new pattern: no new port, and no dependency category the repo
+  doesn't already handle somewhere
+- it fits one PR, or a stack planned up front
+
+Otherwise the run ends at the report: list the open picks as questions and
+stop. A refactor nobody asked for is checkpoint 1 in `unattended-run`.
+
+**When you pick, decide the interface the same way:** your recommended
+design from step 4, test-first as in step 5. One candidate per run.
+
+**Show the choice in the PR.** Name the candidate and why it won, the
+interfaces you weighed and why you chose one, and the candidates you
+skipped. Link the report. The PR is `ssa-ask`, whatever its size, because
+the design is yours and nobody has approved it yet.
+
+Filing the other candidates as issues is checkpoint 2: leave it as a
+question.
 
 ---
 

@@ -13,7 +13,7 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 - **A review intent on every PR.** One of three labels says whether the PR wants a rubber stamp, non-blocking feedback, or a gate — and the reviewer acts on it rather than guessing.
 - **Approval is not permission to merge.** The reviewer clears a PR for auto-merge, or holds it for a person, with a second label. Two status checks enforce it.
 - **Test-first, in tracer bullets.** Every change to behaviour is built red, then green, in thin vertical slices that each run through every layer. A bug fix starts with a test that reproduces it.
-- **Architecture reviews that propose, not refactor.** Deepening candidates come with a strength rating, and nothing changes until you pick one and approve its design.
+- **Architecture reviews that propose, not refactor.** Deepening candidates come with a strength rating, and nothing changes until you pick one and approve its design. Unattended, the agent builds its top pick only when it is strong, off the ask list and sets no new pattern, as a PR you approve.
 - **A two-axis self-review before every PR.** The diff is checked against the repo's standards and against the spec, separately, and the fixes land as `refactor` and `fix` commits.
 - **A real test bar.** Every feature gets unit tests and at least one integration test. UI features also get E2E tests. Every bug fix gets a regression test.
 - **UI verified in a real browser,** with screenshots in the PR.
