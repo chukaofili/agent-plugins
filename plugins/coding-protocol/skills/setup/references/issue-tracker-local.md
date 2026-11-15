@@ -10,8 +10,8 @@ change.
 - **Tickets:** one file per ticket in `docs/plans/YYYY-MM-DD-<topic>-tickets/`,
   named `NN-<slug>.md` and numbered from `01` in dependency order (blockers
   first). Never one combined file.
-- **State:** a `Status:` line near the top of each ticket: `open`, `claimed`
-  or `done`.
+- **State:** a `Status:` line near the top of each ticket: `open`, or
+  `done` once the PR that delivers it has merged.
 - **Blocking:** a `Blocked by: NN, NN` line near the top. A ticket is
   unblocked when every file it lists is `done`.
 - **Comments:** appended at the bottom under a `## Comments` heading.

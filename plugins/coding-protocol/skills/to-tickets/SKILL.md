@@ -34,7 +34,6 @@ change easy, then make the easy change." It becomes the first ticket.
   window.
 - **Built test-first** (see `tdd`). Each ticket names the seam its tests go
   through.
-- **Prefactoring first.**
 
 Give each ticket its **blocking edges**: the tickets that must be done
 before it can start. A ticket with no blockers can start now. Blockers are
@@ -90,7 +89,8 @@ the parent issue.
 
 ## Working the tickets
 
-The **frontier** is every ticket whose blockers are all done. A straight
+A ticket is **done** when its PR has merged, not when the PR opens. The
+**frontier** is every ticket whose blockers are all done. A straight
 chain is worked top to bottom, as a stack of PRs. Tickets on the frontier at
 the same time don't depend on each other.
 
