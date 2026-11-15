@@ -1,0 +1,145 @@
+---
+name: improve-codebase-architecture
+description: Use when asked to improve a codebase's architecture, find refactoring or deepening opportunities, review an area for shallow modules, make code easier to test or for agents to navigate, prepare an area before a big build ("how can we make this change easy?"), audit a brownfield or legacy repo, or find the missing seams before writing tests for untestable code. Covers scoping the scan by commit hot spots, the deletion test, presenting candidates with a strength rating and ask-list flags, stopping for the user to pick one, proposing the deepened interface before any code changes, design it twice on request, and building an approved deepening test-first in tracer-bullet slices within the PR size budget. Not for a bug (see coding-process, Debugging) or for designing a module already chosen (see codebase-design).
+---
+
+# Improve codebase architecture
+
+Find architectural friction and propose **deepening opportunities**:
+refactors that turn shallow modules into deep ones. The aim is testability,
+and code an agent can find its way around.
+
+This skill finds and proposes. It never changes code until the user has
+picked a candidate and approved its design.
+
+## Vocabulary
+
+Load `codebase-design` first. Use its terms exactly: **module**,
+**interface**, **implementation**, **depth**, **seam**, **adapter**,
+**leverage**, **locality**, and the deletion test. Don't drift into
+"component", "service" or "layer" for a module, or "boundary" for a seam.
+Ask-list names ("security boundaries", "public API shape") are labels, so
+quote them as they are.
+
+**Domain docs.** If the repo has a `GLOSSARY.md` or ADRs for the area, read
+them before you scan. Use the glossary's nouns for the domain: "the Order
+intake module", not "the OrderHandler". If neither exists, say nothing about
+it and carry on.
+
+## 1. Scope before you scan
+
+A deepening pays off by making the next change easier. Code nobody touches
+never pays it back. So decide where to look before you look:
+
+- **The user named a direction** (a module, a pain point, a spec they're
+  about to build): take it, and skip the rest of this list. "How can we make
+  this change easy?" against a coming spec is the most useful prompt.
+- **Otherwise, find the hot spots.** Walk back a good stretch of
+  `git log --oneline --name-only` and let the files and areas that keep
+  coming up pull your attention first. No clear hot spot? Widen the net.
+
+## 2. Explore
+
+Split the work the `delegate` way. A helper on the `mechanical` tier maps
+the area and returns facts: the files, what imports what, which modules have
+tests and at which interface, and how often each path changed. The helper
+gathers; it doesn't judge.
+
+You walk the map and note where you feel friction:
+
+- Understanding one concept means bouncing between many small modules.
+- A module is **shallow**: its interface is nearly as complex as its
+  implementation.
+- Pure functions were pulled out just to be testable, and the real bugs hide
+  in how they're called (no **locality**).
+- Tightly coupled modules leak across their seams.
+- Code is untested, or hard to test through its current interface.
+
+**Apply the deletion test** to anything you suspect is shallow. Would
+deleting it concentrate complexity behind a smaller interface, or spread it
+across the callers? Only the first earns a candidate.
+
+## 3. Present candidates, then stop
+
+Write the candidates up as described in `references/candidates.md`. Each one
+names the files, the problem, the deepening in plain words, the gain in
+locality and leverage, which tests get simpler, a before/after sketch, a
+strength (`Strong`, `Worth exploring` or `Speculative`), and any ask-list
+flag. End with the one you'd do first and why.
+
+- **Don't propose interfaces yet.** The report says what to deepen, not how
+  the new interface looks. That comes after the pick.
+- **Don't pad.** If nothing passes the deletion test, say so. A report where
+  every candidate is `Speculative` is a report that found nothing, and should
+  read that way.
+- **ADR conflicts.** Surface a candidate that contradicts an ADR only when
+  the friction is real enough to reopen it, and say so on the card. Don't
+  list every refactor an ADR rules out.
+
+Then ask which candidate the user wants to explore, and stop. Nothing has
+been decided and no code has changed.
+
+**Where the report goes.** In a live session, in the reply. In an unattended
+run, write it to `docs/plans/YYYY-MM-DD-<area>-architecture-design.md`,
+commit it on its own branch, push it, and report the path.
+
+**Candidates you won't do now** stay in the report. Offer to file them as
+issues, and ask before publishing anything to a tracker.
+
+## 4. Propose the picked candidate
+
+The pick is a problem, not an approval. Take it through propose before
+building (see `coding-process`):
+
+1. **Restate it** in a sentence, with the constraints the new interface must
+   meet.
+2. **Classify its dependencies** (in-process, local-substitutable, remote
+   but owned, true external; see `codebase-design`). The category decides
+   what sits behind the seam and how the tests cross it.
+3. **Propose two or three interfaces** with trade-offs, leading with your
+   recommendation. Name the seam the new tests go through, and the old
+   shallow tests they will replace.
+4. **Get explicit approval** of one. It covers the seam.
+
+**Ask list.** If the deepening touches the data model, auth, billing,
+tenant scoping, a security boundary, the public API shape, or anything on
+the `Ask list` line in Project gates, the design is the user's decision, not
+yours. A deepened interface that is a package
+export or an endpoint is public API shape. The PR is `ssa-ask` (see
+`ship-show-ask`).
+
+**Design it twice only when the user asks.** Follow `codebase-design`'s
+`references/design-it-twice.md`: the helpers run on your model, and the
+recommendation is yours.
+
+## 5. Build it, once approved
+
+Building the approved deepening is ordinary refactor work: load the `run`
+skill's Refactor row. Plan the slices and the split before writing code. The
+order inside each slice, and what happens to the old tests, is in
+`references/building.md`. In short:
+
+- **The highest existing seam stays green throughout.** It is the proof
+  behaviour didn't change. Nothing there? Write those tests first.
+- **Tests at the deepened interface come first,** red against a stub, then
+  green as the logic moves behind it.
+- **Replace, don't layer.** Once the new tests cover a behaviour, delete the
+  shallow tests for it in the same slice.
+- **Tracer bullets, within the budget** (~300 changed lines, 500 ceiling).
+  Bigger deepenings stage as a stack (see `stacked-prs`).
+
+One candidate per build. The rest wait for their own session.
+
+## Unattended runs
+
+An unattended run of this skill ends at the report. A refactor nobody
+approved is checkpoint 1 in `unattended-run`, however strong the candidate.
+Write the report, list the open picks as questions, and stop. Filing issues
+is checkpoint 2: leave it as a question too.
+
+A maintainer who later approves a candidate and its design has given you an
+approved plan. Building it then, attended or not, is the Refactor row.
+
+---
+
+Adapted from Matt Pocock's `improve-codebase-architecture` skill. MIT licence, Copyright (c) 2026 Matt Pocock; see `LICENSE` in this folder.
