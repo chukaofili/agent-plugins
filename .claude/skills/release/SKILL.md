@@ -112,7 +112,7 @@ gh release create v<version> --title v<version> --generate-notes --latest
 
 ```bash
 git ls-remote --tags origin 'v<major>' 'v<version>'   # same SHA, the merge commit
-gh release view v<version> --json tagName,isLatest
+gh api repos/chukaofili/agent-plugins/releases/latest --jq .tag_name   # v<version>
 ```
 
 Then name the repos that will pick it up on their next gate run, and anything
