@@ -29,8 +29,9 @@ the interface is the wrong shape, and it is worth saying so.
 
 ## Seams: agree where tests go
 
-A **seam** is the public interface a test goes through: the place where you
-observe behaviour without reaching inside. Tests live at seams, never against
+A **seam** is the place where a module's interface lives, so it is where a
+test crosses in to observe behaviour without reaching inside (see
+`codebase-design` for the full vocabulary). Tests live at seams, never against
 internals.
 
 - **Seams are agreed with the approach,** in the proposal or plan (see
@@ -44,6 +45,8 @@ internals.
   pattern is a design decision: leave that part unbuilt and flag it.
 - **A seam you need mid-build that nobody agreed** is a gap. Raise it; don't
   quietly add it.
+- **Is the interface itself in question** (how deep the module should be,
+  where the seam belongs)? Use `codebase-design`.
 
 ## The loop
 
@@ -61,7 +64,7 @@ internals.
 5. **Repeat.** Let each slice respond to what the last one taught you.
 
 **Refactoring is not part of the loop.** Note what you would tidy, and do it
-at review, as `refactor` commits with every test green.
+at review (see `code-review`), as `refactor` commits with every test green.
 
 ## The one commit that may be red
 

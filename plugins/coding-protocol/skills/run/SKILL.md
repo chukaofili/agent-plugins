@@ -21,9 +21,11 @@ changes mid-way (an investigation turns into a fix), match again.
 | Feature, or any new or changed behaviour | `coding-process`, `tdd`, `testing`, `stacked-prs`, `delegate` |
 | Bug fix | `coding-process` (Debugging), `tdd`, `testing` |
 | Refactor | `coding-process`, `tdd`, `testing`, `delegate` |
+| Designing or reshaping a module's interface, or deciding where a seam goes | `codebase-design`, plus the row for the task |
 | Choosing, adopting or upgrading a dependency or API | `docs-before-memory` |
 | Anything a user sees | The row for the task, plus `verify-ui` |
-| Opening a PR | `stacked-prs`, `ship-show-ask`, `sync-docs` |
+| Opening a PR | `code-review`, `stacked-prs`, `ship-show-ask`, `sync-docs` |
+| Reviewing your own branch, or a whole spec once it's built | `code-review` |
 | Reviewing a PR, or answering review findings | `ship-show-ask`, `merge-gate`, `stacked-prs` |
 | Unattended run | `unattended-run`, `delegate`, `usage-limits`, `handoff`, plus the row for the task |
 | Context running long, or picking up from a handoff file | `handoff` |
@@ -83,9 +85,12 @@ For work that ends in a PR:
 3. Build one slice at a time, test-first, to the test bar (rule 3), running
    the narrowest check as you go (rule 7).
 4. Drive any UI in a browser (rule 4).
-5. Run the full gate (rule 7).
-6. Sync docs (rule 6).
-7. Open the PR with its review-intent label. Whether it may auto-merge is
+5. Review the branch on both axes, and fix what it finds as `refactor` and
+   `fix` commits (see `code-review`). After the last stage of a spec, review
+   the whole spec once.
+6. Run the full gate (rule 7).
+7. Sync docs (rule 6).
+8. Open the PR with its review-intent label. Whether it may auto-merge is
    the reviewer's call, not yours (see `merge-gate`).
 
-Steps 3 to 7 repeat for each stage of a stack.
+Steps 3 to 8 repeat for each stage of a stack.
