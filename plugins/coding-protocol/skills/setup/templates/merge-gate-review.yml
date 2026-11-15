@@ -6,7 +6,9 @@ name: merge-gate-review
 
 on:
   pull_request_review:
-    types: [submitted, edited, dismissed]
+    # Not edited: editing a review's text can't change its verdict, and each
+    # re-run counts toward GitHub's limit of 50 per run.
+    types: [submitted, dismissed]
 
 permissions: {}
 

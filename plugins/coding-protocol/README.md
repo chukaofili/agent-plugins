@@ -78,7 +78,7 @@ Code). It opens a PR that adds:
 - the five labels: `ssa-ship`, `ssa-show`, `ssa-ask`, `merge-auto`, `merge-human`
 - `.github/coding-protocol.json`: who may clear a PR to merge, and your ask-list paths
 - `.github/workflows/merge-gate.yml`: the `label-check` and `merge-gate` checks
-- `.github/workflows/merge-gate-review.yml` and `merge-gate-rerun.yml`: re-run those checks when a review is submitted, edited or dismissed
+- `.github/workflows/merge-gate-review.yml` and `merge-gate-rerun.yml`: re-run those checks when a review is submitted or dismissed
 - `docs/agents/issue-tracker.md`: where `to-spec` and `to-tickets` publish (GitHub, GitLab, local files, or yours)
 
 It fills in the Project gates by reading the repo (scripts, CI, `CODEOWNERS`,

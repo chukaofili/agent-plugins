@@ -1,5 +1,5 @@
 # Installed by the coding-protocol `setup` skill, with merge-gate-review.yml.
-# A review that is submitted, edited or dismissed re-runs merge-gate.yml for
+# A review that is submitted or dismissed re-runs merge-gate.yml for
 # the pull request's head, so its two checks rule on the reviews as they are
 # now. workflow_run always runs this file from the default branch.
 name: merge-gate-rerun
