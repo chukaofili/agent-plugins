@@ -78,6 +78,7 @@ Code). It opens a PR that adds:
 - the five labels: `ssa-ship`, `ssa-show`, `ssa-ask`, `merge-auto`, `merge-human`
 - `.github/coding-protocol.json`: who may clear a PR to merge, and your ask-list paths
 - `.github/workflows/merge-gate.yml`: the `label-check` and `merge-gate` checks
+- `docs/agents/issue-tracker.md`: where `to-spec` and `to-tickets` publish (GitHub, GitLab, local files, or yours)
 
 It fills in the Project gates by reading the repo (scripts, CI, `CODEOWNERS`,
 test config), shows you what it found, and writes only what you confirm. It
@@ -109,8 +110,8 @@ for example `chukaofili/agent-plugins#coding-protocol-v2.0.0`.
 
 ## Removing it
 
-Run the `uninstall` skill. It removes the core, the gate config and the
-workflow in a PR, after checking the two checks are no longer required. It
+Run the `uninstall` skill. It removes the core, the gate config, the
+workflow and an unedited tracker file in a PR, after checking the two checks are no longer required. It
 keeps your Project gates and the labels, and tells you how to remove the
 skills themselves.
 

@@ -1,6 +1,6 @@
 ---
 name: setup
-description: Use when adopting coding-protocol in a repo, upgrading a repo from an older version, or when something it installs is missing or broken, such as no AGENTS.md core, missing ssa-* or merge-* labels, no .github/coding-protocol.json, no merge-gate workflow, or the label-check and merge-gate checks never reporting. Installs the always-on core and Project gates, the five labels, the gate config and the workflow, then reports the repository settings it cannot change. Safe to run again.
+description: Use when adopting coding-protocol in a repo, upgrading a repo from an older version, or when something it installs is missing or broken, such as no AGENTS.md core, missing ssa-* or merge-* labels, no .github/coding-protocol.json, no merge-gate workflow, no docs/agents/issue-tracker.md, or the label-check and merge-gate checks never reporting. Installs the always-on core and Project gates, the five labels, the gate config, the workflow and the tracker file, then reports the repository settings it cannot change. Safe to run again.
 ---
 
 # Setup
