@@ -25,7 +25,7 @@ a green gate outliving a dismissed approval.
   author on `merge_approvers`. An author on `humans` may still clear their
   own PR, since in a one-maintainer repo nobody else could.
   ([#40](https://github.com/chukaofili/agent-plugins/pull/40))
-- Submitting, editing or dismissing a review re-runs the gate, so a
+- Submitting or dismissing a review re-runs the gate, so a
   dismissed approval turns a green `merge-gate` red. Until now it stayed
   green until the next label or push.
   ([#41](https://github.com/chukaofili/agent-plugins/pull/41))
