@@ -11,7 +11,7 @@ description: Use when writing or reviewing tests, deciding which tests a change 
 |---|---|
 | Any feature | Unit tests for the new logic, plus **at least one integration test** |
 | UI feature | All of the above, plus **E2E tests** for the user flow |
-| Bug fix | A **regression test** that fails without the fix |
+| Bug fix | A **regression test** that fails without the fix, written before the fix |
 
 - **Integration** means real boundaries: a real database, queue, HTTP server or
   filesystem, not mocks of them. Mock only what you don't own and can't run
@@ -42,8 +42,10 @@ existing harnesses support.
 ## Believe a test only after you've seen it fail
 
 A green result means nothing until the same test has gone red against broken
-code. Break the code (or revert the fix), watch the test fail for the right
-reason, then restore it.
+code. Working test-first (see `tdd`), the red step is that proof. For a test
+written after the code (pinning a refactor, or a harness added later), break
+the code (or revert the fix), watch the test fail for the right reason, then
+restore it.
 
 Two ways a test goes green without testing anything:
 
