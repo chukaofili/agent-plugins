@@ -184,7 +184,9 @@ protection:
 - `merge-auto` was added at or after that approval
 
 Both run from the copy of the workflow on the default branch, so a PR can't
-edit its own gate. The config is read from the default branch too:
+edit its own gate. They run again when a review is submitted, edited or
+dismissed (`merge-gate-review.yml` starts `merge-gate-rerun.yml`, which
+re-runs the gate for the head), so a dismissed approval turns a green gate red. The config is read from the default branch too:
 
 ```json
 {
