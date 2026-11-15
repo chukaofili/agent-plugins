@@ -2,19 +2,28 @@
 // event, and a check from a workflow_run job doesn't count for branch
 // protection, so the gate's own run for the head is run again instead: same
 // default-branch workflow, and it re-reads the PR from scratch.
+//
+// Two PRs can share a head SHA (one branch, two bases), and a run for a fork
+// PR carries no PR number, so the newest run of every PR at that head is
+// re-run. A re-run only re-reads state, so re-running a neighbour is harmless.
 export async function rerunGate({ api, headSha, workflow, sleep, attempts = 20, intervalMs = 15000 }) {
   if (!headSha) return { ok: false, reason: 'the triggering run has no head commit' };
   const at = headSha.slice(0, 7);
   for (let i = 1; ; i++) {
-    const runs = await api.gateRuns(workflow, headSha);
-    const latest = [...runs].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at))[0];
-    if (!latest) return { ok: false, reason: `no ${workflow} run found for ${at}, so nothing would update its checks` };
-    // A run still going may have read the reviews before this change.
-    if (latest.status === 'completed') {
-      await api.rerun(latest.id);
-      return { ok: true, reason: `re-ran ${workflow} run ${latest.id} for ${at}` };
+    const newest = new Map();
+    for (const r of await api.gateRuns(workflow, headSha)) {
+      const seen = newest.get(r.pr);
+      if (!seen || Date.parse(r.created_at) > Date.parse(seen.created_at)) newest.set(r.pr, r);
     }
-    if (i >= attempts) return { ok: false, reason: `${workflow} run ${latest.id} for ${at} is still ${latest.status}` };
+    const runs = [...newest.values()];
+    if (runs.length === 0) return { ok: false, reason: `no ${workflow} run found for ${at}, so nothing would update its checks` };
+    // A run still going may have read the reviews before this change.
+    const pending = runs.find((r) => r.status !== 'completed');
+    if (!pending) {
+      for (const r of runs) await api.rerun(r.id);
+      return { ok: true, reason: `re-ran ${workflow} run ${runs.map((r) => r.id).join(', ')} for ${at}` };
+    }
+    if (i >= attempts) return { ok: false, reason: `${workflow} run ${pending.id} for ${at} is still ${pending.status}` };
     await sleep(intervalMs);
   }
 }

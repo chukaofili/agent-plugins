@@ -46,7 +46,7 @@ export function githubApi({ token, repo, fetchImpl = fetch }) {
     comment: (n, body) => call(`/issues/${n}/comments`, { method: 'POST', body: { body } }),
     gateRuns: async (workflow, sha) =>
       (await call(`/actions/workflows/${workflow}/runs?event=pull_request_target&head_sha=${sha}&per_page=20`)).workflow_runs
-        .map((r) => ({ id: r.id, status: r.status, created_at: r.created_at })),
+        .map((r) => ({ id: r.id, status: r.status, created_at: r.created_at, pr: r.pull_requests?.[0]?.number ?? null })),
     rerun: (id) => call(`/actions/runs/${id}/rerun`, { method: 'POST', empty: true }),
   };
 }
