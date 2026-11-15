@@ -65,7 +65,9 @@ Two tiers, from the `Delegation` line in the Project gates block of
 | `judgement` | Coding or analysis that needs some judgement but not yours |
 
 - **Set the model on every spawn.** A helper that inherits your model costs
-  what you cost, and then nothing was saved.
+  what you cost, and then nothing was saved. The one exception is design it
+  twice, which only runs when the user asks: its helpers do design work, so
+  they run on your model (see `codebase-design`).
 - **The line is `off`?** Don't delegate (see the top).
 - **No `Delegation` line?** Use the cheapest tier your harness offers below
   your own for mechanical work and the next one up for the rest. Say which
