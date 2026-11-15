@@ -31,9 +31,9 @@ A long, numbered list covering every aspect of the feature:
 
 ## Ask-list design
 
-For anything on the ask list (data model, auth, billing, tenant scoping,
-security boundaries, public API shape, and the `Ask list` line in Project
-gates): the design, spelled out. A schema change names its columns. Or: "Touches nothing on the ask list."
+For anything on the ask list (see `ship-show-ask`, plus the `Ask list` line
+in Project gates): the design, spelled out. A schema change names its
+columns. Or: "Touches nothing on the ask list."
 
 ## Testing
 
@@ -48,6 +48,13 @@ The checks that pass or fail when the feature is done: the commands, or the
 behaviour you can observe. Not "works well".
 
 ## Out of scope
+
+What this spec deliberately doesn't do, so nobody builds it by accident.
+
+## Further notes
+
+Anything else worth knowing: context, links, constraints that fit nowhere
+above. Empty if there's nothing.
 
 ## Open questions
 
