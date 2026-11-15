@@ -8,8 +8,8 @@ Test-first becomes the default way to implement, work is sliced into
 tracer-bullet vertical slices, and the protocol gains the skills to write a
 spec, break it into tickets and review a branch against both. It adapts six
 of Matt Pocock's engineering skills (MIT, credited in each skill and the
-README): `tdd`, `codebase-design`, `to-spec`, `to-tickets`, `code-review` and
-`setup-matt-pocock-skills`. It also adopts the gaps found by comparing
+README): `tdd`, `codebase-design`, `improve-codebase-architecture`,
+`to-spec`, `to-tickets`, `code-review` and `setup-matt-pocock-skills`. It also adopts the gaps found by comparing
 `implement-spec` with `coding-process`.
 
 The skills are **adapted, not copied**. Upstream points at things this repo
@@ -81,7 +81,7 @@ ours conflict, ours win.
 
 ## The stack
 
-Four PRs. Each one adds its own `## Unreleased` changelog entry and syncs the
+Five PRs above this plan. Each one adds its own `## Unreleased` changelog entry and syncs the
 README. The last one bumps the version.
 
 ### PR 1 — `feat(coding-protocol): test-first and tracer bullets` (ssa-ask)
@@ -118,7 +118,25 @@ README. The last one bumps the version.
   reviewing a branch → `code-review`), and `code-review` in the usual order
   before the PR opens.
 
-### PR 3 — `feat(coding-protocol): specs, tickets and the tracker` (ssa-ask)
+### PR 3 — `feat(coding-protocol): improve-codebase-architecture` (ssa-ask)
+
+Added at the user's request after approval. Split out of PR 2 to keep both
+under the size budget.
+
+- New `improve-codebase-architecture` skill, adapted from upstream. It scopes
+  the scan by commit hot spots, applies the deletion test, writes candidates
+  up with a strength rating and ask-list flags, and stops for the user to
+  pick one. It proposes the interface before any code changes, and builds an
+  approved deepening test-first, replacing the old shallow tests. An
+  unattended run ends at the proposal. The report is Markdown, not
+  upstream's CDN-loaded HTML.
+- `tdd`: a refactor that introduces a new interface starts that interface
+  red, while the existing seam stays green.
+- `codebase-design`'s description hands "find what to refactor" to the new
+  skill.
+- `run`: a row for architecture reviews.
+
+### PR 4 — `feat(coding-protocol): specs, tickets and the tracker` (ssa-ask)
 
 - `setup`: a Tracker step (GitHub, GitLab, local or other) that writes
   `docs/agents/issue-tracker.md` from `references/issue-tracker-*.md`
@@ -134,7 +152,7 @@ README. The last one bumps the version.
   published.
 - `run`: rows for writing a spec and for breaking work into tickets.
 
-### PR 4 — `feat(coding-protocol): run a spec's tickets` (ssa-ask)
+### PR 5 — `feat(coding-protocol): run a spec's tickets` (ssa-ask)
 
 The `implement-spec` gaps, and the release.
 
