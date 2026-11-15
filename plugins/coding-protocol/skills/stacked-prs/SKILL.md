@@ -52,6 +52,15 @@ reverted on its own.
   ```
 - Note the position in each PR body (`Stacked on #123`) so a reviewer who opens
   one out of order knows what they're looking at.
+- **Stack only real dependencies.** Tickets that don't block each other are
+  siblings: each gets its own PR off the base they share, not a place in
+  one long stack. `gh stack` stacks are linear, so siblings are separate
+  stacks or plain PRs. A sibling under the size budget is an ordinary PR,
+  with the usual label.
+- **Close tickets where they finish.** A PR that delivers a whole ticket says
+  `Closes #<n>`. For a ticket a stack delivers, the reference goes on the
+  top PR, and the stages below say `Part of #<n>`, so the ticket closes when
+  the work it describes has all landed.
 - **Every stage is `ssa-ask`,** labelled at creation
   (`gh pr create --label ssa-ask`). The stack exists because the change was too
   big to take in at once, so each stage is its own gate and approval on one
