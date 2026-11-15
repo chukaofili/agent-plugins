@@ -78,7 +78,7 @@ git rm .github/workflows/merge-gate.yml .github/workflows/merge-gate-review.yml 
 
 If the workflow has jobs beyond `label-check` and `merge-gate`, someone added
 them. Remove our two jobs and keep the file. The two re-run files are
-always ours; skip either one that isn't there (installed before 2.1.2).
+always ours; skip either one that isn't there (installed before 2.2.0).
 
 ## 4. The core
 
