@@ -150,7 +150,7 @@ something its brief asked for, that thing is unverified.
   audited.
 - **Work tickets from the frontier.** With a set of tickets (see
   `to-tickets`), the next wave is every ticket whose blockers have all
-  landed. Work it out from your own record of what has merged, not the
+  merged. Work it out from your own record of what has merged, not the
   tracker's blocked-by counts, which lag until each PR merges. Five at once
   at most, as above.
 - **One writer per file.** Two helpers on the same file is a merge conflict
