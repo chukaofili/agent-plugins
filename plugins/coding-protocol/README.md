@@ -13,6 +13,7 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 - **A review intent on every PR.** One of three labels says whether the PR wants a rubber stamp, non-blocking feedback, or a gate — and the reviewer acts on it rather than guessing.
 - **Approval is not permission to merge.** The reviewer clears a PR for auto-merge, or holds it for a person, with a second label. Two status checks enforce it.
 - **Test-first, in tracer bullets.** Every change to behaviour is built red, then green, in thin vertical slices that each run through every layer. A bug fix starts with a test that reproduces it.
+- **Specs and tickets from the conversation.** A spec that passes the protocol's own "handed a spec" check, and tracer-bullet tickets with blocking edges, published to the tracker `setup` configured (GitHub, GitLab or `docs/plans/`) once you approve them.
 - **Architecture reviews that propose, not refactor.** Deepening candidates come with a strength rating, and nothing changes until you pick one and approve its design. Unattended, the agent builds its top pick only when it is strong, off the ask list and sets no new pattern, as a PR you approve.
 - **A two-axis self-review before every PR.** The diff is checked against the repo's standards and against the spec, separately, and the fixes land as `refactor` and `fix` commits.
 - **A real test bar.** Every feature gets unit tests and at least one integration test. UI features also get E2E tests. Every bug fix gets a regression test.
@@ -29,7 +30,7 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 |---|---|---|
 | [`AGENTS.md`](AGENTS.md) | Every session | Ten guardrails plus your project gates |
 | [`skills/run`](skills/run) | When code changes, or on `/coding-protocol:run` | The ten working rules, and a table that matches the task to the skills below |
-| [`skills/`](skills) | When relevant | `coding-process`, `tdd`, `codebase-design`, `improve-codebase-architecture`, `code-review`, `docs-before-memory`, `unattended-run`, `stacked-prs`, `ship-show-ask`, `merge-gate`, `delegate`, `usage-limits`, `handoff`, `testing`, `verify-ui`, `sync-docs`, `setup`, `uninstall` |
+| [`skills/`](skills) | When relevant | `coding-process`, `tdd`, `codebase-design`, `improve-codebase-architecture`, `code-review`, `to-spec`, `to-tickets`, `docs-before-memory`, `unattended-run`, `stacked-prs`, `ship-show-ask`, `merge-gate`, `delegate`, `usage-limits`, `handoff`, `testing`, `verify-ui`, `sync-docs`, `setup`, `uninstall` |
 
 The guardrails are the rules that have to hold when nobody typed a command:
 who can give instructions, how commits are made, that behaviour is built test-first, the review label on every PR,

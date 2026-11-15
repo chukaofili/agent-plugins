@@ -32,6 +32,21 @@ All notable changes to `coding-protocol`. Versions follow
   report. The refactor is built test-first at the deepened
   interface, replacing the old shallow tests. Adapted from
   `mattpocock/skills`.
+- A `to-spec` skill: turns the conversation into a spec with no interview,
+  agrees the seams, and checks the draft against the four "handed a spec"
+  questions, so it comes back Ready. Adapted from `mattpocock/skills`.
+- A `to-tickets` skill: breaks a spec into tracer-bullet tickets sized to
+  one PR and one context window, each with its blocking edges, and
+  expand-migrate-contract for wide refactors. You approve the breakdown
+  before anything is published. Adapted from `mattpocock/skills`.
+- A tracker. `setup` writes `docs/agents/issue-tracker.md` for GitHub,
+  GitLab, local files in `docs/plans/`, or a tracker you describe, and adds
+  `Tracker` and `Domain docs` lines to Project gates. Publishing to a remote
+  tracker always asks first. The templates are adapted from
+  `mattpocock/skills`.
+- Domain docs: agents read `GLOSSARY.md` and the ADRs for the area before
+  exploring, use the glossary's terms, and flag ADR conflicts
+  (`coding-process`).
 - A `code-review` skill: before a PR opens, and once over a whole spec,
   helpers review the diff against the repo's standards (plus a baseline of
   Fowler smells) and against the spec, reported side by side. Findings are
