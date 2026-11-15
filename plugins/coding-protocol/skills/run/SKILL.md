@@ -1,6 +1,6 @@
 ---
 name: run
-description: Use at the start of any task that changes code or docs in a repo, such as a feature, bug fix, refactor, dependency change, opening or reviewing a pull request, or an unattended run. Also when asked to "follow the protocol" or "run the protocol". Matches the task to the skills it needs and carries the working rules that apply across them, covering propose-before-building, the PR size budget, the test bar, browser-verified UI, docs before memory, docs sync, check cadence, clean breaks and delegation.
+description: Use at the start of any task that changes code or docs in a repo, such as a feature, bug fix, refactor, dependency change, opening or reviewing a pull request, or an unattended run. Also when asked to "follow the protocol" or "run the protocol". Matches the task to the skills it needs and carries the working rules that apply across them, covering propose-before-building, the PR size budget, test-first and the test bar, tracer-bullet slices, browser-verified UI, docs before memory, docs sync, check cadence, clean breaks and delegation.
 ---
 
 # Run
@@ -18,9 +18,9 @@ changes mid-way (an investigation turns into a fix), match again.
 
 | Task | Load |
 |---|---|
-| Feature, or any new or changed behaviour | `coding-process`, `testing`, `stacked-prs`, `delegate` |
-| Bug fix | `coding-process` (Debugging), `testing` |
-| Refactor | `coding-process`, `testing`, `delegate` |
+| Feature, or any new or changed behaviour | `coding-process`, `tdd`, `testing`, `stacked-prs`, `delegate` |
+| Bug fix | `coding-process` (Debugging), `tdd`, `testing` |
+| Refactor | `coding-process`, `tdd`, `testing`, `delegate` |
 | Choosing, adopting or upgrading a dependency or API | `docs-before-memory` |
 | Anything a user sees | The row for the task, plus `verify-ui` |
 | Opening a PR | `stacked-prs`, `ship-show-ask`, `sync-docs` |
@@ -45,10 +45,12 @@ the answer turns into a change.
 2. **PR size budget: ~300 changed lines, 500 ceiling.** Count hand-written code
    and tests; not lockfiles, generated code, snapshots, fixtures or vendored
    files. Decide the split in the plan, not mid-write. *(skill: `stacked-prs`)*
-3. **Test bar.** Every feature gets unit tests and at least one integration
-   test; UI features add E2E tests; bug fixes add a regression test you saw
-   fail first. Missing harness → ask once, and never substitute throwaway
-   tests. *(skill: `testing`)*
+3. **Test-first, to the test bar.** Every change to behaviour is built red,
+   then green, one slice at a time, at seams agreed in the plan. Every feature
+   gets unit tests and at least one integration test; UI features add E2E
+   tests; a bug fix starts with the regression test that reproduces it.
+   Missing harness → ask once, and never substitute throwaway tests.
+   *(skills: `tdd`, `testing`)*
 4. **UI changes are driven in a real browser, with screenshots in the PR.** If
    the environment can't run a browser, the PR's Testing section says so and
    what was verified instead. *(skill: `verify-ui`)*
@@ -57,15 +59,18 @@ the answer turns into a change.
    adopting or implementing against it. *(skill: `docs-before-memory`)*
 6. **Sync docs** after every stacked-PR stage or completed feature, before the
    PR opens. *(skill: `sync-docs`)*
-7. **Narrowest relevant check while editing; the full gate at stage
-   checkpoints** and before pushing. The commands are in the Project gates
-   block of `AGENTS.md`.
+7. **Narrowest relevant check while editing; the full gate before every PR
+   opens,** and before every push to an open PR. The commands are in the
+   Project gates block of `AGENTS.md`.
 8. **Clean breaks over legacy shims** when nothing depends on the old shape.
 9. **Delegate the mechanical work, keep the judgement.** This is the default,
    not something to be asked for: if your agent can spawn subagents and
    nobody has turned it off, say how the work splits before you build, put helpers on
    cheaper models, and review what they return. The PR says what was
    delegated. *(skill: `delegate`)*
+10. **Slice vertically, as tracer bullets.** Each slice is a thin path through
+    every layer that works on its own, and it is kept and grown, not thrown
+    away. Never build a layer at a time. *(skill: `coding-process`)*
 
 ## The usual order
 
@@ -73,13 +78,12 @@ For work that ends in a PR:
 
 1. Propose, and get approval (rule 1). Handed a spec? Read it first; it may
    already be the approval.
-2. Plan the split against the size budget (rule 2), and the split between you
-   and helpers (rule 9).
-3. Build one atomic commit at a time, running the narrowest check as you go
-   (rule 7).
-4. Meet the test bar for the change (rule 3), and drive any UI in a browser
-   (rule 4).
-5. Run the full gate.
+2. Plan the slices (rule 10) and the split against the size budget (rule 2),
+   and the split between you and helpers (rule 9).
+3. Build one slice at a time, test-first, to the test bar (rule 3), running
+   the narrowest check as you go (rule 7).
+4. Drive any UI in a browser (rule 4).
+5. Run the full gate (rule 7).
 6. Sync docs (rule 6).
 7. Open the PR with its review-intent label. Whether it may auto-merge is
    the reviewer's call, not yours (see `merge-gate`).
