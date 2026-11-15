@@ -12,6 +12,7 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 - **Small, atomic PRs.** Aim for ~300 changed lines, with 500 as the ceiling. Bigger work ships as a stack of PRs, all open for review unless you ask for one stage at a time.
 - **A review intent on every PR.** One of three labels says whether the PR wants a rubber stamp, non-blocking feedback, or a gate — and the reviewer acts on it rather than guessing.
 - **Approval is not permission to merge.** The reviewer clears a PR for auto-merge, or holds it for a person, with a second label. Two status checks enforce it.
+- **Test-first, in tracer bullets.** Every change to behaviour is built red, then green, in thin vertical slices that each run through every layer. A bug fix starts with a test that reproduces it.
 - **A real test bar.** Every feature gets unit tests and at least one integration test. UI features also get E2E tests. Every bug fix gets a regression test.
 - **UI verified in a real browser,** with screenshots in the PR.
 - **Docs before memory.** Read the installed version's current docs before using a framework or package.
@@ -24,12 +25,12 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 
 | Part | Loaded | Contents |
 |---|---|---|
-| [`AGENTS.md`](AGENTS.md) | Every session | Nine guardrails plus your project gates |
-| [`skills/run`](skills/run) | When code changes, or on `/coding-protocol:run` | The nine working rules, and a table that matches the task to the skills below |
-| [`skills/`](skills) | When relevant | `coding-process`, `docs-before-memory`, `unattended-run`, `stacked-prs`, `ship-show-ask`, `merge-gate`, `delegate`, `usage-limits`, `handoff`, `testing`, `verify-ui`, `sync-docs`, `setup`, `uninstall` |
+| [`AGENTS.md`](AGENTS.md) | Every session | Ten guardrails plus your project gates |
+| [`skills/run`](skills/run) | When code changes, or on `/coding-protocol:run` | The ten working rules, and a table that matches the task to the skills below |
+| [`skills/`](skills) | When relevant | `coding-process`, `tdd`, `docs-before-memory`, `unattended-run`, `stacked-prs`, `ship-show-ask`, `merge-gate`, `delegate`, `usage-limits`, `handoff`, `testing`, `verify-ui`, `sync-docs`, `setup`, `uninstall` |
 
 The guardrails are the rules that have to hold when nobody typed a command:
-who can give instructions, how commits are made, the review label on every PR,
+who can give instructions, how commits are made, that behaviour is built test-first, the review label on every PR,
 who may merge it, and how a response says whether the work is done. Everything about how to do the work loads with `run`.
 
 ## Install
@@ -112,4 +113,6 @@ skills themselves.
 
 ## License
 
-MIT
+MIT. Some skills are adapted from Matt Pocock's
+[mattpocock/skills](https://github.com/mattpocock/skills), also MIT; see
+[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).

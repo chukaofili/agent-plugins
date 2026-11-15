@@ -6,6 +6,29 @@ All notable changes to `coding-protocol`. Versions follow
 `.claude-plugin/plugin.json`, the marketplace entry and the header comment in
 `AGENTS.md`. CI checks that they match each other and this file.
 
+## Unreleased
+
+### Added
+- A `tdd` skill: every change to behaviour is built test-first, red then
+  green, one slice at a time, at seams agreed in the plan. A bug fix is one
+  slice whose regression test is the red step. Changes with no behaviour to
+  test are exempt, and the PR says why. Adapted from Matt Pocock's
+  `mattpocock/skills` (MIT, see `THIRD_PARTY_NOTICES.md`).
+- Tracer bullets. Work is sliced vertically, each slice a thin path through
+  every layer that works on its own. A new working rule in `run`, and a
+  section in `coding-process`.
+- `AGENTS.md` rule 10: build every change to behaviour test-first.
+
+### Changed
+- `AGENTS.md` rule 2 allows one kind of failing commit: a TDD red step that
+  holds only the new failing test, made green by the next commit.
+- Stacks are split by slice, not by layer. "Logic, then UI, then docs" is
+  gone from `coding-process`.
+- The full gate runs before every PR opens and before every push to an open
+  PR (`run` rule 7).
+- Helpers are briefed to work test-first and return the failure each new
+  test showed (`delegate`).
+
 ## 2.0.0 — 2026-11-14
 
 Breaking. Approval stops being permission to merge, the always-on core
