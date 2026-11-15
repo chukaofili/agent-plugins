@@ -179,6 +179,7 @@ protection:
 - `label-check` passes
 - `merge-human` is not in force
 - `merge-auto` is on the PR, last added by an account in `merge_approvers`
+  that is not the PR's author
 - the latest approval from a merge approver covers the current head: the
   same commit, or the same patch
 - `merge-auto` was added at or after that approval
