@@ -101,7 +101,7 @@ test('the API client lists pull_request_target gate runs by head and posts the r
   assert.deepEqual(await api.gateRuns('merge-gate.yml', 'abc'), [{ id: 5, status: 'completed', created_at: T(1), pr: 9 }, { id: 6, status: 'completed', created_at: T(2), pr: null }]);
   await api.rerun(5);
   assert.deepEqual(seen, [
-    'GET /actions/workflows/merge-gate.yml/runs?event=pull_request_target&head_sha=abc&per_page=20',
+    'GET /actions/workflows/merge-gate.yml/runs?event=pull_request_target&head_sha=abc&per_page=100&page=1',
     'POST /actions/runs/5/rerun',
   ]);
 });
@@ -125,4 +125,23 @@ test('fork runs carry no PR number, so every one of them at the head is re-run',
   const r = await rerunGate({ api, headSha: HEAD, workflow: 'merge-gate.yml', sleep: async () => {} });
   assert.equal(r.ok, true);
   assert.deepEqual(seen.filter((s) => s.startsWith('POST')).sort(), ['POST /actions/runs/101/rerun', 'POST /actions/runs/202/rerun', 'POST /actions/runs/404/rerun']);
+});
+
+test('a run on a later page still counts: one PR\'s many runs cannot hide another\'s', async () => {
+  // 100 newer runs for PR #2 fill page 1; PR #1's only run is on page 2.
+  const page1 = Array.from({ length: 100 }, (_, i) => ({ id: 1000 + i, status: 'completed', created_at: T(50), pull_requests: [{ number: 2 }] }));
+  const seen = [];
+  const fetchImpl = async (url, init) => {
+    seen.push(`${init.method} ${url.replace('https://api.github.com/repos/o/r', '')}`);
+    if (url.includes('/runs?')) {
+      const page = Number(new URL(url).searchParams.get('page'));
+      const runs = page === 1 ? page1 : page === 2 ? [{ id: 101, status: 'completed', created_at: T(10), pull_requests: [{ number: 1 }] }] : [];
+      return { ok: true, status: 200, json: async () => ({ total_count: 101, workflow_runs: runs }) };
+    }
+    return { ok: true, status: 201, json: async () => { throw new Error('empty body'); } };
+  };
+  const api = githubApi({ token: 't', repo: 'o/r', fetchImpl });
+  await rerunGate({ api, headSha: HEAD, workflow: 'merge-gate.yml', sleep: async () => {} });
+  assert.ok(seen.includes('POST /actions/runs/101/rerun'));
+  assert.equal(seen.filter((s) => s.startsWith('POST')).length, 2);
 });

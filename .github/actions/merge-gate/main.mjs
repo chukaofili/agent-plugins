@@ -44,9 +44,16 @@ export function githubApi({ token, repo, fetchImpl = fetch }) {
     mergeBase: async (base, head) => (await call(`/compare/${base}...${head}?per_page=1`)).merge_base_commit.sha,
     removeLabel: (n, label) => call(`/issues/${n}/labels/${label}`, { method: 'DELETE' }),
     comment: (n, body) => call(`/issues/${n}/comments`, { method: 'POST', body: { body } }),
-    gateRuns: async (workflow, sha) =>
-      (await call(`/actions/workflows/${workflow}/runs?event=pull_request_target&head_sha=${sha}&per_page=20`)).workflow_runs
-        .map((r) => ({ id: r.id, status: r.status, created_at: r.created_at, pr: r.pull_requests?.[0]?.number ?? null })),
+    // Every page: one PR's runs at a shared head must not push another's out of view.
+    gateRuns: async (workflow, sha) => {
+      const all = [];
+      for (let page = 1; ; page++) {
+        const { workflow_runs: batch } = await call(`/actions/workflows/${workflow}/runs?event=pull_request_target&head_sha=${sha}&per_page=100&page=${page}`);
+        all.push(...batch);
+        if (batch.length < 100) break;
+      }
+      return all.map((r) => ({ id: r.id, status: r.status, created_at: r.created_at, pr: r.pull_requests?.[0]?.number ?? null }));
+    },
     rerun: (id) => call(`/actions/runs/${id}/rerun`, { method: 'POST', empty: true }),
   };
 }
