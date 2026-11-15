@@ -73,6 +73,10 @@ test('merge-gate: an author who is also a merge approver cannot clear their own 
   assert.equal(gate({ author: 'chuka', labels: ['ssa-show', 'merge-auto'], events: [ev('labeled', 'merge-auto', 'anton')] }).ok, true);
 });
 
+test('merge-gate: an author on the humans list may clear their own PR', () => {
+  assert.equal(gate({ author: 'Chuka', labels: ['ssa-show', 'merge-auto'], events: [ev('labeled', 'merge-auto', 'chuka')] }).ok, true);
+});
+
 test('merge-gate: the latest merge-auto event decides, not an earlier one', () => {
   const events = [ev('labeled', 'merge-auto', 'anton'), ev('unlabeled', 'merge-auto', 'github-actions[bot]'), ev('labeled', 'merge-auto', 'author-bot')];
   assert.equal(gate({ labels: ['ssa-show', 'merge-auto'], events }).ok, false);
