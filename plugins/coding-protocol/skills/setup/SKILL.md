@@ -19,7 +19,7 @@ change; this skill reports them and stops.
 git rev-parse --show-toplevel
 head -3 AGENTS.md 2>/dev/null          # the header carries the installed version
 ls CLAUDE.md .gemini/settings.json 2>/dev/null
-ls .github/coding-protocol.json .github/workflows/merge-gate.yml 2>/dev/null
+ls .github/coding-protocol.json .github/workflows/merge-gate*.yml 2>/dev/null
 ls docs/agents/issue-tracker.md GLOSSARY.md GLOSSARY-MAP.md docs/adr 2>/dev/null
 git remote -v
 gh label list --limit 200 --json name --jq '.[].name'
@@ -170,8 +170,19 @@ agreed to, and keep their pins.
 calls the action at the `v2` tag, which moves with gate
 fixes. To pin an exact release, change the tag in both jobs.
 
+**Then the review re-run,** `templates/merge-gate-review.yml` and
+`templates/merge-gate-rerun.yml`, copied the same way and under the same
+rule if either exists already. `pull_request_target` has no review event, so
+without them an approval dismissed after the gate went green leaves it green
+until the next label or push. A review event runs the PR's own copy of a
+workflow, so `merge-gate-review.yml` does nothing and holds no permissions;
+finishing starts `merge-gate-rerun.yml` from the default branch, which
+re-runs the gate's run for the PR head. A PR that edits the first file can
+only stop the re-run, and it is under `.github/`, so it is an Ask. Keep the
+second file's tag in step with the gate's.
+
 On an upgrade or repair, check you kept your hands off it before committing:
-`git status --short .github/workflows/merge-gate.yml` prints nothing unless
+`git status --short .github/workflows/` prints nothing unless
 they asked for a change.
 
 Commit steps 3, 5 and 6 on a branch, one commit each, and open the PR as
@@ -205,11 +216,13 @@ On a throwaway PR, after the settings are in place:
    can merge.
 4. Push a commit that only re-indents a line: red again, and the label is
    gone.
-5. On a second PR, the reviewer approves and adds `merge-human`: red, and
+5. Approve the new head and add `merge-auto` again (green), then dismiss the
+   approval: `merge-gate-rerun` runs and `merge-gate` goes red.
+6. On a second PR, the reviewer approves and adds `merge-human`: red, and
    neither auto-merge nor the merge button lands it. A person on `humans`
    removes `merge-human` and adds `merge-auto`: green, and it merges.
 
-Five outcomes, five lines in the setup PR or a follow-up comment. If you
+Six outcomes, six lines in the setup PR or a follow-up comment. If you
 couldn't run this (no second account, no admin to set step 7), say that.
 
 ## What this gate doesn't stop

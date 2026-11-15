@@ -5,14 +5,19 @@ description: >-
   the workflow and this action come from the default branch, never the PR.
 inputs:
   check:
-    description: Which check this job reports. One of label-check or merge-gate.
+    description: >-
+      Which check this job reports: label-check or merge-gate. Or rerun, from a
+      workflow_run job, to re-run the gate workflow's run for the head commit.
     required: true
   github-token:
-    description: Token with pull-requests write and contents read.
+    description: Token with pull-requests write and contents read; actions write for rerun.
     required: true
   config-path:
     description: Path of the gate config on the default branch.
     default: .github/coding-protocol.json
+  gate-workflow:
+    description: For rerun, the file name of the workflow that runs the two checks.
+    default: merge-gate.yml
 runs:
   using: composite
   steps:
@@ -24,5 +29,6 @@ runs:
       env:
         GATE_CHECK: ${{ inputs.check }}
         GATE_CONFIG_PATH: ${{ inputs.config-path }}
+        GATE_WORKFLOW: ${{ inputs.gate-workflow }}
         GITHUB_TOKEN: ${{ inputs.github-token }}
       run: node "$GITHUB_ACTION_PATH/main.mjs"
