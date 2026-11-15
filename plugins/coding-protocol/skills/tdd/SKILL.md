@@ -19,6 +19,9 @@ This skill is how you write them.
   at the seam must be green before you start and after you finish. No tests
   there? Write them first, against the current code. They pass from the
   start, so prove each one can fail by breaking the code (see `testing`).
+- **A refactor that introduces a new interface** (deepening a module, see
+  `improve-codebase-architecture`) starts that interface red, against a
+  stub, while the existing seam stays green throughout.
 - **Exempt: changes with no behaviour to test.** Docs, copy, config values,
   dependency bumps (the existing suite is their check), purely visual styling
   (driven in a browser instead, see `verify-ui`). The PR's Testing section

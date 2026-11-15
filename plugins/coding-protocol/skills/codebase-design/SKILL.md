@@ -1,6 +1,6 @@
 ---
 name: codebase-design
-description: Use when designing or reshaping a module's interface, deciding where a seam goes, choosing what sits behind it and how tests cross it, judging whether a module is deep or shallow, making code testable, or when another skill needs the deep-module vocabulary (module, interface, implementation, depth, seam, adapter, leverage, locality). Covers the vocabulary, the deletion test, designing for testability, deepening by dependency category, and design it twice. A reference, not a task driver.
+description: Use when designing or reshaping a module's interface, deciding where a seam goes, choosing what sits behind it and how tests cross it, judging whether a module is deep or shallow, making code testable, or when another skill needs the deep-module vocabulary (module, interface, implementation, depth, seam, adapter, leverage, locality). Covers the vocabulary, the deletion test, designing for testability, deepening by dependency category, and design it twice. A reference, not a task driver. To find what to refactor in an area, use improve-codebase-architecture.
 ---
 
 # Codebase design
