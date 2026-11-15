@@ -7,6 +7,34 @@ that major. The version appears in
 `.claude-plugin/plugin.json`, the marketplace entry and the header comment in
 `AGENTS.md`. CI checks that they match each other and this file.
 
+## 2.2.0 — 2026-11-15
+
+The merge gate closes two holes: an agent author clearing its own PR, and
+a green gate outliving a dismissed approval.
+
+### Upgrading from 2.1
+
+1. Update the skills (reinstall the plugin, or `npx skills add` again).
+2. Repos on `@v2` get the author check with no change.
+3. For the review re-run, add `.github/workflows/merge-gate-review.yml` and
+   `.github/workflows/merge-gate-rerun.yml` from `setup`'s templates, or run
+   `setup` again, which adds them without touching `merge-gate.yml`.
+
+### Fixed
+- `merge-gate` refuses a `merge-auto` added by the PR's own author, even an
+  author on `merge_approvers`. An author on `humans` may still clear their
+  own PR, since in a one-maintainer repo nobody else could.
+  ([#40](https://github.com/chukaofili/agent-plugins/pull/40))
+- Submitting or dismissing a review re-runs the gate, so a
+  dismissed approval turns a green `merge-gate` red. Until now it stayed
+  green until the next label or push.
+  ([#41](https://github.com/chukaofili/agent-plugins/pull/41))
+
+### Added
+- The action's `rerun` mode and `setup`'s two re-run workflow templates;
+  `uninstall` removes them.
+  ([#41](https://github.com/chukaofili/agent-plugins/pull/41))
+
 ## 2.1.1 — 2026-11-15
 
 ### Fixed
