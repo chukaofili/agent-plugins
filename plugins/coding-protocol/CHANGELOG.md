@@ -6,6 +6,92 @@ All notable changes to `coding-protocol`. Versions follow
 `.claude-plugin/plugin.json`, the marketplace entry and the header comment in
 `AGENTS.md`. CI checks that they match each other and this file.
 
+## 2.1.0 — 2026-11-15
+
+Test-first becomes the required way to build, work is sliced as tracer
+bullets, and the protocol can write its own specs and tickets and review its
+own branches. Six skills are adapted from Matt Pocock's
+[`mattpocock/skills`](https://github.com/mattpocock/skills) (MIT, see
+`THIRD_PARTY_NOTICES.md`).
+
+### Upgrading from 2.0
+
+1. Update the skills (reinstall the plugin, or `npx skills add` again).
+2. Run `setup` in each repo. It replaces the core in `AGENTS.md` with the
+   new rule 2 wording and rule 10, adds the `Tracker` and `Domain docs`
+   lines to Project gates, and writes `docs/agents/issue-tracker.md`.
+3. Nothing about merging changes. Rule numbers 1 to 9 are unchanged; rule
+   10 is new.
+
+### Added
+- A `tdd` skill: every change to behaviour is built test-first, red then
+  green, one slice at a time, at seams agreed in the plan. A bug fix is one
+  slice whose regression test is the red step. Changes with no behaviour to
+  test are exempt, and the PR says why. Adapted from Matt Pocock's
+  `mattpocock/skills` (MIT, see `THIRD_PARTY_NOTICES.md`).
+- Tracer bullets. Work is sliced vertically, each slice a thin path through
+  every layer that works on its own. A new working rule in `run`, and a
+  section in `coding-process`.
+- `AGENTS.md` rule 10: build every change to behaviour test-first.
+- A `codebase-design` skill: the deep-module vocabulary (module, interface,
+  depth, seam, adapter, leverage, locality), the deletion test, deepening by
+  dependency category, and design it twice, which runs only when asked and
+  on the lead's model. Adapted from `mattpocock/skills`.
+- An `improve-codebase-architecture` skill: scans an area (or the commit
+  hot spots) for shallow modules, proposes deepening candidates with a
+  strength rating, and stops for you to pick one. Nothing is refactored
+  until you approve the chosen candidate's design. An unattended run, or
+  "pick for you", builds the top recommendation only when it is `Strong`,
+  off the ask list, sets no new pattern and fits the size budget, and opens
+  it as an `ssa-ask` PR that shows the choice. Otherwise it ends at the
+  report. The refactor is built test-first at the deepened
+  interface, replacing the old shallow tests. Adapted from
+  `mattpocock/skills`.
+- A `to-spec` skill: turns the conversation into a spec with no interview,
+  agrees the seams, and checks the draft against the four "handed a spec"
+  questions, so it comes back Ready. Adapted from `mattpocock/skills`.
+- A `to-tickets` skill: breaks a spec into tracer-bullet tickets sized to
+  one PR and one context window, each with its blocking edges, and
+  expand-migrate-contract for wide refactors. You approve the breakdown
+  before anything is published. Adapted from `mattpocock/skills`.
+- A tracker. `setup` writes `docs/agents/issue-tracker.md` for GitHub,
+  GitLab, local files in `docs/plans/`, or a tracker you describe, and adds
+  `Tracker` and `Domain docs` lines to Project gates. Publishing to a remote
+  tracker always asks first. The templates are adapted from
+  `mattpocock/skills`.
+- Domain docs: agents read `GLOSSARY.md` and the ADRs for the area before
+  exploring, use the glossary's terms, and flag ADR conflicts
+  (`coding-process`).
+- A `code-review` skill: before a PR opens, and once over a whole spec,
+  helpers review the diff against the repo's standards (plus a baseline of
+  Fowler smells) and against the spec, reported side by side. Findings are
+  fixed in one pass as `refactor` and `fix` commits. Adapted from
+  `mattpocock/skills`.
+
+- Running a spec's tickets (`delegate`): the next wave is the frontier,
+  worked out from what has merged rather than the tracker's counts. A
+  research helper writes notes outside the repo and the others get a
+  pointer. Helpers check their worktree base and merge in its tip before
+  reporting. Shared names are pinned in every brief.
+- An unattended run reviews the whole spec once after its last stage, makes
+  one fix pass, and stops reviewing (`unattended-run`).
+
+### Changed
+- `AGENTS.md` rule 2 allows one kind of failing commit: a TDD red step that
+  holds only the new failing test, made green by the next commit.
+- Stacks are split by slice, not by layer. "Logic, then UI, then docs" is
+  gone from `coding-process`.
+- The full gate runs before every PR opens and before every push to an open
+  PR (`run` rule 7).
+- Helpers are briefed to work test-first and return the failure each new
+  test showed (`delegate`).
+- Tickets that don't block each other are sibling PRs, not one long stack,
+  and a ticket closes on the top PR of the stack that delivers it
+  (`stacked-prs`).
+- A suite that skips tests when a fixture or database is missing no longer
+  passes for green: read the counts, especially in a fresh worktree
+  (`testing`, `coding-process`).
+
 ## 2.0.0 — 2026-11-14
 
 Breaking. Approval stops being permission to merge, the always-on core

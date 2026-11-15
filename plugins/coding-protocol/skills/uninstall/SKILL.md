@@ -1,6 +1,6 @@
 ---
 name: uninstall
-description: Use when removing coding-protocol from a repo, when asked to uninstall, remove, tear down or back out the protocol or its merge gate, or when a repo should stop running the label-check and merge-gate checks. Removes what the setup skill installed, namely the core in AGENTS.md, the gate config and the merge-gate workflow, keeps the project's own content and the labels unless told otherwise, and reports what only a maintainer or the agent's own tooling can remove.
+description: Use when removing coding-protocol from a repo, when asked to uninstall, remove, tear down or back out the protocol or its merge gate, or when a repo should stop running the label-check and merge-gate checks. Removes what the setup skill installed, namely the core in AGENTS.md, the gate config, the merge-gate workflow and an unedited tracker file, keeps the project's own content and the labels unless told otherwise, and reports what only a maintainer or the agent's own tooling can remove.
 ---
 
 # Uninstall
@@ -17,6 +17,7 @@ are yours to change: this skill checks them, reports them, and stops.
 head -3 AGENTS.md 2>/dev/null          # is the core here, and which version
 ls CLAUDE.md .gemini/settings.json 2>/dev/null
 ls .github/coding-protocol.json .github/workflows/merge-gate.yml 2>/dev/null
+ls docs/agents/issue-tracker.md 2>/dev/null
 gh label list --limit 200 --json name --jq '.[].name'
 ```
 
@@ -84,7 +85,11 @@ down to and including the `Project` divider line. Keep everything below it:
 that part was always the project's.
 
 - **The Project gates block stays,** minus its `Merge gate` line, which
-  points at a file that no longer exists. The rest (the fast check, the full
+  points at a file that no longer exists.
+- **`docs/agents/issue-tracker.md`** goes only if it still matches the
+  template `setup` wrote it from (`setup/references/issue-tracker-*.md`),
+  and its `Tracker` line goes with it. If the project has edited it, it is
+  theirs now: keep both. The rest (the fast check, the full
   gate, the test harnesses) is still true and still useful to whoever reads
   the file next.
 - **If nothing is left** but the Project gates, ask whether to keep the file.

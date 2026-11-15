@@ -19,14 +19,15 @@ List which files are generated in the PR body so the reviewer knows what to
 skip.
 
 **Split before writing, not after.** The split is decided in the plan (see
-`coding-process`). If a planned stage would pass 500, re-plan it. Common
-seams:
+`coding-process`). If a planned stage would pass 500, re-plan it. Split by
+slice, not by layer (see Tracer bullets in `coding-process`):
 
-- **Tests may land as their own stage.** For example, logic with unit and
-  integration tests, then UI with E2E tests.
-- Schema or data model, then the service using it, then the API surface, then
-  the UI.
+- **One tracer-bullet slice per stage,** or a few small ones together. Each
+  stage carries its own tests, so tests never land as a stage of their own.
 - A refactor that makes the change easy, then the change.
+- A wide mechanical change (renaming a column used everywhere): add the new
+  form beside the old, move callers over in batches, then remove the old
+  form. Each step stays green on its own.
 - A docs sync that's too big to ride along gets a docs-only stage on top.
 
 **Genuinely unsplittable** changes, such as one cohesive migration or a rename
@@ -51,6 +52,15 @@ reverted on its own.
   ```
 - Note the position in each PR body (`Stacked on #123`) so a reviewer who opens
   one out of order knows what they're looking at.
+- **Stack only real dependencies.** Tickets that don't block each other are
+  siblings: each gets its own PR off the base they share, not a place in
+  one long stack. `gh stack` stacks are linear, so siblings are separate
+  stacks or plain PRs. A sibling under the size budget is an ordinary PR,
+  with the usual label.
+- **Close tickets where they finish.** A PR that delivers a whole ticket says
+  `Closes #<n>`. For a ticket a stack delivers, the reference goes on the
+  top PR, and the stages below say `Part of #<n>`, so the ticket closes when
+  the work it describes has all landed.
 - **Every stage is `ssa-ask`,** labelled at creation
   (`gh pr create --label ssa-ask`). The stack exists because the change was too
   big to take in at once, so each stage is its own gate and approval on one

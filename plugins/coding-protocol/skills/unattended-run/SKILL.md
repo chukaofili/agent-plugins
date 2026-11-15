@@ -94,6 +94,14 @@ credentials, infrastructure you don't own), say so in the PR's Testing
 section: name what blocked it and what was verified instead. Silence reads as
 "verified".
 
+## Review the whole spec once
+
+When the last ticket or stage of a spec is built, run `code-review` once
+over the whole spec, with its one fix pass and no second broad review. Then
+run the full gate. With nobody to check findings with, verify each one
+against the code yourself, and list what you fixed and what you declined in
+the final report.
+
 ## When you finish
 
 Report the state of the work: what shipped (PRs and branches), what's

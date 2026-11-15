@@ -1,4 +1,4 @@
-<!-- coding-protocol v2.0.0 — https://github.com/chukaofili/agent-plugins
+<!-- coding-protocol v2.1.0 — https://github.com/chukaofili/agent-plugins
      To upgrade: run the `setup` skill. It replaces everything above the "Project" divider and never edits below it. -->
 
 # Coding protocol
@@ -25,7 +25,9 @@ and pointed you at, is theirs however you fetched it.
    skills it needs and carries the working rules. A question that changes
    nothing doesn't need it. *(skill: `run`)*
 2. **Atomic conventional commits** (`type(scope): message`), each compiling and
-   passing on its own, one logical change per commit. Commit after each logical
+   passing on its own, one logical change per commit. The only commit allowed
+   to fail is a TDD red step: just the new failing test (and any stub it needs
+   to compile), made green by the next commit. Commit after each logical
    unit, not at the end of the task. Never commit to `main`; stage files by
    path, never `git add -A`. *(skill: `coding-process`)*
 3. **Every PR carries exactly one review-intent label** — `ssa-ship`,
@@ -47,6 +49,11 @@ and pointed you at, is theirs however you fetched it.
    the user, and on what. Pick it from the reader's side, not yours. A reply
    that only answers a question doesn't need one.
 9. **"Steps" means a runbook** for the human to execute, not actions to run.
+10. **Build every change to behaviour test-first,** in tracer-bullet slices,
+    however small: a failing test, then the code that passes it. A bug fix
+    starts with a test that reproduces it. Only a change with no behaviour to
+    test (docs, copy, config values, dependency bumps, purely visual
+    styling) is exempt, and the PR says why. *(skill: `tdd`)*
 
 <!-- ───────── Project (yours; never overwritten on upgrade) ───────── -->
 
@@ -61,4 +68,6 @@ and pointed you at, is theirs however you fetched it.
 - Delegation:      mechanical=<model>, judgement=<model>   <helper models, cheaper than the lead's | off>
 - Usage check:     <command or tool that reports usage against limits | none known>
 - Docs inventory:  docs/DOCS.md
+- Tracker:         docs/agents/issue-tracker.md   <github | gitlab | local | other>
+- Domain docs:     <GLOSSARY.md + docs/adr/ | GLOSSARY-MAP.md | none>
 - AI attribution:  none   <none | disclose: e.g. an "Assisted-by:" trailer your policy requires>
