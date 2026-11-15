@@ -6,7 +6,7 @@ Status: approved 2026-11-15.
 
 Test-first becomes the default way to implement, work is sliced into
 tracer-bullet vertical slices, and the protocol gains the skills to write a
-spec, break it into tickets and review a branch against both. It adapts six
+spec, break it into tickets and review a branch against both. It adapts seven
 of Matt Pocock's engineering skills (MIT, credited in each skill and the
 README): `tdd`, `codebase-design`, `improve-codebase-architecture`,
 `to-spec`, `to-tickets`, `code-review` and `setup-matt-pocock-skills`. It also adopts the gaps found by comparing
@@ -67,6 +67,17 @@ ours conflict, ours win.
     ask before publishing to a remote tracker.
 14. The review skill keeps the name `code-review`. Claude Code namespaces it
     as `coding-protocol:code-review`.
+
+## Upstream parts left out
+
+- **Writing domain docs.** Upstream's `improve-codebase-architecture` adds
+  new terms to `GLOSSARY.md` as they settle, and offers an ADR when a
+  candidate is rejected for a lasting reason. Here, skills only read
+  `GLOSSARY.md` and ADRs (decision 10). Nothing writes them.
+- **Grilling.** Upstream walks the picked candidate through its `grilling`
+  skill. Here it goes through propose-before-building instead.
+- **Triage labels, `.scratch/`, wayfinder and PR-triage operations.** There
+  are no skills here that use them.
 
 ## Conflicts with `implement-spec`: ours win
 
