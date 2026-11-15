@@ -4,18 +4,19 @@ import { readFileSync, appendFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { parseConfig, labelCheck, mergeGate, latestApproval } from './decide.mjs';
 import { replayMatches, fetchCommits } from './replay.mjs';
+import { rerunGate } from './rerun.mjs';
 
 const MAX_FILES = 3000; // the API stops listing a PR's files here
 
 export function githubApi({ token, repo, fetchImpl = fetch }) {
-  const call = async (path, { accept = 'application/vnd.github+json', method = 'GET', body } = {}) => {
+  const call = async (path, { accept = 'application/vnd.github+json', method = 'GET', body, empty = false } = {}) => {
     const res = await fetchImpl(`https://api.github.com/repos/${repo}${path}`, {
       method,
       headers: { authorization: `Bearer ${token}`, accept, 'x-github-api-version': '2022-11-28', ...(body ? { 'content-type': 'application/json' } : {}) },
       body: body ? JSON.stringify(body) : undefined,
     });
     if (!res.ok) throw new Error(`${method} ${path}: HTTP ${res.status}`);
-    return res.status === 204 ? null : res.json();
+    return res.status === 204 || empty ? null : res.json();
   };
   const pages = async (path) => {
     const all = [];
@@ -43,6 +44,10 @@ export function githubApi({ token, repo, fetchImpl = fetch }) {
     mergeBase: async (base, head) => (await call(`/compare/${base}...${head}?per_page=1`)).merge_base_commit.sha,
     removeLabel: (n, label) => call(`/issues/${n}/labels/${label}`, { method: 'DELETE' }),
     comment: (n, body) => call(`/issues/${n}/comments`, { method: 'POST', body: { body } }),
+    gateRuns: async (workflow, sha) =>
+      (await call(`/actions/workflows/${workflow}/runs?event=pull_request_target&head_sha=${sha}&per_page=20`)).workflow_runs
+        .map((r) => ({ id: r.id, status: r.status, created_at: r.created_at })),
+    rerun: (id) => call(`/actions/runs/${id}/rerun`, { method: 'POST', empty: true }),
   };
 }
 
@@ -101,24 +106,27 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const env = process.env;
   const event = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, 'utf8'));
   const check = env.GATE_CHECK;
-  if (!['label-check', 'merge-gate'].includes(check)) {
+  if (!['label-check', 'merge-gate', 'rerun'].includes(check)) {
     console.log(`::error::unknown check "${check}"`);
     process.exit(1);
   }
-  const result = await run({
-    check,
-    eventName: env.GITHUB_EVENT_NAME,
-    event,
-    api: githubApi({ token: env.GITHUB_TOKEN, repo: env.GITHUB_REPOSITORY }),
-    fetchGit: (shas) =>
-      fetchCommits({
-        url: `${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}`,
-        shas,
-        extraHeader: `AUTHORIZATION: basic ${Buffer.from(`x-access-token:${env.GITHUB_TOKEN}`).toString('base64')}`,
-      }),
-    configPath: env.GATE_CONFIG_PATH,
-    defaultBranch: event.repository.default_branch,
-  }).catch((e) => ({ ok: false, reason: `the gate could not run: ${e.message}` }));
+  const api = githubApi({ token: env.GITHUB_TOKEN, repo: env.GITHUB_REPOSITORY });
+  const result = await (check === 'rerun'
+    ? rerunGate({ api, headSha: event.workflow_run?.head_sha, workflow: env.GATE_WORKFLOW, sleep: (ms) => new Promise((r) => setTimeout(r, ms)) })
+    : run({
+        check,
+        eventName: env.GITHUB_EVENT_NAME,
+        event,
+        api,
+        fetchGit: (shas) =>
+          fetchCommits({
+            url: `${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}`,
+            shas,
+            extraHeader: `AUTHORIZATION: basic ${Buffer.from(`x-access-token:${env.GITHUB_TOKEN}`).toString('base64')}`,
+          }),
+        configPath: env.GATE_CONFIG_PATH,
+        defaultBranch: event.repository.default_branch,
+      })).catch((e) => ({ ok: false, reason: `the gate could not run: ${e.message}` }));
   const line = `${check}: ${result.ok ? 'pass' : 'not passing'}. ${result.reason}`;
   console.log(result.ok ? line : `::error::${line}`);
   if (env.GITHUB_STEP_SUMMARY) appendFileSync(env.GITHUB_STEP_SUMMARY, `${line}\n`);
