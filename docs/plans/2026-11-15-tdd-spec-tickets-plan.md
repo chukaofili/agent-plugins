@@ -127,9 +127,13 @@ under the size budget.
   the scan by commit hot spots, applies the deletion test, writes candidates
   up with a strength rating and ask-list flags, and stops for the user to
   pick one. It proposes the interface before any code changes, and builds an
-  approved deepening test-first, replacing the old shallow tests. An
-  unattended run ends at the proposal. The report is Markdown, not
-  upstream's CDN-loaded HTML.
+  approved deepening test-first, replacing the old shallow tests. The report
+  is upstream's HTML (Tailwind and Mermaid from CDNs), with an ask-list
+  badge added (the user's call). With nobody to pick, or on "pick for you",
+  the agent builds its top recommendation only when it is `Strong`, off the
+  ask list, sets no new pattern and fits the size budget, as an `ssa-ask`
+  PR that shows the choice (the user's call). Otherwise the run ends at the
+  report.
 - `tdd`: a refactor that introduces a new interface starts that interface
   red, while the existing seam stays green.
 - `codebase-design`'s description hands "find what to refactor" to the new
@@ -174,7 +178,8 @@ The `implement-spec` gaps, and the release.
 
 - `python3 scripts/validate.py` passes on every PR.
 - Each new skill reads as the protocol's own: no references to upstream-only
-  skills, files or labels (`grep -rn 'setup-matt-pocock\|\.scratch\|ready-for-agent\|GLOSSARY-MAP'`
-  is empty except in the credit).
+  skills, files or labels (`grep -rn 'setup-matt-pocock\|\.scratch\|ready-for-agent'`
+  is empty except in the credit). `GLOSSARY-MAP.md` is kept on purpose: it
+  is the multi-context layout of the domain docs (decision 10).
 - `run`'s table and rules name every new skill, and the README lists them.
 - No PR passes 500 changed lines.
