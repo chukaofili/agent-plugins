@@ -105,3 +105,24 @@ test('the API client lists pull_request_target gate runs by head and posts the r
     'POST /actions/runs/5/rerun',
   ]);
 });
+
+test('fork runs carry no PR number, so every one of them at the head is re-run', async () => {
+  // Two fork PRs on one head both report pull_requests: []; neither may hide the other.
+  const seen = [];
+  const fetchImpl = async (url, init) => {
+    seen.push(`${init.method} ${url.replace('https://api.github.com/repos/o/r', '')}`);
+    if (url.includes('/runs?')) {
+      return { ok: true, status: 200, json: async () => ({ workflow_runs: [
+        { id: 101, status: 'completed', created_at: T(10), pull_requests: [] },
+        { id: 202, status: 'completed', created_at: T(20), pull_requests: [] },
+        { id: 303, status: 'completed', created_at: T(5), pull_requests: [{ number: 4 }] },
+        { id: 404, status: 'completed', created_at: T(15), pull_requests: [{ number: 4 }] },
+      ] }) };
+    }
+    return { ok: true, status: 201, json: async () => { throw new Error('empty body'); } };
+  };
+  const api = githubApi({ token: 't', repo: 'o/r', fetchImpl });
+  const r = await rerunGate({ api, headSha: HEAD, workflow: 'merge-gate.yml', sleep: async () => {} });
+  assert.equal(r.ok, true);
+  assert.deepEqual(seen.filter((s) => s.startsWith('POST')).sort(), ['POST /actions/runs/101/rerun', 'POST /actions/runs/202/rerun', 'POST /actions/runs/404/rerun']);
+});
