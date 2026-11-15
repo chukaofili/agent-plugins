@@ -23,6 +23,8 @@ changes mid-way (an investigation turns into a fix), match again.
 | Refactor | `coding-process`, `tdd`, `testing`, `delegate` |
 | Architecture review, or finding what to refactor | `improve-codebase-architecture`, `codebase-design`, `delegate`; once a candidate is approved, the Refactor row plus `stacked-prs` |
 | Designing or reshaping a module's interface, or deciding where a seam goes | `codebase-design`, plus the row for the task |
+| Writing up a spec from the conversation | `to-spec` |
+| Breaking a spec or plan into tickets | `to-tickets`, `coding-process` |
 | Choosing, adopting or upgrading a dependency or API | `docs-before-memory` |
 | Anything a user sees | The row for the task, plus `verify-ui` |
 | Opening a PR | `code-review`, `stacked-prs`, `ship-show-ask`, `sync-docs` |

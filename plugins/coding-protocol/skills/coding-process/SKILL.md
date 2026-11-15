@@ -18,7 +18,8 @@ description: Use when starting a feature, refactor or bug fix; when handed a tic
 4. **Write a mini-spec or plan.** Break it into ordered vertical slices (see
    Tracer bullets below), each with a clear definition of done. For anything
    bigger than a few files, write it to
-   `docs/plans/YYYY-MM-DD-<topic>-plan.md`.
+   `docs/plans/YYYY-MM-DD-<topic>-plan.md`. To publish it as a spec, or as
+   tickets someone else can pick up, use `to-spec` and `to-tickets`.
 5. **Build one slice at a time, test-first** (see `tdd`). Stick to the
    approved spec: no bonus features and no refactors nobody asked for. If the
    plan turns out wrong, stop and re-propose rather than drifting.
@@ -203,7 +204,8 @@ evidence, and state in the PR what was delegated.
 ## Handoffs
 
 Plans and handoffs live in `docs/plans/`, dated and suffixed by what they are:
-`YYYY-MM-DD-<topic>-{design,plan,handoff}.md`.
+`YYYY-MM-DD-<topic>-{design,plan,spec,handoff}.md`. Local tickets go in a
+`YYYY-MM-DD-<topic>-tickets/` folder beside them (see `to-tickets`).
 
 When context is running long, or work stops mid-task, write
 `docs/plans/YYYY-MM-DD-<topic>-handoff.md`. Someone starting fresh should be
@@ -211,6 +213,21 @@ able to continue from that file alone. Don't wait to be compacted: the line
 is 70% of the context window. The `handoff` skill has what the file
 carries, how a helper hands back to its lead, how a lead gets a fresh
 session started, and how the next session picks up.
+
+## Domain docs
+
+The `Domain docs` line in Project gates says where the project's own
+language lives. Before exploring an area:
+
+- **Read `GLOSSARY.md`,** or the ones `GLOSSARY-MAP.md` points to for the
+  area, and the ADRs in `docs/adr/` that touch it.
+- **Use the glossary's terms** in names, tests, tickets and proposals. Don't
+  drift to a synonym it avoids. A concept that isn't there is a sign: either
+  you're inventing language the project doesn't use, or it's a real gap
+  worth naming.
+- **Flag a conflict with an ADR** rather than overriding it quietly: "This
+  contradicts ADR-0007, but is worth reopening because…".
+- **None of them exist?** Carry on, and don't suggest creating them.
 
 ## Docs before memory
 
