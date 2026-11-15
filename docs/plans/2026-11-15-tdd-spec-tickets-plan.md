@@ -56,8 +56,10 @@ ours conflict, ours win.
 11. **No triage labels.** There is no `triage` skill here. A ticket the
     maintainer approved in chat and that the agent published counts as
     maintainer-assigned.
-12. **TDD stays out of the always-on core** beyond the commit wording in rule
-    2. It lives in `run` and `tdd`.
+12. **TDD is a guardrail in the always-on core.** A new `AGENTS.md` rule
+    says every code change is built test-first, in tracer-bullet slices,
+    with no exceptions for small changes *(skill: `tdd`)*. It holds even
+    when `run` didn't load. `run` and `tdd` carry the detail.
 13. **`to-spec` and `to-tickets` can load on their own description.** They
     ask before publishing to a remote tracker.
 14. The review skill keeps the name `code-review`. Claude Code namespaces it
@@ -94,7 +96,8 @@ README. The last one bumps the version.
 - `coding-process`: the commit rule change, a tracer-bullet section (versus
   horizontal slicing and versus prototypes), the vertical "Plan the split",
   and seams in the proposal.
-- `AGENTS.md` rule 2 and `setup/references/AGENTS.md`, kept identical.
+- `AGENTS.md`: rule 2's red-step wording and the new test-first guardrail
+  (decision 12), mirrored in `setup/references/AGENTS.md`.
 - `delegate`: helpers follow the loop, and return red-then-green evidence.
 
 ### PR 2 — `feat(coding-protocol): codebase-design and code-review` (ssa-ask)
