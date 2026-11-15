@@ -19,8 +19,8 @@ This skill is how you write them.
   at the seam must be green before you start and after you finish. No tests
   there? Write them first, against the current code. They pass from the
   start, so prove each one can fail by breaking the code (see `testing`).
-- **Exempt: changes with no behaviour to test.** Docs, copy, config values, a
-  dependency bump the existing suite already covers, purely visual styling
+- **Exempt: changes with no behaviour to test.** Docs, copy, config values,
+  dependency bumps (the existing suite is their check), purely visual styling
   (driven in a browser instead, see `verify-ui`). The PR's Testing section
   names the exemption.
 
