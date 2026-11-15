@@ -46,7 +46,9 @@ testing past the interface.
 ## Size and staging
 
 - **Fits the budget?** One PR, labelled `ssa-show` (a refactor; see
-  `ship-show-ask`), or `ssa-ask` if it touches the ask list.
+  `ship-show-ask`), or `ssa-ask` if it touches the ask list. A candidate
+  the agent picked itself, with nobody to approve the design, is always
+  `ssa-ask`.
 - **Doesn't fit?** Stage it as a stack, one or more slices per stage, every
   stage `ssa-ask` (see `stacked-prs`).
 - **Many callers?** Use the wide-change pattern in `stacked-prs`: the new
