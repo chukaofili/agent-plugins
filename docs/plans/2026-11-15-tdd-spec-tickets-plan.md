@@ -1,6 +1,6 @@
 # coding-protocol v2.1.0 plan: TDD, tracer bullets, specs and tickets
 
-Status: draft, awaiting approval.
+Status: approved 2026-11-15.
 
 ## What 2.1 is
 
@@ -57,8 +57,11 @@ ours conflict, ours win.
     maintainer approved in chat and that the agent published counts as
     maintainer-assigned.
 12. **TDD is a guardrail in the always-on core.** A new `AGENTS.md` rule
-    says every code change is built test-first, in tracer-bullet slices,
-    with no exceptions for small changes *(skill: `tdd`)*. It holds even
+    says every change to behaviour is built test-first, in tracer-bullet
+    slices, however small *(skill: `tdd`)*. A bug fix is one slice: the
+    regression test is the red step. A change with no behaviour to test
+    (docs, copy, config values, dependency bumps, purely visual styling
+    covered by `verify-ui`) is exempt, and the PR says why. It holds even
     when `run` didn't load. `run` and `tdd` carry the detail.
 13. **`to-spec` and `to-tickets` can load on their own description.** They
     ask before publishing to a remote tracker.
