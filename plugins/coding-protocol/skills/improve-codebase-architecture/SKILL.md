@@ -1,6 +1,6 @@
 ---
 name: improve-codebase-architecture
-description: Use when asked to improve a codebase's architecture, find refactoring or deepening opportunities, review an area for shallow modules, make code easier to test or for agents to navigate, prepare an area before a big build ("how can we make this change easy?"), audit a brownfield or legacy repo, or find the missing seams before writing tests for untestable code. Covers scoping the scan by commit hot spots, the deletion test, presenting candidates with a strength rating and ask-list flags, stopping for the user to pick one (or picking the top recommendation when unattended, under strict conditions), proposing the deepened interface before any code changes, design it twice on request, and building an approved deepening test-first in tracer-bullet slices within the PR size budget. Not for a bug (see coding-process, Debugging) or for designing a module already chosen (see codebase-design).
+description: Use when asked to improve a codebase's architecture, find refactoring or deepening opportunities, review an area for shallow modules, make code easier to test or for agents to navigate, prepare an area before a big build ("how can we make this change easy?"), audit a brownfield or legacy repo, or find the missing seams before writing tests for untestable code. Covers scoping the scan by commit hot spots, the deletion test, presenting candidates with a strength rating and ask-list flags, presenting them as a visual HTML report, stopping for the user to pick one (or picking the top recommendation when unattended, under strict conditions), proposing the deepened interface before any code changes, design it twice on request, and building an approved deepening test-first in tracer-bullet slices within the PR size budget. Not for a bug (see coding-process, Debugging) or for designing a module already chosen (see codebase-design).
 ---
 
 # Improve codebase architecture
@@ -61,11 +61,15 @@ across the callers? Only the first earns a candidate.
 
 ## 3. Present candidates, then stop
 
-Write the candidates up as described in `references/candidates.md`. Each one
-names the files, the problem, the deepening in plain words, the gain in
-locality and leverage, which tests get simpler, a before/after sketch, a
+Present them as a visual HTML report, built as in `references/html-report.md`:
+one self-contained file, Tailwind and Mermaid from their CDNs, a
+before/after diagram for every candidate. Each card names the files, the
+problem, the deepening in plain words, the wins in locality and leverage, a
 strength (`Strong`, `Worth exploring` or `Speculative`), and any ask-list
-flag. End with the one you'd do first and why.
+flag. The report ends with the one you'd do first and why.
+
+In the reply, give the absolute path, then one line per candidate (title
+and strength) and the top recommendation, so the pick can happen in chat.
 
 - **Don't propose interfaces yet.** The report says what to deepen, not how
   the new interface looks. That comes after the pick.
@@ -80,9 +84,13 @@ Then ask which candidate the user wants to explore, and stop. Nothing has
 been decided and no code has changed. The exception is when nobody is there
 to pick, or the user says "pick for you" (see Unattended runs below).
 
-**Where the report goes.** In a live session, in the reply. In an unattended
-run, write it to `docs/plans/YYYY-MM-DD-<area>-architecture-design.md`,
-commit it on its own branch, push it, and report the path.
+**Where the report goes.** In a live session, write it to the OS temp
+directory (`$TMPDIR`, falling back to `/tmp`, or `%TEMP%` on Windows) as
+`architecture-review-<timestamp>.html`, so nothing lands in the repo. Open
+it for the user (`open` on macOS, `xdg-open` on Linux, `start` on Windows).
+In an unattended run a temp file doesn't survive, so write it to
+`docs/plans/YYYY-MM-DD-<area>-architecture-design.html`, commit it on its
+own branch, push it, and link it from the PR or the final report.
 
 **Candidates you won't do now** stay in the report. Offer to file them as
 issues, and ask before publishing anything to a tracker.
