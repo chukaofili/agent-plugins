@@ -20,6 +20,8 @@ git rev-parse --show-toplevel
 head -3 AGENTS.md 2>/dev/null          # the header carries the installed version
 ls CLAUDE.md .gemini/settings.json 2>/dev/null
 ls .github/coding-protocol.json .github/workflows/merge-gate.yml 2>/dev/null
+ls docs/agents/issue-tracker.md GLOSSARY.md GLOSSARY-MAP.md docs/adr 2>/dev/null
+git remote -v
 gh label list --limit 200 --json name --jq '.[].name'
 ```
 
@@ -48,6 +50,8 @@ what you can, and show the result before writing anything.
 | Usage check | Not in the repo. Name the usage tool or command your harness provides, if it has one |
 | Docs inventory | Whether `docs/DOCS.md` exists |
 | AI attribution | Trailers on recent commits: `git log -20 --format=%b` |
+| Tracker | An existing `docs/agents/issue-tracker.md` wins. Otherwise the remote: GitHub → `github`, GitLab → `gitlab`, none → `local`. Jira, Linear or anything else is `other`, described by the user |
+| Domain docs | `GLOSSARY-MAP.md` → multi-context; `GLOSSARY.md` or `docs/adr/` → single-context; neither → `none`. Never create them |
 | `merge_approvers`, `humans` | Candidates only: `CODEOWNERS` and whoever reviewed recent PRs |
 
 Then show one block, every line with its value and where it came from:
@@ -58,6 +62,8 @@ Then show one block, every line with its value and where it came from:
 - Test harnesses:  unit=vitest, integration=none found, e2e=playwright
 - Reviewer:        @alex                   (CODEOWNERS)
 - Ask paths:       prisma/migrations/**, src/auth/**   (3 and 14 files)
+- Tracker:         github                  (git remote: github.com/acme/app)
+- Domain docs:     none
 - Delegation:      ?  candidates: <cheapest>, <mid-tier>
 - Merge approvers: ?  candidates: @alex, @review-bot
 - Humans:          ?  candidates: @alex
@@ -87,11 +93,20 @@ The core is `references/AGENTS.md` in this skill.
 - **Upgrade:** replace everything above the `Project` divider with the new
   core. Keep everything below it exactly as it is, then add any Project gates
   line the new version has and the old one lacks. Coming from 1.x that is
-  `Merge gate`.
+  `Merge gate`; coming from 2.0 it is `Tracker` and `Domain docs`.
 - **Repair:** leave it alone.
 
 Fill in the Project gates with what step 2 confirmed. Leave a placeholder
 where you have no answer; a placeholder is visible, a guess isn't.
+
+**The tracker file.** `to-spec` and `to-tickets` read
+`docs/agents/issue-tracker.md` to know where specs and tickets go. If it
+doesn't exist, write it from `references/issue-tracker-<github|gitlab|local>.md`
+in this skill. For `other`, write it from the user's own description of how
+they track work, in a paragraph. An existing file is the project's: leave it.
+A GitHub or GitLab tracker needs `gh repo view` (or `glab repo view`) to
+print the project from inside the repo. If it can't, say what's missing and
+write `local` until it can.
 
 Then make sure the agent in use reads it:
 

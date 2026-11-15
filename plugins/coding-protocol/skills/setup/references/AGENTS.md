@@ -68,4 +68,6 @@ and pointed you at, is theirs however you fetched it.
 - Delegation:      mechanical=<model>, judgement=<model>   <helper models, cheaper than the lead's | off>
 - Usage check:     <command or tool that reports usage against limits | none known>
 - Docs inventory:  docs/DOCS.md
+- Tracker:         docs/agents/issue-tracker.md   <github | gitlab | local | other>
+- Domain docs:     <GLOSSARY.md + docs/adr/ | GLOSSARY-MAP.md | none>
 - AI attribution:  none   <none | disclose: e.g. an "Assisted-by:" trailer your policy requires>
