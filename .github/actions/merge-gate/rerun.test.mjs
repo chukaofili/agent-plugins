@@ -7,7 +7,7 @@ import { rerunGate } from './rerun.mjs';
 
 const T = (min) => `2026-11-14T10:${String(min).padStart(2, '0')}:00Z`;
 const HEAD = 'H2aaaaaaa';
-const gateRun = (id, status = 'completed', min = 30) => ({ id, status, created_at: T(min) });
+const gateRun = (id, status = 'completed', min = 30, pr = 7) => ({ id, status, created_at: T(min), pr });
 
 function fakeApi({ runs = [[gateRun(11)]] } = {}) {
   const calls = [];
@@ -52,6 +52,14 @@ test('the newest gate run for the head is the one re-run', async () => {
   assert.deepEqual(api.calls.at(-1), ['rerun', 12]);
 });
 
+test('two pull requests on the same head: each one\'s newest gate run is re-run', async () => {
+  // The same branch opened against two bases shares a head SHA; the review was on one of them.
+  const api = fakeApi({ runs: [[gateRun(101, 'completed', 10, 1), gateRun(202, 'completed', 30, 2), gateRun(103, 'completed', 20, 1)]] });
+  const r = await rerun(api);
+  assert.equal(r.ok, true);
+  assert.deepEqual(api.calls.filter((c) => c[0] === 'rerun').map((c) => c[1]).sort(), [103, 202]);
+});
+
 test('a gate run still in progress is waited for, then re-run', async () => {
   // It may have read the reviews before this one changed.
   const api = fakeApi({ runs: [[gateRun(12, 'in_progress')], [gateRun(12, 'queued')], [gateRun(12)]] });
@@ -85,12 +93,12 @@ test('the API client lists pull_request_target gate runs by head and posts the r
   const seen = [];
   const fetchImpl = async (url, init) => {
     seen.push(`${init.method} ${url.replace('https://api.github.com/repos/o/r', '')}`);
-    if (url.includes('/runs?')) return { ok: true, status: 200, json: async () => ({ workflow_runs: [{ id: 5, status: 'completed', created_at: T(1), extra: 1 }] }) };
+    if (url.includes('/runs?')) return { ok: true, status: 200, json: async () => ({ workflow_runs: [{ id: 5, status: 'completed', created_at: T(1), pull_requests: [{ number: 9 }], extra: 1 }, { id: 6, status: 'completed', created_at: T(2), pull_requests: [] }] }) };
     if (url.endsWith('/actions/runs/5/rerun')) return { ok: true, status: 201, json: async () => { throw new Error('empty body'); } };
     return { ok: false, status: 404 };
   };
   const api = githubApi({ token: 't', repo: 'o/r', fetchImpl });
-  assert.deepEqual(await api.gateRuns('merge-gate.yml', 'abc'), [{ id: 5, status: 'completed', created_at: T(1) }]);
+  assert.deepEqual(await api.gateRuns('merge-gate.yml', 'abc'), [{ id: 5, status: 'completed', created_at: T(1), pr: 9 }, { id: 6, status: 'completed', created_at: T(2), pr: null }]);
   await api.rerun(5);
   assert.deepEqual(seen, [
     'GET /actions/workflows/merge-gate.yml/runs?event=pull_request_target&head_sha=abc&per_page=20',
