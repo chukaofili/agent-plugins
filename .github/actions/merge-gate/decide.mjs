@@ -78,10 +78,10 @@ export function latestApproval(reviews, config) {
   return approvals.sort((a, b) => Date.parse(a.at) - Date.parse(b.at)).at(-1) ?? null;
 }
 
-// approval: latestApproval(), or null. covered: whether that approval's
+// author: the PR author's login. approval: latestApproval(), or null. covered: whether that approval's
 // commit is the head, or the head is that commit replayed on a moved base. remove: merge-auto no longer
 // stands for a reviewed head and should come off the PR.
-export function mergeGate({ labels, events, config, labelCheckResult, approval, covered }) {
+export function mergeGate({ author, labels, events, config, labelCheckResult, approval, covered }) {
   const no = (reason, remove = false) => ({ ok: false, reason, remove });
   if (!labelCheckResult.ok) return no(`label-check fails: ${labelCheckResult.reason}`);
   if (mergeHumanInForce({ labels, events, config })) {
@@ -90,6 +90,13 @@ export function mergeGate({ labels, events, config, labelCheckResult, approval, 
   if (!labels.includes('merge-auto')) return no('no merge-auto label yet');
   const e = last(events, 'merge-auto', ['labeled']);
   if (!e) return no('merge-auto is present but its label event was not found');
+  // Being on merge_approvers doesn't let an agent author clear its own PR.
+  // A person on the humans list may: with one maintainer, nobody else could.
+  if (!author) return no('the pull request author is unknown, so merge-auto cannot be checked against it');
+  const self = e.actor.toLowerCase() === author.toLowerCase();
+  if (self && !config.humans.includes(author.toLowerCase())) {
+    return no(`merge-auto was added by ${e.actor}, the pull request's author, who is not on the humans list; the reviewer sets it`);
+  }
   if (!config.mergeApprovers.includes(e.actor.toLowerCase())) {
     return no(`merge-auto was added by ${e.actor}, who is not in merge_approvers`);
   }

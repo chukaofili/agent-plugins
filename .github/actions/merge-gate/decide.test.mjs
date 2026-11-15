@@ -11,7 +11,7 @@ const T = (min) => `2026-11-14T10:${String(min).padStart(2, '0')}:00Z`;
 const ev = (event, label, actor, min = 30) => ({ event, label, actor, at: T(min) });
 const rev = (actor, state, commit, min) => ({ actor, state, commit, at: T(min) });
 const approval = rev('anton', 'APPROVED', 'aaaaaaa1', 20);
-const gate = (o) => mergeGate({ config, labelCheckResult: passing, approval, covered: true, events: [], ...o });
+const gate = (o) => mergeGate({ config, author: 'author-bot', labelCheckResult: passing, approval, covered: true, events: [], ...o });
 const passing = { ok: true, reason: 'ssa-show' };
 
 test('config: rejects bad JSON, wrong types and an empty approver list', () => {
@@ -63,6 +63,18 @@ test('merge-gate: the author cannot open it', () => {
   const r = gate({ labels: ['ssa-show', 'merge-auto'], events: [ev('labeled', 'merge-auto', 'author-bot')] });
   assert.equal(r.ok, false);
   assert.match(r.reason, /author-bot/);
+});
+
+test('merge-gate: an author who is also a merge approver cannot clear their own PR', () => {
+  // Both accounts are approvers; only the PR author is barred, whatever the case of the login.
+  const own = gate({ author: 'Anton', labels: ['ssa-show', 'merge-auto'], events: [ev('labeled', 'merge-auto', 'anton')] });
+  assert.deepEqual([own.ok, own.remove], [false, false]);
+  assert.match(own.reason, /author/);
+  assert.equal(gate({ author: 'chuka', labels: ['ssa-show', 'merge-auto'], events: [ev('labeled', 'merge-auto', 'anton')] }).ok, true);
+});
+
+test('merge-gate: an author on the humans list may clear their own PR', () => {
+  assert.equal(gate({ author: 'Chuka', labels: ['ssa-show', 'merge-auto'], events: [ev('labeled', 'merge-auto', 'chuka')] }).ok, true);
 });
 
 test('merge-gate: the latest merge-auto event decides, not an earlier one', () => {

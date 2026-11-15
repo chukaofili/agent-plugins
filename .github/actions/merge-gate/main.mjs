@@ -82,7 +82,7 @@ export async function run({ check, eventName, event, api, fetchGit, configPath, 
 
   const approval = latestApproval(await api.reviews(n), config);
   const covered = Boolean(approval) && labels.includes('merge-auto') && (await covers({ api, fetchGit, approval, pr }));
-  const mg = mergeGate({ labels, events: await api.labelEvents(n), config, labelCheckResult: lc, approval, covered });
+  const mg = mergeGate({ author: pr.user?.login, labels, events: await api.labelEvents(n), config, labelCheckResult: lc, approval, covered });
 
   let removed = false;
   if (mg.remove) {

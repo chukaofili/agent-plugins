@@ -28,7 +28,7 @@ function fakeApi({ labels, files = ['src/a.ts'], events = [], reviews = [], repo
     comment: async (n, body) => { calls.push(['comment', body]); },
   };
 }
-const pr = (action, head = 'H2aaaaaaa', base = 'B2') => ({ action, pull_request: { number: 7, base: { sha: base }, head: { sha: head } } });
+const pr = (action, head = 'H2aaaaaaa', base = 'B2', author = 'author-bot') => ({ action, pull_request: { number: 7, user: { login: author }, base: { sha: base }, head: { sha: head } } });
 // The commits are fetched for real, by SHA and one snapshot deep, the way the action fetches them.
 const go = (check, event, api, { eventName = 'pull_request_target', repo = null } = {}) =>
   run({ check, eventName, event, api, configPath: 'c.json', defaultBranch: 'main', fetchGit: (shas) => fetchCommits({ url: `file://${repo.dir}`, shas }) });
@@ -80,6 +80,13 @@ test('approved and cleared at the head: open, no diff needed', async () => {
   const api = fakeApi({ labels: ['ssa-show', 'merge-auto'], events: labelled(), reviews: approvedAt('H2aaaaaaa') });
   const r = await go('merge-gate', pr('labeled'), api);
   assert.deepEqual([r.ok, r.removed, api.calls], [true, false, []]);
+});
+
+test('an approver who authored the PR cannot open its gate with merge-auto', async () => {
+  const api = fakeApi({ labels: ['ssa-show', 'merge-auto'], events: labelled(30, 'anton'), reviews: [{ actor: 'chuka', state: 'APPROVED', commit: 'H2aaaaaaa', at: T(20) }], config: JSON.stringify({ merge_approvers: ['anton', 'chuka'], humans: ['chuka'] }) });
+  const r = await go('merge-gate', pr('labeled', 'H2aaaaaaa', 'B2', 'anton'), api);
+  assert.deepEqual([r.ok, api.calls], [false, []]);
+  assert.match(r.reason, /anton.*author/);
 });
 
 test('a clean rebase after clearance keeps the gate open', async () => {
