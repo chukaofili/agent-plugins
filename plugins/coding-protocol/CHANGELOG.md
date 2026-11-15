@@ -7,6 +7,14 @@ that major. The version appears in
 `.claude-plugin/plugin.json`, the marketplace entry and the header comment in
 `AGENTS.md`. CI checks that they match each other and this file.
 
+## 2.2.1 — 2026-11-15
+
+### Fixed
+- The review re-run reads every page of gate runs for the head. It read
+  only the first 20, so with two PRs on one commit, one PR's newer runs
+  could hide the other's, leaving its gate green after a dismissal.
+  ([#45](https://github.com/chukaofili/agent-plugins/pull/45))
+
 ## 2.2.0 — 2026-11-15
 
 The merge gate closes two holes: an agent author clearing its own PR, and
