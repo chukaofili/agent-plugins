@@ -96,12 +96,11 @@ section: name what blocked it and what was verified instead. Silence reads as
 
 ## Review the whole spec once
 
-When the last ticket or stage of a spec is built, review the whole of it
-against the spec (see `code-review`), from the base of the first stage. Then
-make one fix pass, fixing each finding in the stage it belongs to. After
-that, run focused checks on what the fixes touched, and the full gate. Don't
-start a second broad review: it never runs out of findings, and the run
-never ends. List what you fixed and what you declined in the final report.
+When the last ticket or stage of a spec is built, run `code-review` once
+over the whole spec, with its one fix pass and no second broad review. Then
+run the full gate. With nobody to check findings with, verify each one
+against the code yourself, and list what you fixed and what you declined in
+the final report.
 
 ## When you finish
 
