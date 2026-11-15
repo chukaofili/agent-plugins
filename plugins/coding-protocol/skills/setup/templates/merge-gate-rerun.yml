@@ -1,0 +1,22 @@
+# Installed by the coding-protocol `setup` skill, with merge-gate-review.yml.
+# A review that is submitted or dismissed re-runs merge-gate.yml for
+# the pull request's head, so its two checks rule on the reviews as they are
+# now. workflow_run always runs this file from the default branch.
+name: merge-gate-rerun
+
+on:
+  workflow_run:
+    workflows: [merge-gate-review]
+    types: [completed]
+
+permissions:
+  actions: write
+
+jobs:
+  rerun:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: chukaofili/agent-plugins/.github/actions/merge-gate@v2
+        with:
+          check: rerun
+          github-token: ${{ github.token }}

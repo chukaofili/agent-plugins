@@ -1,6 +1,6 @@
 ---
 name: uninstall
-description: Use when removing coding-protocol from a repo, when asked to uninstall, remove, tear down or back out the protocol or its merge gate, or when a repo should stop running the label-check and merge-gate checks. Removes what the setup skill installed, namely the core in AGENTS.md, the gate config, the merge-gate workflow and an unedited tracker file, keeps the project's own content and the labels unless told otherwise, and reports what only a maintainer or the agent's own tooling can remove.
+description: Use when removing coding-protocol from a repo, when asked to uninstall, remove, tear down or back out the protocol or its merge gate, or when a repo should stop running the label-check and merge-gate checks. Removes what the setup skill installed, namely the core in AGENTS.md, the gate config, the merge-gate workflows and an unedited tracker file, keeps the project's own content and the labels unless told otherwise, and reports what only a maintainer or the agent's own tooling can remove.
 ---
 
 # Uninstall
@@ -16,7 +16,7 @@ are yours to change: this skill checks them, reports them, and stops.
 ```bash
 head -3 AGENTS.md 2>/dev/null          # is the core here, and which version
 ls CLAUDE.md .gemini/settings.json 2>/dev/null
-ls .github/coding-protocol.json .github/workflows/merge-gate.yml 2>/dev/null
+ls .github/coding-protocol.json .github/workflows/merge-gate*.yml 2>/dev/null
 ls docs/agents/issue-tracker.md 2>/dev/null
 gh label list --limit 200 --json name --jq '.[].name'
 ```
@@ -72,11 +72,13 @@ merge.
 ## 3. The gate
 
 ```bash
-git rm .github/workflows/merge-gate.yml .github/coding-protocol.json
+git rm .github/workflows/merge-gate.yml .github/workflows/merge-gate-review.yml \
+  .github/workflows/merge-gate-rerun.yml .github/coding-protocol.json
 ```
 
 If the workflow has jobs beyond `label-check` and `merge-gate`, someone added
-them. Remove our two jobs and keep the file.
+them. Remove our two jobs and keep the file. The two re-run files are
+always ours; skip either one that isn't there (installed before 2.2.0).
 
 ## 4. The core
 
