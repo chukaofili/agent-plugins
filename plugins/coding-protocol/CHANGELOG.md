@@ -6,7 +6,22 @@ All notable changes to `coding-protocol`. Versions follow
 `.claude-plugin/plugin.json`, the marketplace entry and the header comment in
 `AGENTS.md`. CI checks that they match each other and this file.
 
-## Unreleased
+## 2.1.0 — 2026-11-15
+
+Test-first becomes the required way to build, work is sliced as tracer
+bullets, and the protocol can write its own specs and tickets and review its
+own branches. Six skills are adapted from Matt Pocock's
+[`mattpocock/skills`](https://github.com/mattpocock/skills) (MIT, see
+`THIRD_PARTY_NOTICES.md`).
+
+### Upgrading from 2.0
+
+1. Update the skills (reinstall the plugin, or `npx skills add` again).
+2. Run `setup` in each repo. It replaces the core in `AGENTS.md` with the
+   new rule 2 wording and rule 10, adds the `Tracker` and `Domain docs`
+   lines to Project gates, and writes `docs/agents/issue-tracker.md`.
+3. Nothing about merging changes. Rule numbers 1 to 9 are unchanged; rule
+   10 is new.
 
 ### Added
 - A `tdd` skill: every change to behaviour is built test-first, red then
@@ -53,6 +68,14 @@ All notable changes to `coding-protocol`. Versions follow
   fixed in one pass as `refactor` and `fix` commits. Adapted from
   `mattpocock/skills`.
 
+- Running a spec's tickets (`delegate`): the next wave is the frontier,
+  worked out from what has merged rather than the tracker's counts. A
+  research helper writes notes outside the repo and the others get a
+  pointer. Helpers check their worktree base and merge in its tip before
+  reporting. Shared names are pinned in every brief.
+- An unattended run reviews the whole spec once after its last stage, makes
+  one fix pass, and stops reviewing (`unattended-run`).
+
 ### Changed
 - `AGENTS.md` rule 2 allows one kind of failing commit: a TDD red step that
   holds only the new failing test, made green by the next commit.
@@ -62,6 +85,12 @@ All notable changes to `coding-protocol`. Versions follow
   PR (`run` rule 7).
 - Helpers are briefed to work test-first and return the failure each new
   test showed (`delegate`).
+- Tickets that don't block each other are sibling PRs, not one long stack,
+  and a ticket closes on the top PR of the stack that delivers it
+  (`stacked-prs`).
+- A suite that skips tests when a fixture or database is missing no longer
+  passes for green: read the counts, especially in a fresh worktree
+  (`testing`, `coding-process`).
 
 ## 2.0.0 — 2026-11-14
 

@@ -101,12 +101,13 @@ Run `setup` again. It replaces everything above the `Project` divider in
 `Full gate:  pnpm run pipeline` line survives the upgrade, while the
 guardrails above the divider are replaced.
 
-**2.0.0 is a breaking release.** Once the checks are required, an approved PR
+**2.0.0 was a breaking release.** Once the checks are required, an approved PR
 no longer merges until the reviewer adds `merge-auto`. See "Upgrading from
-1.x" in [`CHANGELOG.md`](CHANGELOG.md).
+1.x" in [`CHANGELOG.md`](CHANGELOG.md). 2.1.0 is not breaking: re-run `setup`
+to get rule 10 and the tracker.
 
 The version is in the header comment of `AGENTS.md`. Pin a release by its tag,
-for example `chukaofili/agent-plugins#coding-protocol-v2.0.0`.
+for example `chukaofili/agent-plugins#coding-protocol-v2.1.0`.
 
 ## Removing it
 
