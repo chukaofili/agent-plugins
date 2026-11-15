@@ -37,11 +37,8 @@ testing past the interface.
 
 - **Use the seam the approved design named.** A seam you need mid-build that
   nobody agreed is a gap. Raise it; don't add it.
-- **One adapter means a hypothetical seam.** Add a port only when two
-  adapters are justified, usually production and test. A single-adapter port
-  is just indirection.
-- **Internal seams stay internal.** Don't widen the interface because a test
-  wants to reach inside.
+- **Ports, adapters and internal seams** follow the seam discipline in
+  `codebase-design`'s `references/deepening.md`.
 
 ## Size and staging
 

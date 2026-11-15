@@ -12,7 +12,7 @@ The architecture review is one self-contained HTML file, written where the skill
     <title>Architecture review for {{repo name}}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="module">
-      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/mermaid.esm.min.mjs";
       mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose" });
     </script>
     <style>
@@ -45,7 +45,7 @@ Each candidate is one `<article>`:
 
 - **Title**: short, names the deepening (e.g. "Collapse the Order intake pipeline").
 - **Badge row**: recommendation strength (`Strong` = emerald, `Worth exploring` = amber, `Speculative` = slate), plus a tag for the dependency category (`in-process`, `local-substitutable`, `ports & adapters`, `mock`).
-- **Ask-list badge** (if applicable): a red-tinted badge naming the area it touches (data model, auth, billing, tenant scoping, a security boundary, public API shape, or the `Ask list` line in Project gates), with "needs `ssa-ask` and your decision".
+- **Ask-list badge** (if applicable): a red-tinted badge naming the ask-list area it touches (see `ship-show-ask`, plus the `Ask list` line in Project gates), with "needs `ssa-ask` and your decision".
 - **Files**: monospaced list, `font-mono text-sm`.
 - **Before / After diagram**: the centrepiece. Two columns, side by side. See patterns below.
 - **Problem**: one sentence. What hurts.

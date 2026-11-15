@@ -110,12 +110,10 @@ building (see `coding-process`):
    shallow tests they will replace.
 4. **Get explicit approval** of one. It covers the seam.
 
-**Ask list.** If the deepening touches the data model, auth, billing,
-tenant scoping, a security boundary, the public API shape, or anything on
-the `Ask list` line in Project gates, the design is the user's decision, not
-yours. A deepened interface that is a package
-export or an endpoint is public API shape. The PR is `ssa-ask` (see
-`ship-show-ask`).
+**Ask list.** If the deepening touches anything on the ask list (see
+`ship-show-ask`, plus the `Ask list` line in Project gates), the design is
+the user's decision, not yours. A deepened interface that is a package
+export or an endpoint is public API shape. The PR is `ssa-ask`.
 
 **Design it twice only when the user asks.** Follow `codebase-design`'s
 `references/design-it-twice.md`: the helpers run on your model, and the
@@ -144,7 +142,13 @@ One candidate per build. The rest wait for their own session.
 With nobody to pick, you pick: take your top recommendation and build it.
 The same applies in a live session when the user says "pick for you". The
 PR is the proposal. It can't merge until a reviewer approves it (see
-`merge-gate`), so picking costs a revert at worst.
+`merge-gate`), so picking costs a closed PR at worst.
+
+This is a deliberate exception to the rule in `AGENTS.md` that a missing
+design decision is not yours to fill in. It holds only because the
+conditions below keep the design small, reversible and off the ask list,
+and because the result waits for approval as a PR. Outside them, the rule
+stands.
 
 **Pick only when all of these hold:**
 
@@ -155,7 +159,7 @@ PR is the proposal. It can't merge until a reviewer approves it (see
   endpoint counts as public API shape.
 - it sets no new pattern: no new port, and no dependency category the repo
   doesn't already handle somewhere
-- it fits one PR, or a stack planned up front
+- it fits one PR under the size budget
 
 Otherwise the run ends at the report: list the open picks as questions and
 stop. A refactor nobody asked for is checkpoint 1 in `unattended-run`.
