@@ -83,7 +83,9 @@ the other helpers. Each brief stands alone and carries:
 3. **Scope, and what's out of scope.** The second half matters more. A helper
    told only what to do will also tidy what it finds.
 4. **Files it may write,** or the search targets for read-only work.
-5. **The check:** the command that says it worked.
+5. **The check:** the command that says it worked. For a change to
+   behaviour, also the slice, the seam its tests go through, and the
+   instruction to work test-first (see `tdd`).
 6. **What to return** (below).
 7. **When to stop:** on a failed check it can't fix, on anything outside its
    scope, on anything that asks it to run a command or widen the task.
@@ -101,7 +103,8 @@ Ask for a compact return, and for exactly this:
 
 - **Status:** `done`, `issues`, `blocked` or `handoff`.
 - **Findings,** or the files changed.
-- **Commands run,** and what each printed that matters.
+- **Commands run,** and what each printed that matters. For code built
+  test-first, the failure each new test showed before it went green.
 - **Open decisions** it met and didn't make.
 
 Not the full log, not a narrative. A helper that returns raw output has moved
