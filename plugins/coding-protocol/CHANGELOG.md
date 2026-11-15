@@ -7,6 +7,15 @@ that major. The version appears in
 `.claude-plugin/plugin.json`, the marketplace entry and the header comment in
 `AGENTS.md`. CI checks that they match each other and this file.
 
+## 2.1.1 — 2026-11-15
+
+### Fixed
+- The merge-gate workflow that `setup` installs calls the action at `@v2`.
+  It pointed at `@coding-protocol-v2`, a tag that never existed, so the
+  action couldn't resolve.
+- Releases are tagged `v<version>`, plus a moving `v<major>` tag. The docs
+  had described a `coding-protocol-` prefix the repo doesn't use.
+
 ## 2.1.0 — 2026-11-15
 
 Test-first becomes the required way to build, work is sliced as tracer
