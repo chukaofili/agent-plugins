@@ -22,6 +22,13 @@ All notable changes to `coding-protocol`. Versions follow
   depth, seam, adapter, leverage, locality), the deletion test, deepening by
   dependency category, and design it twice, which runs only when asked and
   on the lead's model. Adapted from `mattpocock/skills`.
+- An `improve-codebase-architecture` skill: scans an area (or the commit
+  hot spots) for shallow modules, proposes deepening candidates with a
+  strength rating, and stops for you to pick one. Nothing is refactored
+  until you approve the chosen candidate's design, and an unattended run
+  ends at the proposal. The refactor is built test-first at the deepened
+  interface, replacing the old shallow tests. Adapted from
+  `mattpocock/skills`.
 - A `code-review` skill: before a PR opens, and once over a whole spec,
   helpers review the diff against the repo's standards (plus a baseline of
   Fowler smells) and against the spec, reported side by side. Findings are
