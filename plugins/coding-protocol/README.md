@@ -107,7 +107,7 @@ no longer merges until the reviewer adds `merge-auto`. See "Upgrading from
 to get rule 10 and the tracker.
 
 The version is in the header comment of `AGENTS.md`. Pin a release by its tag,
-for example `chukaofili/agent-plugins#coding-protocol-v2.1.0`.
+for example `chukaofili/agent-plugins#v2.1.0`.
 
 ## Removing it
 
