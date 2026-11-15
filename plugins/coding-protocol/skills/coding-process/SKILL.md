@@ -268,6 +268,10 @@ path.
 **Gotchas:**
 - A new worktree has none of the untracked files. Copy `.env*` and local config
   across, and install dependencies before building.
+- Tests can skip silently in a fresh worktree: a gitignored fixture, a
+  local database that isn't running, an env var a suite checks before it
+  runs. Compare the test count with a run in the main checkout before you
+  believe a green result (see `testing`).
 - The stash stack is shared by every worktree. Never use a bare
   `git stash` / `git stash pop`; set work aside with a WIP commit instead.
 - Commit and push early. Some harnesses clean up a worktree with no changes,

@@ -47,12 +47,16 @@ written after the code (pinning a refactor, or a harness added later), break
 the code (or revert the fix), watch the test fail for the right reason, then
 restore it.
 
-Two ways a test goes green without testing anything:
+Three ways a test goes green without testing anything:
 
 - **Stale build artifacts.** Some harnesses only rebuild when the output
   directory is missing, so a run after a source change tests the previous
   build. Clean first, or know exactly when your harness rebuilds. A
   falsifiability check against a stale build is worse than none.
+- **Skipped, not passed.** A suite that skips when a fixture, database or
+  env var is missing reports green with fewer tests. It happens most in a
+  fresh worktree, where gitignored files aren't there. Read the count of
+  tests run and skipped, not only the verdict.
 - **Retrying assertions can't see transients.** Polling assertions retry until
   the state is satisfied, so they pass right over a dialog that renders twice,
   or an error that flashes and clears. To catch a transient, synchronise on
