@@ -3,8 +3,6 @@
 // GitHub itself returns, so the adapter's mapping runs in every test and
 // cannot share a mistake with the fake.
 const RESPONSE = Symbol('response');
-// List endpoints that wrap their items in an object instead of returning an array.
-const ENVELOPES = ['workflow_runs'];
 
 // A reply with a given status. Without a body, reading one throws, like an empty 201.
 export const reply = (status, body) => ({ [RESPONSE]: true, status, body });
@@ -57,14 +55,14 @@ function respond(status, body) {
   };
 }
 
-// Serves one page of a list, as GitHub does: per_page defaults to 30, pages count from 1.
+// Serves one page of a list, as GitHub does even when no page is asked for:
+// per_page defaults to 30 and stops at 100, and pages count from 1.
 function page(out, query) {
-  if (!('page' in query) && !('per_page' in query)) return out;
-  const size = Number(query.per_page ?? 30);
+  const size = Math.min(Number(query.per_page ?? 30), 100);
   const from = (Number(query.page ?? 1) - 1) * size;
   if (Array.isArray(out)) return out.slice(from, from + size);
-  const key = ENVELOPES.find((k) => Array.isArray(out?.[k]));
-  return key ? { ...out, [key]: out[key].slice(from, from + size) } : out;
+  if (Array.isArray(out?.workflow_runs)) return { ...out, workflow_runs: out.workflow_runs.slice(from, from + size) };
+  return out;
 }
 
 // Builders for GitHub's own shapes.
