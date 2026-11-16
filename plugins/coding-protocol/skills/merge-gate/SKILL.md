@@ -122,6 +122,21 @@ Comparing diffs is what goes wrong here. A diff that ignores whitespace, as
 of it. A diff that ignores position can't tell an edit to `allow_admin()`
 from the same edit to `allow_anonymous()`. The replay has neither blind spot.
 
+In a stack, "the base" is the stage below as the reviewer saw it. When that
+stage is rewritten and the stages above are restacked onto it, the gate
+replays from the lower stage's tip at the time of the approval, taken from
+GitHub's record of every update to that branch (fast-forwards included), so a
+restacked stage whose own patch is unchanged keeps `merge-auto`. If that tip
+can't be placed, the check stays red and says so.
+
+When the patch did change, the removal comment says how: which files the
+replay conflicted in, or which files the new head differs in. That's the part
+to re-review.
+
+If the gate couldn't make the comparison (GitHub or git failed), the check
+stays red and says so, and `merge-auto` stays on: a failed fetch is not a
+changed patch. The next run checks again.
+
 The gate makes this comparison every time it runs, not only when it sees a
 push. A missed event can't leave an old clearance standing.
 

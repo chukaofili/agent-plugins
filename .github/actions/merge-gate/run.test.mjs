@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { run, githubApi } from './main.mjs';
 import { fetchCommits } from './replay.mjs';
-import { fakeGitHub, reply, prRoutes, review, labelEvent, file } from './fake-github.mjs';
+import { fakeGitHub, reply, prRoutes, review, labelEvent, file, refUpdate } from './fake-github.mjs';
 
 const CONFIG = JSON.stringify({ merge_approvers: ['anton'], humans: ['chuka'], ask_paths: ['**/migrations/**'] });
 const approvedAt = (commit, min = 20) => [review('anton', 'APPROVED', commit, min)];
@@ -17,7 +17,8 @@ const COMMENT = 'POST /issues/7/comments';
 
 // GitHub for PR #7. /compare answers from the test repository, as GitHub
 // answers from the real one; without a repository, or for a commit it lacks, it is a 404.
-function gitHub({ labels, files, events = [], reviews = [], repo = null, config = CONFIG, fail = {} }) {
+// updates: the repository's branch updates, newest first, as GitHub lists them.
+function gitHub({ labels, files, events = [], reviews = [], repo = null, config = CONFIG, fail = {}, updates = [] }) {
   const compare = ({ params }) => {
     const [base, head] = params.range.split('...');
     try {
@@ -26,10 +27,11 @@ function gitHub({ labels, files, events = [], reviews = [], repo = null, config 
       return reply(404, { message: 'Not Found' });
     }
   };
-  const gh = fakeGitHub({ routes: { ...prRoutes({ config, labels, files, events, reviews }), 'GET /compare/:range': compare }, fail });
+  const activity = ({ query }) => updates.filter((u) => u.ref === query.ref);
+  const gh = fakeGitHub({ routes: { ...prRoutes({ config, labels, files, events, reviews }), 'GET /compare/:range': compare, 'GET /activity': activity }, fail });
   return { ...gh, api: githubApi({ token: 't', repo: 'o/r', fetchImpl: gh.fetchImpl }), writeRoutes: () => gh.writes().map((w) => `${w.method} ${w.path}`) };
 }
-const pr = (action, head = 'H2aaaaaaa', base = 'B2', author = 'author-bot') => ({ action, pull_request: { number: 7, user: { login: author }, base: { sha: base }, head: { sha: head } } });
+const pr = (action, head = 'H2aaaaaaa', base = 'B2', author = 'author-bot', baseRef = 'main') => ({ action, pull_request: { number: 7, user: { login: author }, base: { sha: base, ref: baseRef }, head: { sha: head } } });
 // The commits are fetched for real, by SHA and one snapshot deep, the way the action fetches them.
 const go = (check, event, gh, { eventName = 'pull_request_target', repo = null } = {}) =>
   run({ check, eventName, event, api: gh.api, configPath: 'c.json', defaultBranch: 'main', fetchGit: (shas) => fetchCommits({ url: `file://${repo.dir}`, shas }) });
@@ -179,6 +181,7 @@ test('a push that only changes indentation shuts the gate and removes merge-auto
   assert.deepEqual([r.ok, r.removed], [false, true]);
   assert.deepEqual(gh.writeRoutes(), [REMOVE, COMMENT]);
   assert.match(gh.writes()[1].body.body, /^Removed `merge-auto` at /);
+  assert.match(r.reason, /the new head differs in auth\.py/);
 });
 
 test('a rebase that needed a conflict resolution shuts the gate', async () => {
@@ -191,7 +194,95 @@ test('a rebase that needed a conflict resolution shuts the gate', async () => {
   writeFileSync(join(g.dir, 'auth.py'), AUTH('True', 'False'));
   g.git('commit', '-qam', 'resolved by hand');
   const r = await go('merge-gate', pr('synchronize', g.git('rev-parse', 'HEAD'), main2), cleared(g), { repo: g });
+  assert.deepEqual([r.ok, r.removed], [false, true]);
+  assert.match(r.reason, /replaying it conflicts in auth\.py/);
+});
+
+test('a GitHub error while comparing shuts the gate but keeps merge-auto', async () => {
+  const g = repo();
+  const gh = cleared(g, { fail: { 'GET /compare/:range': [502] } });
+  const r = await go('merge-gate', pr('synchronize', g.rebased, g.main), gh, { repo: g });
+  assert.deepEqual([r.ok, r.removed, gh.writeRoutes()], [false, false, []]);
+  assert.match(r.reason, /could not check .*HTTP 502/);
+});
+
+// A two-stage stack: #7 sits on `lower`. The reviewer approves #7's guard and
+// feature; then `lower` is amended, and #7 is restacked onto it. keep: which of
+// #7's two commits the restack keeps.
+function stack({ keep = ['guard', 'feature'] } = {}) {
+  const g = repo();
+  const write = (f, s) => writeFileSync(join(g.dir, f), s);
+  const commit = (f, s, msg) => { write(f, s); g.git('add', '.'); g.git('commit', '-qm', msg); return g.git('rev-parse', 'HEAD'); };
+  g.git('checkout', '-q', '-b', 'lower', g.main);
+  const lower = commit('lower.txt', 'lower v1\n', 'lower');
+  g.git('checkout', '-q', '-b', 'upper');
+  const guard = commit('guard.txt', 'guard\n', 'guard');
+  const approved = commit('feature.txt', 'feature\n', 'feature');
+  g.git('checkout', '-q', 'lower');
+  write('lower.txt', 'lower v2\n'); g.git('commit', '-q', '-a', '--amend', '-m', 'lower');
+  const lower2 = g.git('rev-parse', 'HEAD');
+  g.git('checkout', '-q', '-b', 'restacked', lower2);
+  for (const c of keep) g.git('cherry-pick', c === 'guard' ? guard : approved);
+  return { g, lower, lower2, approved, head: g.git('rev-parse', 'HEAD') };
+}
+const restacked = (s) => [s.head, s.lower2, 'author-bot', 'lower'];
+
+const rewritten = (s, min = 35) => [refUpdate('force_push', s.lower, s.lower2, min)];
+
+test('a stage restacked onto its rewritten lower stage keeps the gate open', async () => {
+  const s = stack();
+  const gh = cleared(s.g, { reviews: approvedAt(s.approved), updates: rewritten(s) });
+  const r = await go('merge-gate', pr('synchronize', ...restacked(s)), gh, { repo: s.g });
+  assert.deepEqual([r.ok, r.removed, gh.writeRoutes()], [true, false, []]);
+});
+
+test('a restack that drops a reviewed commit shuts the gate', async () => {
+  const s = stack({ keep: ['feature'] });
+  const gh = cleared(s.g, { reviews: approvedAt(s.approved), updates: rewritten(s) });
+  const r = await go('merge-gate', pr('synchronize', ...restacked(s)), gh, { repo: s.g });
+  assert.deepEqual([r.ok, r.removed], [false, true]);
+  assert.match(r.reason, /older patch/);
+});
+
+test('a fast-forward of the lower stage onto a reviewed commit cannot hide dropping it', async () => {
+  // After the approval, lower moves forward to #7's guard, then is rewritten without it,
+  // and the restack keeps only the feature. The force-push alone would name the guard as the old tip.
+  const s = stack({ keep: ['feature'] });
+  const guard = s.g.git('rev-parse', `${s.approved}~1`);
+  const updates = [refUpdate('force_push', guard, s.lower2, 35), refUpdate('push', s.lower, guard, 30)];
+  const gh = cleared(s.g, { reviews: approvedAt(s.approved), updates });
+  const r = await go('merge-gate', pr('synchronize', ...restacked(s)), gh, { repo: s.g });
+  assert.deepEqual([r.ok, r.removed], [false, true]);
+});
+
+test('the lower stage\'s tip at approval is found past the first page of its history', async () => {
+  const s = stack();
+  const noise = Array.from({ length: 120 }, () => refUpdate('push', s.lower2, s.lower2, 50));
+  const gh = cleared(s.g, { reviews: approvedAt(s.approved), updates: [...noise, ...rewritten(s)] });
+  assert.equal((await go('merge-gate', pr('synchronize', ...restacked(s)), gh, { repo: s.g })).ok, true);
+});
+
+test('another branch\'s updates say nothing about the base', async () => {
+  const s = stack();
+  const gh = cleared(s.g, { reviews: approvedAt(s.approved), updates: [refUpdate('force_push', s.lower, s.lower2, 35, 'other')] });
+  const r = await go('merge-gate', pr('synchronize', ...restacked(s)), gh, { repo: s.g });
   assert.equal(r.ok, false);
+});
+
+test('a base that moved in the same second as the approval cannot be placed, so the label stays', async () => {
+  const s = stack();
+  const gh = cleared(s.g, { reviews: approvedAt(s.approved), updates: rewritten(s, 20) });
+  const r = await go('merge-gate', pr('synchronize', ...restacked(s)), gh, { repo: s.g });
+  assert.deepEqual([r.ok, r.removed], [false, false]);
+  assert.match(r.reason, /could not check .*same second/);
+});
+
+test('a lower-stage rewrite from before the approval is not taken as the approved base', async () => {
+  // The reviewer approved #7 on top of lower2, so lower's old tip says nothing about it.
+  const s = stack();
+  const gh = cleared(s.g, { reviews: approvedAt(s.head), updates: rewritten(s, 10) });
+  const r = await go('merge-gate', pr('synchronize', ...restacked(s)), gh, { repo: s.g });
+  assert.equal(r.ok, true);
 });
 
 test('a failed run on the push does not let a later label event reopen the gate', async () => {
@@ -207,7 +298,8 @@ test('a failed run on the push does not let a later label event reopen the gate'
 test('an approved commit that can no longer be fetched covers nothing', async () => {
   const g = repo();
   const gh = cleared(g, { reviews: approvedAt('0'.repeat(40)) });
-  assert.equal((await go('merge-gate', pr('synchronize', g.rebased, g.main), gh, { repo: g })).ok, false);
+  const r = await go('merge-gate', pr('synchronize', g.rebased, g.main), gh, { repo: g });
+  assert.deepEqual([r.ok, r.removed], [false, false]);
 });
 
 test('re-approved after a change: the old label does not carry over until it is added again', async () => {
@@ -241,4 +333,12 @@ test('a merge group passes: the gate held when the pull request was queued', asy
   const gh = gitHub({ labels: [] });
   assert.equal((await go('merge-gate', {}, gh, { eventName: 'merge_group' })).ok, true);
   assert.deepEqual(gh.requests, []);
+});
+
+test('a failed fetch reports git\'s complaint without the token header', () => {
+  const g = repo();
+  assert.throws(
+    () => fetchCommits({ url: `file://${g.dir}`, shas: ['0'.repeat(40)], extraHeader: 'AUTHORIZATION: basic SECRETTOKEN' }),
+    (e) => /^git fetch: /.test(e.message) && !e.message.includes('SECRETTOKEN'),
+  );
 });

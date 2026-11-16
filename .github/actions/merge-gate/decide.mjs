@@ -79,9 +79,10 @@ export function latestApproval(reviews, config) {
 }
 
 // author: the PR author's login. approval: latestApproval(), or null. covered: whether that approval's
-// commit is the head, or the head is that commit replayed on a moved base. remove: merge-auto no longer
-// stands for a reviewed head and should come off the PR.
-export function mergeGate({ author, labels, events, config, labelCheckResult, approval, covered }) {
+// commit is the head, or the head is that commit replayed on a moved base; null when that could not be
+// checked. why: what changed, or what failed. remove: merge-auto no longer stands for a reviewed head and
+// should come off the PR. A check that could not be made keeps the label: the next run checks again.
+export function mergeGate({ author, labels, events, config, labelCheckResult, approval, covered, why }) {
   const no = (reason, remove = false) => ({ ok: false, reason, remove });
   if (!labelCheckResult.ok) return no(`label-check fails: ${labelCheckResult.reason}`);
   if (mergeHumanInForce({ labels, events, config })) {
@@ -102,7 +103,8 @@ export function mergeGate({ author, labels, events, config, labelCheckResult, ap
   }
   if (!approval) return no('no approval from a merge approver yet');
   const at = approval.commit.slice(0, 7);
-  if (!covered) return no(`the approval at ${at} covers an older patch; review the new head, approve it, then add merge-auto again`, true);
+  if (covered === null) return no(`could not check that the approval at ${at} covers this head (${why}); merge-auto stays, since this is not a changed patch`);
+  if (!covered) return no(`the approval at ${at} covers an older patch${why ? ` (${why})` : ''}; review the new head, approve it, then add merge-auto again`, true);
   if (Date.parse(e.at) < Date.parse(approval.at)) {
     return no(`merge-auto was added before the approval at ${at}; add it again now that the approval is in`, true);
   }

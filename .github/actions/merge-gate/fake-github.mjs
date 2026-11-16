@@ -28,6 +28,7 @@ export function fakeGitHub({ routes = {}, fail = {} } = {}) {
     const route = routes[hit.key];
     const out = typeof route === 'function' ? route({ method, path, query, body, params: hit.params }) : route;
     if (out?.[RESPONSE]) return respond(out.status, out.body);
+    if (CURSORED.includes(path)) return cursorPage(out, u);
     return respond(200, page(out, query));
   };
   return { fetchImpl, requests, writes: () => requests.filter((r) => r.method !== 'GET') };
@@ -45,10 +46,11 @@ function match(routes, method, path) {
   return null;
 }
 
-function respond(status, body) {
+function respond(status, body, link = null) {
   return {
     ok: status >= 200 && status < 300,
     status,
+    headers: { get: (name) => (name.toLowerCase() === 'link' ? link : null) },
     json: async () => {
       if (body === undefined) throw new Error('no response body');
       return body;
@@ -66,6 +68,16 @@ function page(out, query) {
   return out;
 }
 
+// Lists GitHub pages with a cursor in the Link header instead of page numbers.
+const CURSORED = ['/activity'];
+function cursorPage(out, u) {
+  const size = Math.min(Number(u.searchParams.get('per_page') ?? 30), 100);
+  const from = Number(u.searchParams.get('after') ?? 0);
+  const next = new URL(u);
+  next.searchParams.set('after', String(from + size));
+  return respond(200, out.slice(from, from + size), from + size < out.length ? `<${next}>; rel="next"` : null);
+}
+
 // Builders for GitHub's own shapes.
 export const T = (min) => `2026-11-14T10:${String(min).padStart(2, '0')}:00Z`;
 export const label = (name) => ({ name });
@@ -76,6 +88,9 @@ export const content = (text) => ({ content: Buffer.from(text).toString('base64'
 // pr: the PR number GitHub attaches to the run, or null for a fork PR, which it reports as [].
 export const gateRun = (id, { status = 'completed', min = 30, pr = 7 } = {}) => ({ id, status, created_at: T(min), pull_requests: pr === null ? [] : [{ number: pr }] });
 export const gateRuns = (runs) => ({ total_count: runs.length, workflow_runs: runs });
+
+// One update to a branch, as the repository activity list reports it.
+export const refUpdate = (type, before, after, min, branch = 'lower') => ({ activity_type: type, before, after, ref: `refs/heads/${branch}`, timestamp: T(min) });
 
 // A list route whose answer moves on each time the list is read from its first page:
 // one answer per poll, the last repeating.
@@ -99,5 +114,6 @@ export function prRoutes({ n = 7, config, labels = [], files = [file('src/a.ts')
     [`GET /pulls/${n}/reviews`]: reviews,
     [`DELETE /issues/${n}/labels/merge-auto`]: [],
     [`POST /issues/${n}/comments`]: reply(201, { id: 1 }),
+    'GET /activity': [], // no record of the base branch moving
   };
 }

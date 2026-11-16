@@ -3,19 +3,21 @@
 import { readFileSync, appendFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { parseConfig, labelCheck, mergeGate, latestApproval } from './decide.mjs';
-import { replayMatches, fetchCommits } from './replay.mjs';
+import { replay, fetchCommits } from './replay.mjs';
 import { rerunGate } from './rerun.mjs';
 
 const MAX_FILES = 3000; // the API stops listing a PR's files here
 
 export function githubApi({ token, repo, fetchImpl = fetch }) {
-  const call = async (path, { accept = 'application/vnd.github+json', method = 'GET', body, empty = false } = {}) => {
-    const res = await fetchImpl(`https://api.github.com/repos/${repo}${path}`, {
+  // withLink: also return the Link header's next URL, for lists paged by cursor.
+  const call = async (path, { accept = 'application/vnd.github+json', method = 'GET', body, empty = false, url = `https://api.github.com/repos/${repo}${path}`, withLink = false } = {}) => {
+    const res = await fetchImpl(url, {
       method,
       headers: { authorization: `Bearer ${token}`, accept, 'x-github-api-version': '2022-11-28', ...(body ? { 'content-type': 'application/json' } : {}) },
       body: body ? JSON.stringify(body) : undefined,
     });
     if (!res.ok) throw new Error(`${method} ${path}: HTTP ${res.status}`);
+    if (withLink) return { body: await res.json(), next: res.headers.get('link')?.match(/<([^>]+)>;\s*rel="next"/)?.[1] ?? null };
     return res.status === 204 || empty ? null : res.json();
   };
   // Every page of a list. items picks the list out of a response that wraps it.
@@ -49,21 +51,62 @@ export function githubApi({ token, repo, fetchImpl = fetch }) {
     gateRuns: (workflow, sha) =>
       pages(`/actions/workflows/${workflow}/runs?event=pull_request_target&head_sha=${sha}`, (body) => body.workflow_runs),
     rerun: (id) => call(`/actions/runs/${id}/rerun`, { method: 'POST', empty: true }),
+    // Every update to this repository's branch at or after a time, newest
+    // first: pushes and fast-forwards as well as force-pushes, each with the
+    // commit it replaced. The list is paged by cursor and reads back from now,
+    // so it stops at the first page that reaches past the time.
+    refUpdatesSince: async (branch, at) => {
+      const since = Date.parse(at);
+      const all = [];
+      let url = `https://api.github.com/repos/${repo}/activity?ref=${encodeURIComponent(`refs/heads/${branch}`)}&per_page=100`;
+      while (url) {
+        const { body, next } = await call('/activity', { url, withLink: true });
+        for (const a of body) {
+          if (Date.parse(a.timestamp) < since) return all;
+          all.push({ type: a.activity_type, before: a.before, after: a.after, at: a.timestamp });
+        }
+        url = next;
+      }
+      return all;
+    },
   };
 }
 
+// The base branch's tip when the approval was given. In a stack the base is
+// the stage below, and restacking it leaves its old tip out of the new
+// history, so the merge-base with today's base would reach down to the trunk
+// and count the lower stage's old commits as part of this patch. GitHub's
+// activity list records every update to the branch with the commit it
+// replaced, so the first update after the approval replaced the tip the
+// reviewer saw. Fast-forwards count: a force-push alone can name a commit the
+// branch only reached after the approval. No updates since means today's tip
+// is that tip. Nothing here comes from the head, so a push cannot choose it.
+async function baseTipAtApproval({ api, pr, approval }) {
+  const updates = await api.refUpdatesSince(pr.base.ref, approval.at);
+  if (updates.some((u) => Date.parse(u.at) === Date.parse(approval.at))) {
+    throw new Error(`${pr.base.ref} moved in the same second as the approval, so its tip then is unknown`);
+  }
+  const first = updates.at(-1);
+  if (!first) return pr.base.sha;
+  if (/^0+$/.test(first.before)) throw new Error(`${pr.base.ref} did not exist when the approval was given`);
+  return first.before;
+}
+
 // Whether the approval still stands for this head: the same commit, or that
-// commit replayed onto a base that moved. Anything that cannot be fetched or
-// compared covers nothing.
+// commit replayed onto a base that moved. { covered, why }: covered is null
+// when the comparison could not be made, which is not the same as a changed
+// patch. why says which files, or what failed.
 async function covers({ api, fetchGit, approval, pr }) {
-  if (approval.commit === pr.head.sha) return true;
+  if (approval.commit === pr.head.sha) return { covered: true };
   try {
-    const oldBase = await api.mergeBase(pr.base.sha, approval.commit);
+    // GitHub showed the reviewer the diff from here: the merge-base of the base's tip then and the approved commit.
+    const oldBase = await api.mergeBase(await baseTipAtApproval({ api, pr, approval }), approval.commit);
     const newBase = await api.mergeBase(pr.base.sha, pr.head.sha);
     const git = fetchGit([oldBase, newBase, approval.commit, pr.head.sha]);
-    return replayMatches({ git, oldBase, newBase, approved: approval.commit, head: pr.head.sha });
-  } catch {
-    return false;
+    const r = replay({ git, oldBase, newBase, approved: approval.commit, head: pr.head.sha });
+    return { covered: r.match, why: r.why };
+  } catch (e) {
+    return { covered: null, why: e.message };
   }
 }
 
@@ -87,8 +130,8 @@ export async function run({ check, eventName, event, api, fetchGit, configPath, 
   if (check === 'label-check') return { ok: lc.ok, reason: lc.reason, removed: false };
 
   const approval = latestApproval(await api.reviews(n), config);
-  const covered = Boolean(approval) && labels.includes('merge-auto') && (await covers({ api, fetchGit, approval, pr }));
-  const mg = mergeGate({ author: pr.user?.login, labels, events: await api.labelEvents(n), config, labelCheckResult: lc, approval, covered });
+  const { covered, why } = approval && labels.includes('merge-auto') ? await covers({ api, fetchGit, approval, pr }) : { covered: false };
+  const mg = mergeGate({ author: pr.user?.login, labels, events: await api.labelEvents(n), config, labelCheckResult: lc, approval, covered, why });
 
   let removed = false;
   if (mg.remove) {
