@@ -18,10 +18,11 @@ export function githubApi({ token, repo, fetchImpl = fetch }) {
     if (!res.ok) throw new Error(`${method} ${path}: HTTP ${res.status}`);
     return res.status === 204 || empty ? null : res.json();
   };
-  const pages = async (path) => {
+  // Every page of a list. items picks the list out of a response that wraps it.
+  const pages = async (path, items = (body) => body) => {
     const all = [];
     for (let page = 1; ; page++) {
-      const batch = await call(`${path}${path.includes('?') ? '&' : '?'}per_page=100&page=${page}`);
+      const batch = items(await call(`${path}${path.includes('?') ? '&' : '?'}per_page=100&page=${page}`));
       all.push(...batch);
       if (batch.length < 100) return all;
     }
@@ -45,15 +46,9 @@ export function githubApi({ token, repo, fetchImpl = fetch }) {
     removeLabel: (n, label) => call(`/issues/${n}/labels/${label}`, { method: 'DELETE' }),
     comment: (n, body) => call(`/issues/${n}/comments`, { method: 'POST', body: { body } }),
     // Every page: one PR's runs at a shared head must not push another's out of view.
-    gateRuns: async (workflow, sha) => {
-      const all = [];
-      for (let page = 1; ; page++) {
-        const { workflow_runs: batch } = await call(`/actions/workflows/${workflow}/runs?event=pull_request_target&head_sha=${sha}&per_page=100&page=${page}`);
-        all.push(...batch);
-        if (batch.length < 100) break;
-      }
-      return all.map((r) => ({ id: r.id, status: r.status, created_at: r.created_at, pr: r.pull_requests?.[0]?.number ?? null }));
-    },
+    gateRuns: async (workflow, sha) =>
+      (await pages(`/actions/workflows/${workflow}/runs?event=pull_request_target&head_sha=${sha}`, (body) => body.workflow_runs))
+        .map((r) => ({ id: r.id, status: r.status, created_at: r.created_at, pr: r.pull_requests?.[0]?.number ?? null })),
     rerun: (id) => call(`/actions/runs/${id}/rerun`, { method: 'POST', empty: true }),
   };
 }
