@@ -103,17 +103,14 @@ export async function run({ check, eventName, event, api, fetchGit, configPath, 
   return { ok: mg.ok, reason: mg.reason, removed };
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const env = process.env;
-  const event = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, 'utf8'));
+// Everything the script does but read the event file, print and exit. A gate
+// that cannot run is not passing, so any error becomes a failing verdict.
+export async function entry({ env, event, fetchImpl = fetch, sleep = (ms) => new Promise((r) => setTimeout(r, ms)) }) {
   const check = env.GATE_CHECK;
-  if (!['label-check', 'merge-gate', 'rerun'].includes(check)) {
-    console.log(`::error::unknown check "${check}"`);
-    process.exit(1);
-  }
-  const api = githubApi({ token: env.GITHUB_TOKEN, repo: env.GITHUB_REPOSITORY });
+  if (!['label-check', 'merge-gate', 'rerun'].includes(check)) return { ok: false, line: `unknown check "${check}"` };
+  const api = githubApi({ token: env.GITHUB_TOKEN, repo: env.GITHUB_REPOSITORY, fetchImpl });
   const result = await (check === 'rerun'
-    ? rerunGate({ api, headSha: event.workflow_run?.head_sha, workflow: env.GATE_WORKFLOW, sleep: (ms) => new Promise((r) => setTimeout(r, ms)) })
+    ? rerunGate({ api, headSha: event.workflow_run?.head_sha, workflow: env.GATE_WORKFLOW, sleep })
     : run({
         check,
         eventName: env.GITHUB_EVENT_NAME,
@@ -128,8 +125,13 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
         configPath: env.GATE_CONFIG_PATH,
         defaultBranch: event.repository.default_branch,
       })).catch((e) => ({ ok: false, reason: `the gate could not run: ${e.message}` }));
-  const line = `${check}: ${result.ok ? 'pass' : 'not passing'}. ${result.reason}`;
-  console.log(result.ok ? line : `::error::${line}`);
+  return { ok: result.ok, line: `${check}: ${result.ok ? 'pass' : 'not passing'}. ${result.reason}` };
+}
+
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const env = process.env;
+  const { ok, line } = await entry({ env, event: JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, 'utf8')) });
+  console.log(ok ? line : `::error::${line}`);
   if (env.GITHUB_STEP_SUMMARY) appendFileSync(env.GITHUB_STEP_SUMMARY, `${line}\n`);
-  process.exit(result.ok ? 0 : 1);
+  process.exit(ok ? 0 : 1);
 }
