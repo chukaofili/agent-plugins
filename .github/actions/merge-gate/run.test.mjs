@@ -17,7 +17,7 @@ const COMMENT = 'POST /issues/7/comments';
 
 // GitHub for PR #7. /compare answers from the test repository, as GitHub
 // answers from the real one; without a repository, or for a commit it lacks, it is a 404.
-function gitHub({ labels, files = ['src/a.ts'], events = [], reviews = [], repo = null, config = CONFIG, fail = {} }) {
+function gitHub({ labels, files, events = [], reviews = [], repo = null, config = CONFIG, fail = {} }) {
   const compare = ({ params }) => {
     const [base, head] = params.range.split('...');
     try {
@@ -26,8 +26,8 @@ function gitHub({ labels, files = ['src/a.ts'], events = [], reviews = [], repo 
       return reply(404, { message: 'Not Found' });
     }
   };
-  const gh = fakeGitHub({ routes: { ...prRoutes({ config, labels, files: files.map((f) => (typeof f === 'string' ? file(f) : f)), events, reviews }), 'GET /compare/:range': compare }, fail });
-  return { ...gh, api: githubApi({ token: 't', repo: 'o/r', fetchImpl: gh.fetchImpl }), written: () => gh.writes().map((w) => `${w.method} ${w.path}`) };
+  const gh = fakeGitHub({ routes: { ...prRoutes({ config, labels, files, events, reviews }), 'GET /compare/:range': compare }, fail });
+  return { ...gh, api: githubApi({ token: 't', repo: 'o/r', fetchImpl: gh.fetchImpl }), writeRoutes: () => gh.writes().map((w) => `${w.method} ${w.path}`) };
 }
 const pr = (action, head = 'H2aaaaaaa', base = 'B2', author = 'author-bot') => ({ action, pull_request: { number: 7, user: { login: author }, base: { sha: base }, head: { sha: head } } });
 // The commits are fetched for real, by SHA and one snapshot deep, the way the action fetches them.
@@ -67,9 +67,9 @@ function repo() {
 const cleared = (g, extra = {}) => gitHub({ labels: ['ssa-show', 'merge-auto'], events: labelled(), reviews: approvedAt(g.approved), repo: g, ...extra });
 
 test('label-check reports on its own and never touches labels', async () => {
-  const gh = gitHub({ labels: ['ssa-ship', 'merge-auto'], files: ['db/migrations/1.sql'] });
+  const gh = gitHub({ labels: ['ssa-ship', 'merge-auto'], files: [file('db/migrations/1.sql')] });
   assert.equal((await go('label-check', pr('synchronize'), gh)).ok, false);
-  assert.deepEqual(gh.written(), []);
+  assert.deepEqual(gh.writeRoutes(), []);
 });
 
 test('label-check passes on a correctly labelled PR that nobody has cleared to merge', async () => {
@@ -87,7 +87,7 @@ test('a file renamed out of the ask list still counts as touching it', async () 
 
 test('a file list too long to read in full needs ssa-ask', async () => {
   // GitHub stops listing a pull request's files at 3000.
-  const gh = gitHub({ labels: ['ssa-show'], files: Array.from({ length: 3000 }, (_, i) => `src/${i}.ts`) });
+  const gh = gitHub({ labels: ['ssa-show'], files: Array.from({ length: 3000 }, (_, i) => file(`src/${i}.ts`)) });
   const r = await go('label-check', pr('synchronize'), gh);
   assert.equal(r.ok, false);
   assert.match(r.reason, /could not be listed in full/);
@@ -102,7 +102,7 @@ test('the gate config is read from the default branch, never the pull request', 
 test('approved and cleared at the head: open, no diff needed', async () => {
   const gh = gitHub({ labels: ['ssa-show', 'merge-auto'], events: labelled(), reviews: approvedAt('H2aaaaaaa') });
   const r = await go('merge-gate', pr('labeled'), gh);
-  assert.deepEqual([r.ok, r.removed, gh.written()], [true, false, []]);
+  assert.deepEqual([r.ok, r.removed, gh.writeRoutes()], [true, false, []]);
 });
 
 test('a merge-auto label event past the first page of the PR\'s history still counts', async () => {
@@ -138,7 +138,7 @@ test('merge-human removed by a bot, past the first page of history, still holds'
 test('an approver who authored the PR cannot open its gate with merge-auto', async () => {
   const gh = gitHub({ labels: ['ssa-show', 'merge-auto'], events: labelled(30, 'anton'), reviews: [review('chuka', 'APPROVED', 'H2aaaaaaa', 20)], config: JSON.stringify({ merge_approvers: ['anton', 'chuka'], humans: ['chuka'] }) });
   const r = await go('merge-gate', pr('labeled', 'H2aaaaaaa', 'B2', 'anton'), gh);
-  assert.deepEqual([r.ok, gh.written()], [false, []]);
+  assert.deepEqual([r.ok, gh.writeRoutes()], [false, []]);
   assert.match(r.reason, /anton.*author/);
 });
 
@@ -146,7 +146,7 @@ test('a clean rebase after clearance keeps the gate open', async () => {
   const g = repo();
   const gh = cleared(g);
   const r = await go('merge-gate', pr('synchronize', g.rebased, g.main), gh, { repo: g });
-  assert.deepEqual([r.ok, r.removed, gh.written()], [true, false, []]);
+  assert.deepEqual([r.ok, r.removed, gh.writeRoutes()], [true, false, []]);
 });
 
 test('a reworded commit on the same base keeps the gate open', async () => {
@@ -177,7 +177,7 @@ test('a push that only changes indentation shuts the gate and removes merge-auto
   const gh = cleared(g);
   const r = await go('merge-gate', pr('synchronize', g.dedented, g.main), gh, { repo: g });
   assert.deepEqual([r.ok, r.removed], [false, true]);
-  assert.deepEqual(gh.written(), [REMOVE, COMMENT]);
+  assert.deepEqual(gh.writeRoutes(), [REMOVE, COMMENT]);
   assert.match(gh.writes()[1].body.body, /^Removed `merge-auto` at /);
 });
 
@@ -198,7 +198,7 @@ test('a failed run on the push does not let a later label event reopen the gate'
   const g = repo();
   const gh = cleared(g, { labels: ['ssa-show', 'merge-auto', 'bug'], fail: { 'GET /pulls/7/files': [502] } });
   await assert.rejects(go('merge-gate', pr('synchronize', g.dedented, g.main), gh, { repo: g }), /HTTP 502/);
-  assert.deepEqual(gh.written(), []); // the push run died before it could remove anything
+  assert.deepEqual(gh.writeRoutes(), []); // the push run died before it could remove anything
   const r = await go('merge-gate', pr('labeled', g.dedented, g.main), gh, { repo: g });
   assert.deepEqual([r.ok, r.removed], [false, true]);
   assert.match(r.reason, /older patch/);
@@ -213,7 +213,7 @@ test('an approved commit that can no longer be fetched covers nothing', async ()
 test('re-approved after a change: the old label does not carry over until it is added again', async () => {
   const reviews = [...approvedAt('H1', 20), ...approvedAt('H2aaaaaaa', 40)];
   const stale = gitHub({ labels: ['ssa-show', 'merge-auto'], events: labelled(30), reviews });
-  assert.deepEqual([(await go('merge-gate', pr('labeled'), stale)).ok, stale.written()[0]], [false, REMOVE]);
+  assert.deepEqual([(await go('merge-gate', pr('labeled'), stale)).ok, stale.writeRoutes()[0]], [false, REMOVE]);
   const fresh = gitHub({ labels: ['ssa-show', 'merge-auto'], events: [...labelled(30), ...labelled(41)], reviews });
   assert.equal((await go('merge-gate', pr('labeled'), fresh)).ok, true);
 });
@@ -221,7 +221,7 @@ test('re-approved after a change: the old label does not carry over until it is 
 test('no approval yet: shut, and the label is left alone', async () => {
   const gh = gitHub({ labels: ['ssa-show', 'merge-auto'], events: labelled() });
   const r = await go('merge-gate', pr('labeled'), gh);
-  assert.deepEqual([r.ok, r.removed, gh.written()], [false, false, []]);
+  assert.deepEqual([r.ok, r.removed, gh.writeRoutes()], [false, false, []]);
 });
 
 test('a label that cannot be removed leaves the gate shut all the same', async () => {
