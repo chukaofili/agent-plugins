@@ -46,9 +46,8 @@ export function githubApi({ token, repo, fetchImpl = fetch }) {
     removeLabel: (n, label) => call(`/issues/${n}/labels/${label}`, { method: 'DELETE' }),
     comment: (n, body) => call(`/issues/${n}/comments`, { method: 'POST', body: { body } }),
     // Every page: one PR's runs at a shared head must not push another's out of view.
-    gateRuns: async (workflow, sha) =>
-      (await pages(`/actions/workflows/${workflow}/runs?event=pull_request_target&head_sha=${sha}`, (body) => body.workflow_runs))
-        .map((r) => ({ id: r.id, status: r.status, created_at: r.created_at, pr: r.pull_requests?.[0]?.number ?? null })),
+    gateRuns: (workflow, sha) =>
+      pages(`/actions/workflows/${workflow}/runs?event=pull_request_target&head_sha=${sha}`, (body) => body.workflow_runs),
     rerun: (id) => call(`/actions/runs/${id}/rerun`, { method: 'POST', empty: true }),
   };
 }
