@@ -104,12 +104,24 @@ export async function run({ check, eventName, event, api, fetchGit, configPath, 
 }
 
 // Everything the script does but read the event file, print and exit. A gate
-// that cannot run is not passing, so any error becomes a failing verdict.
+// that cannot run is not passing, so any error, in setting up the check or in
+// running it, becomes a failing verdict.
 export async function entry({ env, event, fetchImpl = fetch, sleep = (ms) => new Promise((r) => setTimeout(r, ms)) }) {
   const check = env.GATE_CHECK;
   if (!['label-check', 'merge-gate', 'rerun'].includes(check)) return { ok: false, line: `unknown check "${check}"` };
+  let result;
+  try {
+    result = await gate({ check, env, event, fetchImpl, sleep });
+  } catch (e) {
+    result = { ok: false, reason: `the gate could not run: ${e.message}` };
+  }
+  return { ok: result.ok, line: `${check}: ${result.ok ? 'pass' : 'not passing'}. ${result.reason}` };
+}
+
+// One check, wired to GitHub and git from the action's environment.
+function gate({ check, env, event, fetchImpl, sleep }) {
   const api = githubApi({ token: env.GITHUB_TOKEN, repo: env.GITHUB_REPOSITORY, fetchImpl });
-  const result = await (check === 'rerun'
+  return check === 'rerun'
     ? rerunGate({ api, headSha: event.workflow_run?.head_sha, workflow: env.GATE_WORKFLOW, sleep })
     : run({
         check,
@@ -124,8 +136,7 @@ export async function entry({ env, event, fetchImpl = fetch, sleep = (ms) => new
           }),
         configPath: env.GATE_CONFIG_PATH,
         defaultBranch: event.repository.default_branch,
-      })).catch((e) => ({ ok: false, reason: `the gate could not run: ${e.message}` }));
-  return { ok: result.ok, line: `${check}: ${result.ok ? 'pass' : 'not passing'}. ${result.reason}` };
+      });
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {

@@ -69,6 +69,14 @@ test('an API failure fails closed with the gate could not run', async () => {
   assert.match(r.line, /^merge-gate: not passing\. the gate could not run: .*HTTP 502/);
 });
 
+test('an event the gate cannot read fails closed with a verdict, not a crash', async () => {
+  // An error while the check is set up must reach the verdict line and the step summary too.
+  const gh = gitHub({ labels: ['ssa-show'] });
+  const r = await go(gh, env(), { pull_request: prEvent().pull_request });
+  assert.equal(r.ok, false);
+  assert.match(r.line, /^merge-gate: not passing\. the gate could not run: /);
+});
+
 test('rerun re-runs the gate workflow run for the triggering head', async () => {
   const gh = fakeGitHub({ routes: { 'GET /actions/workflows/merge-gate.yml/runs': gateRuns([gateRun(11)]), 'POST /actions/runs/:id/rerun': reply(201) } });
   const r = await go(gh, env({ GATE_CHECK: 'rerun' }), { repository: { default_branch: 'main' }, workflow_run: { head_sha: HEAD } });
