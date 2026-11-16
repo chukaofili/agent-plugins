@@ -1,7 +1,8 @@
-// A stand-in for the GitHub REST API, behind githubApi's fetchImpl. It knows
-// routes and paging and nothing about the gate: every fixture is the JSON
-// GitHub itself returns, so the adapter's mapping runs in every test and
-// cannot share a mistake with the fake.
+// A stand-in for the GitHub REST API, behind githubApi's fetchImpl.
+// fakeGitHub knows routes and paging and nothing about the gate. Its fixtures
+// are the JSON GitHub itself returns, so the adapter's mapping runs in every
+// test and cannot share a mistake with the fake. The builders at the bottom
+// make the gate's fixtures in that shape.
 const RESPONSE = Symbol('response');
 
 // A reply with a given status. Without a body, reading one throws, like an empty 201.
@@ -9,8 +10,8 @@ export const reply = (status, body) => ({ [RESPONSE]: true, status, body });
 
 // routes: { 'GET /pulls/7/reviews': json | (req) => json | reply(...) }, paths
 // without /repos/{owner}/{repo}; a :name segment matches anything and lands in
-// req.params. A route reads its fixture on every request,
-// so a test can change the fixture between calls. fail: { 'GET /path': [502] }
+// req.params. A route reads its fixture on every request, so a test can
+// change the fixture between calls. fail: { 'GET /path': [502] }
 // answers the next requests to that route with those statuses, once each.
 export function fakeGitHub({ routes = {}, fail = {} } = {}) {
   const requests = [];
@@ -39,7 +40,7 @@ function match(routes, method, path) {
     const names = [];
     const re = new RegExp(`^${pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/:(\w+)/g, (_, name) => (names.push(name), '([^/]+)'))}$`);
     const found = path.match(re);
-    if (found) return { key, params: Object.fromEntries(names.map((name, i) => [name, decodeURIComponent(found[i + 1])])) };
+    if (found) return { key, params: Object.fromEntries(names.map((name, i) => [name, found[i + 1]])) };
   }
   return null;
 }
@@ -87,7 +88,8 @@ export function polls(...answers) {
 }
 
 // The routes the gate reads and writes for one pull request.
-// config: the gate config's text, or null for a repository that has none.
+// config: the gate config's text, served at c.json (the tests' configPath),
+// or null for a repository that has none.
 export function prRoutes({ n = 7, config, labels = [], files = [file('src/a.ts')], events = [], reviews = [] }) {
   return {
     ...(config === null ? {} : { 'GET /contents/c.json': () => content(config) }),
