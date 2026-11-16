@@ -134,3 +134,7 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   if (env.GITHUB_STEP_SUMMARY) appendFileSync(env.GITHUB_STEP_SUMMARY, `${line}\n`);
   process.exit(result.ok ? 0 : 1);
 }
+
+export async function entry() {
+  throw new Error('not yet');
+}
