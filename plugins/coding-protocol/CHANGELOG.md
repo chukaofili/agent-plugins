@@ -7,6 +7,31 @@ that major. The version appears in
 `.claude-plugin/plugin.json`, the marketplace entry and the header comment in
 `AGENTS.md`. CI checks that they match each other and this file.
 
+## 2.2.2 — 2026-11-16
+
+### Fixed
+- A stacked PR whose own patch is unchanged keeps `merge-auto` when the
+  stage below is rewritten and the stack restacked. The gate now replays
+  from the lower stage's tip at the time of the approval, taken from
+  GitHub's record of updates to that branch. Before, it fell back to the
+  default branch, replayed the lower stage's old commits, hit conflicts and
+  removed `merge-auto` from every stage above.
+  ([#53](https://github.com/chukaofili/agent-plugins/pull/53))
+- When the gate can't make the comparison (a GitHub or git error), the
+  check goes red and says so, and `merge-auto` stays on. Before, any error
+  removed the label. ([#53](https://github.com/chukaofili/agent-plugins/pull/53))
+- When a push does change the patch, the check and the removal comment name
+  the files: where the replay conflicted, or where the new head differs.
+  ([#53](https://github.com/chukaofili/agent-plugins/pull/53))
+- A failed `git fetch` no longer echoes the command line, which carried the
+  auth header. ([#53](https://github.com/chukaofili/agent-plugins/pull/53))
+- When the gate can't set a check up, for example on an event with no
+  `repository`, it now prints a verdict line such as
+  `merge-gate: not passing. the gate could not run: <reason>` and writes it
+  to the step summary. Before, it crashed with a stack trace and left no
+  reason. The gate still fails closed either way.
+  ([#52](https://github.com/chukaofili/agent-plugins/pull/52))
+
 ## 2.2.1 — 2026-11-15
 
 ### Fixed
