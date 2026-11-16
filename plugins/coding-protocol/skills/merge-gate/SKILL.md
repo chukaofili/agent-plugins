@@ -124,9 +124,10 @@ from the same edit to `allow_anonymous()`. The replay has neither blind spot.
 
 In a stack, "the base" is the stage below as the reviewer saw it. When that
 stage is rewritten and the stages above are restacked onto it, the gate
-replays from the lower stage's tip at the time of the approval, as GitHub
-recorded it at the force-push, so a restacked stage whose own patch is
-unchanged keeps `merge-auto`.
+replays from the lower stage's tip at the time of the approval, taken from
+GitHub's record of every update to that branch (fast-forwards included), so a
+restacked stage whose own patch is unchanged keeps `merge-auto`. If that tip
+can't be placed, the check stays red and says so.
 
 When the patch did change, the removal comment says how: which files the
 replay conflicted in, or which files the new head differs in. That's the part
