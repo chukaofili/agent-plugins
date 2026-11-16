@@ -1,6 +1,6 @@
 {
   "name": "coding-protocol",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "An opinionated protocol for coding agents: propose before building, atomic stacked PRs under 500 lines, a real test bar, browser-verified UI, docs before memory.",
   "author": {
     "name": "Chuka Ofili",
