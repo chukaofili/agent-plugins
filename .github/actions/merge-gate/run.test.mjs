@@ -111,11 +111,28 @@ test('a merge-auto label event past the first page of the PR\'s history still co
   assert.equal((await go('merge-gate', pr('labeled'), gh)).ok, true);
 });
 
-test('a review from a deleted account is skipped, not fatal', async () => {
-  // GitHub reports a deleted reviewer as user: null.
-  const ghost = { user: null, state: 'COMMENTED', commit_id: 'H2aaaaaaa', submitted_at: null };
-  const gh = gitHub({ labels: ['ssa-show', 'merge-auto'], events: labelled(), reviews: [ghost, ...approvedAt('H2aaaaaaa')] });
+test('a review or label event from a deleted account is skipped, not fatal', async () => {
+  // GitHub reports a deleted account as user: null or actor: null.
+  const ghostReview = { user: null, state: 'APPROVED', commit_id: 'H2aaaaaaa', submitted_at: '2026-11-14T10:25:00Z' };
+  const ghostEvent = { event: 'labeled', label: { name: 'bug' }, actor: null, created_at: '2026-11-14T10:26:00Z' };
+  const gh = gitHub({ labels: ['ssa-show', 'merge-auto'], events: [ghostEvent, ...labelled()], reviews: [ghostReview, ...approvedAt('H2aaaaaaa')] });
   assert.equal((await go('merge-gate', pr('labeled'), gh)).ok, true);
+});
+
+test('a pending review neither approves nor cancels an approval', async () => {
+  // A review not yet submitted has no submitted_at.
+  const pending = { user: { login: 'anton' }, state: 'PENDING', commit_id: 'H2aaaaaaa' };
+  const gh = gitHub({ labels: ['ssa-show', 'merge-auto'], events: labelled(), reviews: [...approvedAt('H2aaaaaaa'), pending] });
+  assert.equal((await go('merge-gate', pr('labeled'), gh)).ok, true);
+});
+
+test('merge-human removed by a bot, past the first page of history, still holds', async () => {
+  const chatter = Array.from({ length: 120 }, () => ({ event: 'commented', created_at: '2026-11-14T10:00:00Z' }));
+  const events = [labelEvent('labeled', 'merge-human', 'chuka', 10), ...chatter, labelEvent('unlabeled', 'merge-human', 'github-actions[bot]', 25), ...labelled()];
+  const gh = gitHub({ labels: ['ssa-show', 'merge-auto'], events, reviews: approvedAt('H2aaaaaaa') });
+  const r = await go('merge-gate', pr('labeled'), gh);
+  assert.equal(r.ok, false);
+  assert.match(r.reason, /merge-human was removed by an account that is not on the humans list/);
 });
 
 test('an approver who authored the PR cannot open its gate with merge-auto', async () => {
