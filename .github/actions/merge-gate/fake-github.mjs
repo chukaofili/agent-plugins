@@ -30,7 +30,8 @@ export function fakeGitHub({ routes = {}, fail = {} } = {}) {
     if (out?.[RESPONSE]) return respond(out.status, out.body);
     return respond(200, page(out, query));
   };
-  return { fetchImpl, requests, writes: () => requests.filter((r) => r.method !== 'GET') };
+  // A GraphQL request is a POST that only reads, so it is not a write.
+  return { fetchImpl, requests, writes: () => requests.filter((r) => r.method !== 'GET' && r.path !== '/graphql') };
 }
 
 function match(routes, method, path) {
@@ -77,6 +78,16 @@ export const content = (text) => ({ content: Buffer.from(text).toString('base64'
 export const gateRun = (id, { status = 'completed', min = 30, pr = 7 } = {}) => ({ id, status, created_at: T(min), pull_requests: pr === null ? [] : [{ number: pr }] });
 export const gateRuns = (runs) => ({ total_count: runs.length, workflow_runs: runs });
 
+// The GraphQL answer for the pull requests whose head is a branch, with each
+// one's head force-pushes: [[{ before, after, min }, ...], ...], one list per PR.
+// A list with fork: true is a PR from another repository's branch of that name.
+export const headPushes = (...prs) => ({
+  data: { repository: { pullRequests: { nodes: prs.map((pushes) => ({
+    isCrossRepository: Boolean(pushes.fork),
+    timelineItems: { nodes: pushes.map((p) => ({ createdAt: T(p.min), beforeCommit: p.before ? { oid: p.before } : null, afterCommit: { oid: p.after } })) },
+  })) } } },
+});
+
 // A list route whose answer moves on each time the list is read from its first page:
 // one answer per poll, the last repeating.
 export function polls(...answers) {
@@ -99,5 +110,6 @@ export function prRoutes({ n = 7, config, labels = [], files = [file('src/a.ts')
     [`GET /pulls/${n}/reviews`]: reviews,
     [`DELETE /issues/${n}/labels/merge-auto`]: [],
     [`POST /issues/${n}/comments`]: reply(201, { id: 1 }),
+    'POST /graphql': () => headPushes(), // no stage below this PR has been rewritten
   };
 }

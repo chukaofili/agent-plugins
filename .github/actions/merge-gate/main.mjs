@@ -3,14 +3,24 @@
 import { readFileSync, appendFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { parseConfig, labelCheck, mergeGate, latestApproval } from './decide.mjs';
-import { replayMatches, fetchCommits } from './replay.mjs';
+import { replay, fetchCommits } from './replay.mjs';
 import { rerunGate } from './rerun.mjs';
 
 const MAX_FILES = 3000; // the API stops listing a PR's files here
 
+const HEAD_FORCE_PUSHES = `query($owner: String!, $name: String!, $ref: String!) {
+  repository(owner: $owner, name: $name) {
+    pullRequests(headRefName: $ref, first: 20, states: [OPEN, CLOSED, MERGED]) {
+      nodes { isCrossRepository timelineItems(itemTypes: [HEAD_REF_FORCE_PUSHED_EVENT], last: 100) {
+        nodes { ... on HeadRefForcePushedEvent { createdAt beforeCommit { oid } afterCommit { oid } } }
+      } }
+    }
+  }
+}`;
+
 export function githubApi({ token, repo, fetchImpl = fetch }) {
-  const call = async (path, { accept = 'application/vnd.github+json', method = 'GET', body, empty = false } = {}) => {
-    const res = await fetchImpl(`https://api.github.com/repos/${repo}${path}`, {
+  const call = async (path, { accept = 'application/vnd.github+json', method = 'GET', body, empty = false, url = `https://api.github.com/repos/${repo}${path}` } = {}) => {
+    const res = await fetchImpl(url, {
       method,
       headers: { authorization: `Bearer ${token}`, accept, 'x-github-api-version': '2022-11-28', ...(body ? { 'content-type': 'application/json' } : {}) },
       body: body ? JSON.stringify(body) : undefined,
@@ -49,21 +59,51 @@ export function githubApi({ token, repo, fetchImpl = fetch }) {
     gateRuns: (workflow, sha) =>
       pages(`/actions/workflows/${workflow}/runs?event=pull_request_target&head_sha=${sha}`, (body) => body.workflow_runs),
     rerun: (id) => call(`/actions/runs/${id}/rerun`, { method: 'POST', empty: true }),
+    // The head force-pushes of every pull request, open or not, whose head is
+    // this branch: in a stack, the rewrites of the stage below, oldest first.
+    // REST reports only the commit after a force-push; GraphQL has the one before.
+    // headRefName matches a fork's branch of the same name too, and a fork
+    // chooses its own commits, so only this repository's PRs count.
+    headForcePushes: async (ref) => {
+      const [owner, name] = repo.split('/');
+      const res = await call('/graphql', { method: 'POST', url: 'https://api.github.com/graphql', body: { query: HEAD_FORCE_PUSHES, variables: { owner, name, ref } } });
+      if (res.errors?.length) throw new Error(`POST /graphql: ${res.errors[0].message}`);
+      return res.data.repository.pullRequests.nodes
+        .filter((p) => p.isCrossRepository === false)
+        .flatMap((p) => p.timelineItems.nodes)
+        .map((e) => ({ at: e.createdAt, before: e.beforeCommit?.oid ?? null, after: e.afterCommit?.oid ?? null }))
+        .sort((a, b) => Date.parse(a.at) - Date.parse(b.at));
+    },
   };
 }
 
+// The base branch's tip when the approval was given, if the branch has been
+// rewritten since. In a stack the base is the stage below, and restacking it
+// leaves its old tip out of the new history, so the merge-base with today's
+// base would reach down to the trunk and count the lower stage's old commits
+// as part of this patch. GitHub records the tip a force-push replaced; the
+// first force-push after the approval replaced the tip the reviewer saw.
+// Nothing here comes from the head, so a push cannot choose it.
+async function baseTipAtApproval({ api, pr, approval }) {
+  const after = (await api.headForcePushes(pr.base.ref)).find((p) => Date.parse(p.at) > Date.parse(approval.at));
+  return after?.before ?? null;
+}
+
 // Whether the approval still stands for this head: the same commit, or that
-// commit replayed onto a base that moved. Anything that cannot be fetched or
-// compared covers nothing.
+// commit replayed onto a base that moved. { covered, why }: covered is null
+// when the comparison could not be made, which is not the same as a changed
+// patch. why says which files, or what failed.
 async function covers({ api, fetchGit, approval, pr }) {
-  if (approval.commit === pr.head.sha) return true;
+  if (approval.commit === pr.head.sha) return { covered: true };
   try {
-    const oldBase = await api.mergeBase(pr.base.sha, approval.commit);
+    const oldTip = await baseTipAtApproval({ api, pr, approval });
+    const oldBase = await api.mergeBase(oldTip ?? pr.base.sha, approval.commit);
     const newBase = await api.mergeBase(pr.base.sha, pr.head.sha);
     const git = fetchGit([oldBase, newBase, approval.commit, pr.head.sha]);
-    return replayMatches({ git, oldBase, newBase, approved: approval.commit, head: pr.head.sha });
-  } catch {
-    return false;
+    const r = replay({ git, oldBase, newBase, approved: approval.commit, head: pr.head.sha });
+    return { covered: r.match, why: r.why };
+  } catch (e) {
+    return { covered: null, why: e.message };
   }
 }
 
@@ -87,8 +127,8 @@ export async function run({ check, eventName, event, api, fetchGit, configPath, 
   if (check === 'label-check') return { ok: lc.ok, reason: lc.reason, removed: false };
 
   const approval = latestApproval(await api.reviews(n), config);
-  const covered = Boolean(approval) && labels.includes('merge-auto') && (await covers({ api, fetchGit, approval, pr }));
-  const mg = mergeGate({ author: pr.user?.login, labels, events: await api.labelEvents(n), config, labelCheckResult: lc, approval, covered });
+  const { covered, why } = approval && labels.includes('merge-auto') ? await covers({ api, fetchGit, approval, pr }) : { covered: false };
+  const mg = mergeGate({ author: pr.user?.login, labels, events: await api.labelEvents(n), config, labelCheckResult: lc, approval, covered, why });
 
   let removed = false;
   if (mg.remove) {

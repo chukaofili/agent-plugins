@@ -94,6 +94,18 @@ test('merge-gate: an approval that covers an older patch shuts it and drops the 
   assert.match(r.reason, /older patch/);
 });
 
+test('merge-gate: the reason says what changed in the patch', () => {
+  const r = gate({ labels: ['ssa-show', 'merge-auto'], events: [ev('labeled', 'merge-auto', 'anton')], covered: false, why: 'replaying it conflicts in auth.py' });
+  assert.match(r.reason, /older patch \(replaying it conflicts in auth\.py\)/);
+});
+
+test('merge-gate: an approval that could not be checked shuts it but keeps the label', () => {
+  // A failed fetch is not a changed patch; the next run checks again.
+  const r = gate({ labels: ['ssa-show', 'merge-auto'], events: [ev('labeled', 'merge-auto', 'anton')], covered: null, why: 'GET /compare: HTTP 502' });
+  assert.deepEqual([r.ok, r.remove], [false, false]);
+  assert.match(r.reason, /could not check .* HTTP 502/);
+});
+
 test('merge-gate: a label older than the approval does not carry over', () => {
   // Cleared, then the patch changed, then re-approved: the old label must not reopen the gate.
   const r = gate({ labels: ['ssa-show', 'merge-auto'], events: [ev('labeled', 'merge-auto', 'anton', 10)] });

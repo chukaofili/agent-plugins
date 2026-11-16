@@ -14,7 +14,7 @@ const CONFIG = JSON.stringify({ merge_approvers: ['anton'], humans: ['chuka'], a
 const HEAD = 'H2aaaaaaa';
 
 const env = (o = {}) => ({ GATE_CHECK: 'merge-gate', GITHUB_EVENT_NAME: 'pull_request_target', GITHUB_TOKEN: 't', GITHUB_REPOSITORY: 'o/r', GITHUB_SERVER_URL: 'file:///nowhere', GATE_CONFIG_PATH: 'c.json', GATE_WORKFLOW: 'merge-gate.yml', ...o });
-const prEvent = (head = HEAD, base = 'B2', branch = 'main') => ({ repository: { default_branch: branch }, pull_request: { number: 7, user: { login: 'author-bot' }, base: { sha: base }, head: { sha: head } } });
+const prEvent = (head = HEAD, base = 'B2', branch = 'main') => ({ repository: { default_branch: branch }, pull_request: { number: 7, user: { login: 'author-bot' }, base: { sha: base, ref: 'main' }, head: { sha: head } } });
 const go = (gh, e, event) => entry({ env: e, event, fetchImpl: gh.fetchImpl, sleep: async () => {} });
 
 // A repository at <server>/o/r with an approved commit, and a head that is a clean rebase of it onto a moved base.
