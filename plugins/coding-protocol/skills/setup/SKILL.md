@@ -51,7 +51,7 @@ what you can, and show the result before writing anything.
 | Docs inventory | Whether `docs/DOCS.md` exists |
 | AI attribution | Trailers on recent commits: `git log -20 --format=%b` |
 | Tracker | An existing `docs/agents/issue-tracker.md` wins. Otherwise the remote: GitHub → `github`, GitLab → `gitlab`, none → `local`. Jira, Linear or anything else is `other`, described by the user |
-| Domain docs | `GLOSSARY-MAP.md` → multi-context; `GLOSSARY.md` or `docs/adr/` → single-context; neither → `none`. Never create them |
+| Domain docs | `GLOSSARY-MAP.md` → `GLOSSARY-MAP.md`; `GLOSSARY.md` or `docs/adr/` → `GLOSSARY.md + docs/adr/`; neither → `?`, and ask whether to track them (see below) |
 | `merge_approvers`, `humans` | Candidates only: `CODEOWNERS` and whoever reviewed recent PRs |
 
 Then show one block, every line with its value and where it came from:
@@ -63,7 +63,7 @@ Then show one block, every line with its value and where it came from:
 - Reviewer:        @alex                   (CODEOWNERS)
 - Ask paths:       prisma/migrations/**, src/auth/**   (3 and 14 files)
 - Tracker:         github                  (git remote: github.com/acme/app)
-- Domain docs:     none
+- Domain docs:     ?  none found; track ADRs and a glossary?
 - Delegation:      ?  candidates: <cheapest>, <mid-tier>
 - Merge approvers: ?  candidates: @alex, @review-bot
 - Humans:          ?  candidates: @alex
@@ -76,13 +76,20 @@ fill in the ones you couldn't.
 - **Say "none found", not "declined".** `declined` in the harness line means
   a person said no to setting one up (see `testing`). You not finding one is a
   different fact.
+- **Domain docs are opt-in.** With no glossary or ADRs in the repo, ask
+  whether agents should keep them (see `domain-docs`). Yes → write
+  `GLOSSARY.md + docs/adr/`, but create neither: the first ADR or glossary
+  term creates its file, in the PR that needs it. No → write `declined`, and
+  agents won't bring it up again. An older install's `none` was never asked,
+  so ask on an upgrade or repair too.
 - **Never write an account you weren't given.** A candidate is a suggestion to
   show, not a value to save. A wrong name in `merge_approvers` either locks
   the gate or hands it to a stranger.
 - **Nobody to confirm?** Write the lines you inferred from files, each marked
   `(inferred, unconfirmed)`. Leave both account lists empty, say so at the top
   of the PR, and stop before step 7. An empty `merge_approvers` fails the gate
-  closed, which is the safe way to be unfinished.
+  closed, which is the safe way to be unfinished. Domain docs stays `none`:
+  opting in is a person's call.
 
 ## 3. The core and Project gates
 

@@ -16,12 +16,13 @@ The `Domain docs` line in Project gates says which the repo has:
 
 | Line | Layout |
 |---|---|
-| `GLOSSARY.md + docs/adr/` | Single context: one glossary at the root, ADRs in `docs/adr/` |
+| `GLOSSARY.md + docs/adr/` | Single context: one glossary at the root, ADRs in `docs/adr/`. Either may not exist yet: the first term or ADR creates it |
 | `GLOSSARY-MAP.md` | Multi-context: the map lists each context and where its glossary and ADRs live |
-| `none` | Neither exists. Carry on without them, and don't suggest creating them |
+| `declined` | The project chose not to keep them. Don't create them, and don't suggest it |
+| `none` | Nobody has been asked yet. Don't create them either; `setup` asks on its next run |
 
 No Project gates, or the line is missing? Check for the files themselves and
-go by what is there.
+go by what is there. No files means `none`.
 
 ## Read before exploring
 
@@ -129,5 +130,5 @@ domain decision; propose it before making it.
   next to its glossary. An ADR that cuts across contexts goes in the root
   `docs/adr/`. A term used in two contexts with two meanings gets an entry in
   each glossary, and each entry says how it differs from the other.
-- **`none`:** don't create either file. Explain a decision in the PR
-  description, as for any PR.
+- **`declined` or `none`:** don't create either file. Explain a decision in
+  the PR description, as for any PR.
