@@ -29,7 +29,9 @@ judgement call.
 
 1. **Scope.** Anything the approved plan doesn't already cover: a new feature,
    a refactor nobody asked for, or dropping a step because it turned out hard.
-   **Setting up a missing test harness counts as scope.**
+   **Setting up a missing test harness counts as scope,** and so does
+   superseding an accepted ADR or changing what a glossary term means (see
+   `domain-docs`). Writing a new ADR for a decision the plan made is not.
 2. **Anything that leaves the machine:** external messages, publishing, or
    calls to a third-party service. Work in the repo (branches, commits,
    pushes, PRs) is inside the plan; talking to the outside world is not.

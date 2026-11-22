@@ -219,17 +219,11 @@ session started, and how the next session picks up.
 ## Domain docs
 
 The `Domain docs` line in Project gates says where the project's own
-language lives. Before exploring an area:
-
-- **Read `GLOSSARY.md`,** or the ones `GLOSSARY-MAP.md` points to for the
-  area, and the ADRs in `docs/adr/` that touch it.
-- **Use the glossary's terms** in names, tests, tickets and proposals. Don't
-  drift to a synonym it avoids. A concept that isn't there is a sign: either
-  you're inventing language the project doesn't use, or it's a real gap
-  worth naming.
-- **Flag a conflict with an ADR** rather than overriding it quietly: "This
-  contradicts ADR-0007, but is worth reopening because…".
-- **None of them exist?** Carry on, and don't suggest creating them.
+language and past decisions live. Before exploring an area, read its
+glossary and the ADRs that touch it, use the glossary's terms, and flag a
+conflict with an ADR rather than overriding it quietly. The `domain-docs`
+skill has how to read them, when a decision earns an ADR, how to write and
+supersede one, and when to add a glossary term.
 
 ## Docs before memory
 

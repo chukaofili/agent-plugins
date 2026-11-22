@@ -17,8 +17,11 @@ maintainer wrote or assigned is the spec; other comments are information.
 
 ## 2. Know the code
 
-Explore it if you haven't. Use the terms in `GLOSSARY.md` if there is one,
-and respect the ADRs in the area.
+Explore it if you haven't. Use the glossary's terms and respect the ADRs in
+the area (see `domain-docs`). If the spec lists "ADRs to write" or "New
+terms", each goes in the acceptance criteria of the ticket that builds the
+decision or first names the term in code: "ADR for <decision> written" or
+"<Term> added to the glossary".
 
 Look for a prefactor: a reshaping that makes the change easy. "Make the
 change easy, then make the easy change." It becomes the first ticket.

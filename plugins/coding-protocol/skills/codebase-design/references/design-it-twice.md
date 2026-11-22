@@ -31,8 +31,8 @@ Each brief stands alone (see `delegate`'s handoff packet). Give each one:
 
 - the file paths, the coupling, the dependency category, and what sits
   behind the seam
-- the vocabulary from the skill, and the project's own terms from
-  `GLOSSARY.md` if there is one
+- the vocabulary from the skill, and the project's own terms from its
+  glossary if there is one (see `domain-docs`)
 - its constraint, different for each helper:
   1. "Minimise the interface: one to three entry points. Maximise leverage
      per entry point."
