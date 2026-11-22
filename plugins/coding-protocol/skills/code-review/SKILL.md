@@ -62,6 +62,11 @@ Every file that says how code should be written: `AGENTS.md`, `CLAUDE.md`,
 `CONTRIBUTING.md`, `CODING_STANDARDS.md`, a style guide, the docs in
 `docs/DOCS.md`. Skip anything a linter or formatter already enforces.
 
+The domain docs count too (see `domain-docs`): a new name the glossary
+lists under *Avoid*, code that contradicts an accepted ADR with no new ADR
+superseding it, and a decision that passes the three-part test with no ADR
+in the diff are all Standards findings.
+
 On top of those, the Standards axis always carries the smell baseline in
 `references/smells.md`, even when the repo documents nothing. Two rules bind
 it:
