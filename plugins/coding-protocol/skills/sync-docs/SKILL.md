@@ -34,6 +34,7 @@ always-on context doesn't grow with every sync.
 
 ## Frozen (never edited by a sync)
 - docs/plans/
+- docs/adr/ (links and status lines only)
 
 ## Drift checks
 <!-- one grep per mistake that has actually happened, with a comment saying why -->
@@ -41,8 +42,9 @@ always-on context doesn't grow with every sync.
 
 **First run:** build it. Sweep for root and per-package `README.md` /
 `AGENTS.md` / `CLAUDE.md`, contributor docs, API docs (OpenAPI descriptions,
-`llms.txt`), skills and rules directories, and env-var references
-(`.env.example`, config schemas). Write down what each one owns.
+`llms.txt`), skills and rules directories, env-var references
+(`.env.example`, config schemas), and the domain docs (`GLOSSARY.md`,
+`GLOSSARY-MAP.md`, `docs/adr/`). Write down what each one owns.
 
 **Every run:** a doc you find that isn't listed gets added, in the same
 commit.
@@ -57,7 +59,10 @@ commit.
    against the code: each named file exists at that path, each command exists
    in the manifest, each env var is actually read, each route and export
    exists as described. Read the code; don't trust the prose, including prose
-   you wrote earlier.
+   you wrote earlier. For the glossary, check the other direction too: a
+   domain type, table or endpoint the diff renamed gets its entry renamed
+   and the old name moved under *Avoid*; one the diff removed loses its
+   entry (see `domain-docs`).
 3. **Edit.** Fix the drift. Describe what the code does, and never invent
    behaviour to make a doc read better. If code and doc disagree and you can't
    tell which is wrong, flag it instead of guessing.
@@ -76,6 +81,10 @@ commit.
 - **Frozen history:** designs, plans and handoffs in `docs/plans/` are
   snapshots of what was decided at the time. They will turn up in greps; that's
   expected, not drift. Never edit them in a sync.
+- **ADRs are frozen too,** except their links and status line. An ADR that
+  names an old path or type is a record of the time, not drift. Code that
+  contradicts an accepted ADR is not a docs fix either: flag it, and see
+  "Superseding an ADR" in `domain-docs`.
 - **Spikes and prototypes are deleted** once their direction ships or is
   dropped, not kept as reference. A spike's conclusions are the least reliable
   text in the repo once production knows better. Anything still worth knowing
