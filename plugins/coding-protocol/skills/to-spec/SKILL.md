@@ -15,10 +15,9 @@ plan (see `coding-process`).
 
 ## 1. Know the code
 
-Explore the repo if you haven't already. If it has a `GLOSSARY.md` or ADRs
-for the area (the `Domain docs` line in Project gates), read them and use
-their terms. Flag a decision that contradicts an ADR; don't quietly override
-it.
+Explore the repo if you haven't already. Read the glossary and the ADRs for
+the area, use their terms, and flag a decision that contradicts an ADR;
+don't quietly override it (see `domain-docs`).
 
 ## 2. Agree the seams
 
@@ -46,6 +45,14 @@ against the four questions in "When you're handed a spec" in
 A "no" is a gap. Fill it from what you know, or list it under Open
 questions. A spec that would come back as "Gaps" from its own author isn't
 finished.
+
+**Decisions and terms.** Go through the Approach and Implementation
+decisions against the three-part test in `domain-docs`. Each decision that
+passes goes under "ADRs to write", in a line. Each domain concept the spec
+names that the glossary lacks goes under "New terms", with a one-line
+definition. Don't write the files now: the ticket that builds the decision,
+or first names the term in code, writes them in its PR. With `Domain docs`
+at `declined` or `none`, leave both lists out.
 
 **No file paths and no code snippets.** They go stale first. The exception
 is a prototype's snippet that pins a decision more exactly than prose can,

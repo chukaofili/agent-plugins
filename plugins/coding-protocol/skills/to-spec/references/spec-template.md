@@ -29,6 +29,14 @@ A long, numbered list covering every aspect of the feature:
 - schema changes, API contracts, specific interactions
 - architectural decisions and technical clarifications
 
+## Decisions and terms
+
+Leave this section out when `Domain docs` is `declined` or `none`.
+
+- ADRs to write: <decision, in a line, that passes the three-part test in
+  `domain-docs`>. Or: "None."
+- New terms: <Term>: <one-line definition>. Or: "None."
+
 ## Ask-list design
 
 For anything on the ask list (see `ship-show-ask`, plus the `Ask list` line
