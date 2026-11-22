@@ -64,11 +64,10 @@ Every file that says how code should be written: `AGENTS.md`, `CLAUDE.md`,
 
 The domain docs count too (see `domain-docs`): a new name the glossary
 lists under *Avoid*, and code that contradicts an accepted ADR with no new
-ADR superseding it, are Standards findings. So is a decision that passes the
-three-part test with no record of it: no ADR in the diff when `Domain docs`
-names a glossary or ADRs, or nothing under "Decisions" in the PR description
-when it is `declined` or `none` (or the line and the files are both
-missing). In those two modes, never ask for an ADR.
+ADR superseding it, are Standards findings. When `Domain docs` names a
+glossary or ADRs, so is a decision that passes the three-part test with no
+ADR in the diff. With `declined` or `none` (or no line and no files), never
+ask for an ADR or a glossary entry.
 
 On top of those, the Standards axis always carries the smell baseline in
 `references/smells.md`, even when the repo documents nothing. Two rules bind
