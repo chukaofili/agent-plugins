@@ -21,10 +21,10 @@ Load `codebase-design` first. Use its terms exactly: **module**,
 Ask-list names ("security boundaries", "public API shape") are labels, so
 quote them as they are.
 
-**Domain docs.** If the repo has a `GLOSSARY.md` or ADRs for the area, read
-them before you scan. Use the glossary's nouns for the domain: "the Order
-intake module", not "the OrderHandler". If neither exists, say nothing about
-it and carry on.
+**Domain docs.** If the repo has a glossary or ADRs for the area, read them
+before you scan (see `domain-docs`). Use the glossary's nouns for the
+domain: "the Order intake module", not "the OrderHandler". If neither
+exists, say nothing about it and carry on.
 
 ## 1. Scope before you scan
 
