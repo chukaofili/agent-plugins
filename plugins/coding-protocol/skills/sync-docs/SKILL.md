@@ -34,7 +34,7 @@ always-on context doesn't grow with every sync.
 
 ## Frozen (never edited by a sync)
 - docs/plans/
-- docs/adr/ (links and status lines only)
+- docs/adr/ (typos, links and status lines only)
 
 ## Drift checks
 <!-- one grep per mistake that has actually happened, with a comment saying why -->
@@ -81,7 +81,7 @@ commit.
 - **Frozen history:** designs, plans and handoffs in `docs/plans/` are
   snapshots of what was decided at the time. They will turn up in greps; that's
   expected, not drift. Never edit them in a sync.
-- **ADRs are frozen too,** except their links and status line. An ADR that
+- **ADRs are frozen too,** except typos, links and the status line. An ADR that
   names an old path or type is a record of the time, not drift. Code that
   contradicts an accepted ADR is not a docs fix either: flag it, and see
   "Superseding an ADR" in `domain-docs`.
