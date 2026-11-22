@@ -7,6 +7,50 @@ that major. The version appears in
 `.claude-plugin/plugin.json`, the marketplace entry and the header comment in
 `AGENTS.md`. CI checks that they match each other and this file.
 
+## 2.3.0 — 2026-11-22
+
+### Upgrading from 2.2
+
+1. Update the skills (reinstall the plugin, or `npx skills add` again).
+2. Optional: run `setup` in each repo whose Project gates say
+   `Domain docs: none`. It asks whether agents should keep ADRs and a
+   glossary, and writes the answer. Repos that already have a glossary or
+   ADRs need nothing.
+
+### Added
+- A `domain-docs` skill. Agents now write ADRs and glossary terms, not just
+  read them. An ADR is written only for a decision that is hard to reverse,
+  surprising without the context and the result of a real trade-off, in the
+  PR that makes the change, as `Accepted`. Superseding one writes a new ADR
+  and changes only the old one's status line, and needs the user's say-so.
+  Glossary terms are added in the PR that first names the concept in code;
+  a rename moves the old name under *Avoid*. Comes with an ADR template and
+  a glossary format, including `GLOSSARY-MAP.md` for multi-context repos.
+  ([#56](https://github.com/chukaofili/agent-plugins/pull/56))
+- Domain docs are opt-in. With no glossary or ADRs in the repo, `setup` asks
+  whether to keep them: yes writes `GLOSSARY.md + docs/adr/` without
+  creating either file, no writes the new `declined` value. A recorded
+  choice is kept on upgrade and repair.
+  ([#57](https://github.com/chukaofili/agent-plugins/pull/57))
+- `to-spec` lists the ADRs to write and the new terms a spec implies, and
+  `to-tickets` puts each in the acceptance criteria of the ticket that
+  builds it. ([#58](https://github.com/chukaofili/agent-plugins/pull/58))
+- `code-review` flags a name the glossary avoids, code that contradicts an
+  accepted ADR, and, where domain docs are tracked, a qualifying decision
+  with no ADR. ([#58](https://github.com/chukaofili/agent-plugins/pull/58))
+- The plugin is published as an OCI image,
+  `ghcr.io/chukaofili/coding-protocol:<version>`, on every release tag, for
+  runtimes such as kagent that load plugins only from digest-pinned images.
+  ([#55](https://github.com/chukaofili/agent-plugins/pull/55))
+
+### Changed
+- `sync-docs` keeps the glossary in step with renames and removals in the
+  diff, and treats ADRs as frozen apart from typos, links and the status
+  line. ([#58](https://github.com/chukaofili/agent-plugins/pull/58))
+- `unattended-run` counts superseding an ADR, or changing what a glossary
+  term means, as a scope checkpoint.
+  ([#58](https://github.com/chukaofili/agent-plugins/pull/58))
+
 ## 2.2.2 — 2026-11-16
 
 ### Fixed
