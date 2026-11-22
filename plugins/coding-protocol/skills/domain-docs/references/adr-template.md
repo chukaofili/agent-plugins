@@ -6,7 +6,7 @@ needs more is usually two decisions.
 ```markdown
 # NNNN. <The decision, as a short statement>
 
-- Status: <Proposed | Accepted | Superseded by [ADR-NNNN](NNNN-<slug>.md)>
+- Status: <Accepted | Superseded by [ADR-NNNN](NNNN-<slug>.md)>
 - Date: <YYYY-MM-DD the status last changed>
 
 ## Context
