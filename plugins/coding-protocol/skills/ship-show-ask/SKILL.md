@@ -140,6 +140,10 @@ trade-off you made, and where it is.>
 <The question that made this an Ask, answerable in a sentence.>
 ```
 
+- **Use the headings exactly as written:** `## Show` and `## Ask`, at level
+  two, with nothing added to them. Reviewers and review agents find the
+  section by that heading, so `### Show`, `**Show:**` or `## Show (note)`
+  won't be found.
 - **`Show` is a note, not a summary.** Point at the part of the diff a
   reviewer would miss or most needs to see, by file or function. A restated
   description tells them nothing new.

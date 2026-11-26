@@ -111,7 +111,7 @@ findings on each axis and the worst one on each. Don't pick a single winner
 across the axes; that is the reranking the separation prevents.
 
 **Reviewing an `ssa-show` or `ssa-ask` PR?** Its description carries a
-`Show` or an `Ask` section (see `ship-show-ask`). Add a part under the same
+`## Show` or an `## Ask` section (see `ship-show-ask`). Add a part under the same
 heading after the two axes, kept out of the counts:
 
 - **Show:** say whether the part the author pointed at holds up, and why.
