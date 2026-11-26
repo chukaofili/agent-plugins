@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Use before opening a PR for a feature, fix or refactor; after the last slice or stage of a spec is built; when asked to review a branch, a PR, work in progress or "the changes since X"; and when deciding what to refactor once the tests are green. Reviews the diff on two separate axes, Standards (the repo's documented rules plus a baseline of code smells) and Spec (what the originating spec or ticket asked for), in two parallel helpers, and reports them side by side without reranking. Covers pinning the fixed point, finding the spec and the standards, the smell baseline, the helper briefs, and fixing what it finds as refactor and fix commits in one pass.
+description: Use before opening a PR for a feature, fix or refactor; after the last slice or stage of a spec is built; when asked to review a branch, a PR, work in progress or "the changes since X"; and when deciding what to refactor once the tests are green. Reviews the diff on two separate axes, Standards (the repo's documented rules plus a baseline of code smells) and Spec (what the originating spec or ticket asked for), in two parallel helpers, and reports them side by side without reranking. Covers pinning the fixed point, finding the spec and the standards, the smell baseline, the helper briefs, answering a PR's Show and Ask sections, and fixing what it finds as refactor and fix commits in one pass.
 ---
 
 # Code review
@@ -109,6 +109,18 @@ Put the two reports under `## Standards` and `## Spec`, as they came back or
 lightly tidied. Don't merge or rerank them. End with one line: the number of
 findings on each axis and the worst one on each. Don't pick a single winner
 across the axes; that is the reranking the separation prevents.
+
+**Reviewing a PR whose description has a `Show` or `Ask` section** (see
+`ship-show-ask`)? Add a part under the same heading after the two axes, kept
+out of the counts:
+
+- **Show:** say whether the part the author pointed at holds up, and why.
+- **Ask:** answer the question, best effort, from the diff, the spec and the
+  standards. Where the code can't settle it, say what would, and leave it
+  to the reviewer rather than guessing.
+
+Post it as the reply to the author's section when the review goes on the
+PR. No PR yet, or no such section? Leave the part out.
 
 ## 6. Fix
 
