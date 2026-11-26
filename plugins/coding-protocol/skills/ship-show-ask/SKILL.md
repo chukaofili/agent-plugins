@@ -1,6 +1,6 @@
 ---
 name: ship-show-ask
-description: Use when opening a pull request and choosing its review intent, when reviewing anyone's PR, when deciding whether a finding blocks a merge or ships as a follow-up, or when a PR's scope changes mid-review. Covers the three review-intent labels, what belongs under each, the project ask list that always forces ssa-ask, setting exactly one label at creation, what a reviewer does with each label, and what the author owes a finding that arrives after an ssa-show has merged.
+description: Use when opening a pull request and choosing its review intent, when reviewing anyone's PR, when deciding whether a finding blocks a merge or ships as a follow-up, or when a PR's scope changes mid-review. Covers the three review-intent labels, what belongs under each, the project ask list that always forces ssa-ask, setting exactly one label at creation, the Show note an ssa-show description carries and the Ask question an ssa-ask one carries, what a reviewer does with each label, and what the author owes a finding that arrives after an ssa-show has merged.
 ---
 
 # Ship / Show / Ask
@@ -119,6 +119,40 @@ an Ask. The label has to match what the PR needs **at merge time**, not what
 it needed when you opened it. Say in a comment that you relabelled and why,
 because a reviewer who already approved won't go back and re-read the label.
 
+## Show and Ask in the PR body
+
+The label decides which section the PR description carries:
+
+| Label | Section |
+|---|---|
+| `ssa-ship` | None. Nobody is meant to read it. |
+| `ssa-show` | `## Show`: a note for the reviewer. |
+| `ssa-ask` | `## Ask`: a question for the reviewer. |
+
+```markdown
+## Show
+<The one thing worth seeing, such as the new pattern, the tricky line or the
+trade-off you made, and where it is.>
+```
+
+```markdown
+## Ask
+<The question that made this an Ask, answerable in a sentence.>
+```
+
+- **`Show` is a note, not a summary.** Point at the part of the diff a
+  reviewer would miss or most needs to see, by file or function. A restated
+  description tells them nothing new.
+- **`Ask` is one real question.** Something you don't know and the reviewer
+  can answer: "Is a per-tenant index enough here, or do we need a partial
+  one?", not "Any thoughts?" or "Does this look good?". On the ask list, name
+  the area it touches and what you want confirmed.
+- **Relabelling swaps the section.** A Show that grew a migration loses its
+  `Show` and gains an `Ask`.
+
+Put it after the template's own sections. Without label permission, the
+`Review intent` line above stays first.
+
 ## Reviewing
 
 - **`ssa-ship`:** approve it. Reading it isn't the job; CI is. If you find
@@ -135,6 +169,12 @@ because a reviewer who already approved won't go back and re-read the label.
 what you think breaks and that you'd hold the merge for it. Silently
 requesting changes is worse than either option: the author set out to merge,
 and reads a process failure instead of your actual concern.
+
+**Answer the section in your review,** best effort. On a `Show`, say whether
+the part the author pointed at holds up. On an `Ask`, answer the question,
+and where you can't settle it, say what would. A Show or Ask missing its
+section gets a comment asking for it. `code-review` does this when it
+reviews a PR.
 
 **Every review ends with a merge label as well as a verdict.** Which one, and
 what an `ssa-ship` reviewer checks before approving unread, is in
