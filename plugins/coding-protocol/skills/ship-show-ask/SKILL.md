@@ -17,12 +17,12 @@ behind a migration, and how the migration gets the same skim as the docs fix.
 
 | Label | Author | Reviewer |
 |---|---|---|
-| `ssa-ship` | Nobody needs to look. Merges once CI is green, approval lands and the reviewer clears it to merge. | Approve without reviewing. No findings, no comments. |
+| `ssa-ship` | Nobody needs to look. Merges once CI is green, approval lands and the reviewer clears it to merge. | Scan the diff for what would make approving it wrong (a secret, a stray file, the ask list), then approve. No review. |
 | `ssa-show` | Feedback welcome, not blocking. Merges once CI is green, approval lands and the reviewer clears it to merge; act on findings afterwards. | Review, then approve, or comment until it matches its Show note. Never changes-requested. |
 | `ssa-ask` | Pause before it goes live. Wait for approval, and address every finding first. | Review, and block if warranted. Request changes when something must be fixed before merge. |
 
-Approval still lands on all three. `ssa-ship` buys a reviewer who doesn't read
-the diff, not a merge without a reviewer.
+Approval still lands on all three. `ssa-ship` buys a reviewer who scans the
+diff instead of reviewing it, not a merge without a reviewer.
 
 **Approval is not permission to merge.** The reviewer says that separately,
 with a `merge-auto` or `merge-human` label, and an approved PR with neither
@@ -30,8 +30,8 @@ waits. See `merge-gate`.
 
 **Don't use `ssa-ship` where an approval is an audit control** (SOX, ISO, a
 regulated change process). A reviewer can't attest to a change they didn't
-read, and "approve without reviewing" is the precise thing those controls
-exist to catch. If that's the repo, say so in Project gates and treat
+review, and "approve after a scan" is the precise thing those controls exist
+to catch. If that's the repo, say so in Project gates and treat
 `ssa-ship` as unavailable.
 
 ## What goes where
@@ -159,9 +159,10 @@ Put it after the template's own sections. Without label permission, the
 
 ## Reviewing
 
-- **`ssa-ship`:** approve it. Reading it isn't the job; CI is. If you find
-  yourself wanting to review it, the label is wrong — say that, rather than
-  reviewing it quietly.
+- **`ssa-ship`:** scan it, then approve it. The scan looks only for what CI
+  can't catch and what would make approving it wrong; correctness is CI's job.
+  If you find yourself wanting to review it, the label is wrong — say that,
+  rather than reviewing it quietly.
 - **`ssa-show`:** review it properly. Approve when it does what its `Show`
   note says and nothing needs to change first, with findings as comments on
   the approval. Otherwise comment, saying what would make it an approval.
@@ -182,7 +183,7 @@ section gets a comment asking for it. `ssa-review` is the procedure for all
 of this.
 
 **Every review ends with a merge label as well as a verdict.** Which one, and
-what an `ssa-ship` reviewer checks before approving unread, is in
+what an `ssa-ship` reviewer checks before approving, is in
 `merge-gate`.
 
 Verifying a finding, then fixing it or pushing back, works the same under all

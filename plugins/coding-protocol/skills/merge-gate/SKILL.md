@@ -48,8 +48,9 @@ approval it follows. A label added before the approval doesn't count, and the
 check says so.
 
 **`ssa-ship`:** check the `label-check` status first.
-- Green: approve, add `merge-auto`. Don't read the diff; that's the label
-  working as intended.
+- Green: scan the diff (see `ssa-review`), approve, add `merge-auto`. A scan
+  isn't a review; that's the label working as intended. A committed secret
+  means a comment, not an approval.
 - Red: the PR touches the ask list, so the label is wrong. Say so and stop.
   Don't approve, and don't quietly review it as an Ask.
 

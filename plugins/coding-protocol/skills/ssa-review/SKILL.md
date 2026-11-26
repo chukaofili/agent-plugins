@@ -1,6 +1,6 @@
 ---
 name: ssa-review
-description: Use when reviewing someone else's pull request, when asked to review a PR by number, link or branch, when re-reviewing a PR after the author pushed fixes, and when deciding a review's verdict. Reviews at the depth the PR's ssa-ship, ssa-show or ssa-ask label asks for. Covers what each label gets (Ship approves unread; Show approves or comments, never blocks; Ask can block), the separate helper reviews and how to weigh what they return, running the smallest check that settles a suspicion, the Ask risk areas, when a finding blocks, answering the PR's Show note or Ask question, re-reviews, and the review's format.
+description: Use when reviewing someone else's pull request, when asked to review a PR by number, link or branch, when re-reviewing a PR after the author pushed fixes, and when deciding a review's verdict. Reviews at the depth the PR's ssa-ship, ssa-show or ssa-ask label asks for. Covers what each label gets (Ship scans the diff and approves; Show approves or comments, never blocks; Ask can block), the separate helper reviews and how to weigh what they return, running the smallest check that settles a suspicion, the Ask risk areas, when a finding blocks, answering the PR's Show note or Ask question, re-reviews, and the review's format.
 ---
 
 # SSA review
@@ -35,9 +35,26 @@ tells you which one you're looking at.
 
 | Label | You do | Verdict |
 |---|---|---|
-| `ssa-ship` | Check `label-check`, then approve unread (see `merge-gate`). | Approve |
+| `ssa-ship` | Check `label-check`, then a quick scan of the diff. | Approve, or comment on a secret |
 | `ssa-show` | A full read of the diff, plus the Standards helper. | Approve, or comment. Never request changes. |
 | `ssa-ask` | All of Show, plus the Security helper, checks you run, and the risk areas. | Request changes if anything blocks, otherwise approve |
+
+### `ssa-ship`: scan, then approve
+
+A Ship is not reviewed: CI covers correctness. Read the diff once, quickly,
+for what would make an approval wrong and that CI won't catch:
+
+- **Secrets or credentials** committed in code, config or fixtures.
+- **Debug leftovers:** `console.log`, `debugger`, `.only` on a test,
+  commented-out blocks.
+- **Files that shouldn't be there:** build output, large binaries, editor
+  files, lockfile churn the change doesn't explain.
+- **The ask list:** a path `label-check` missed, such as a migration. The
+  label is wrong: say so and stop, as `merge-gate` says for a red check.
+
+Approve with anything you found as short comments on the approval. A secret
+is the exception: comment instead of approving, and say it must be rotated,
+not just removed. Nothing found: approve with the one-line body.
 
 ### `ssa-show`: approve or comment
 
@@ -52,7 +69,7 @@ Then pick the verdict:
   on the approval. Add the merge label (see `merge-gate`).
 - **Comment** when the PR doesn't yet match its note (the note points at
   code that isn't there, or describes a different change), when the note is
-  missing, or when a finding should be dealt with first. Say plainly what
+  missing (see below), or when a finding should be dealt with first. Say plainly what
   would make it an approval. No merge label: a comment isn't an approval, so
   the PR waits.
 
@@ -92,8 +109,9 @@ Everything Show does, then:
      migration with no way down, code and schema that must deploy in order,
      rows the old code can't read.
 
-Request changes only if a finding blocks. Then pick the merge label as
-`merge-gate` says.
+Request changes if a finding blocks. Otherwise approve, unless the `## Ask`
+question is missing (see below), and pick the merge label as `merge-gate`
+says.
 
 ## Blocking
 
@@ -157,8 +175,10 @@ placeholder text.
   your mind. If the answer is somewhere you can't look (production data, a
   vendor account, a team's call), say that and who would know. Don't sign
   off on anything you didn't check.
-- **Missing:** a Show or Ask PR without its section gets a line asking for
-  it. On a Show, that alone makes the verdict a comment.
+- **Missing:** a Show or Ask PR without its section gets a comment, not an
+  approval, asking the author to add it or to relabel the PR if it's really
+  another kind. Findings still go in as usual, and on an Ask a blocker still
+  requests changes.
 
 The response doesn't decide the verdict. If it turns up a problem, raise
 that as a finding under the usual rules.

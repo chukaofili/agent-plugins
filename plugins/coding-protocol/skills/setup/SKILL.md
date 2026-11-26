@@ -134,9 +134,9 @@ Then make sure the agent in use reads it:
 
 ```bash
 gh label create ssa-ship --force --color 0E8A16 \
-  --description "Nobody needs to look. Approve without reviewing."
+  --description "Nobody needs to review. Scan the diff, then approve."
 gh label create ssa-show --force --color 1D76DB \
-  --description "Feedback welcome, not blocking. Approve, then comment."
+  --description "Feedback welcome, not blocking. Approve or comment."
 gh label create ssa-ask --force --color D93F0B \
   --description "Blocking review. Address every finding before merge."
 gh label create merge-auto --force --color 0E8A16 \
