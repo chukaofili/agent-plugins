@@ -1,6 +1,6 @@
 ---
 name: stacked-prs
-description: Use when a change is likely to exceed ~300 changed lines, when work spans several commits or stages, when opening a pull request, when receiving or responding to review feedback on any pull request, or when rebasing or landing a stack of dependent PRs. Covers the PR size budget and what counts toward it, how to split and stack PRs, landing stacks made with gh stack, how to request review on a stack (CODEOWNERS, or stage by stage when asked), and how to handle review findings by verifying each one, then fixing it or pushing back.
+description: Use when a change is likely to exceed ~300 changed lines, when work spans several commits or stages, when opening a pull request, or when rebasing or landing a stack of dependent PRs. Covers the PR size budget and what counts toward it, how to split and stack PRs, landing stacks made with gh stack, how to request review on a stack (CODEOWNERS, or stage by stage when asked). Answering review findings is ssa-reply.
 ---
 
 # Stacked PRs
@@ -61,10 +61,11 @@ reverted on its own.
   `Closes #<n>`. For a ticket a stack delivers, the reference goes on the
   top PR, and the stages below say `Part of #<n>`, so the ticket closes when
   the work it describes has all landed.
-- **Every stage is `ssa-ask`,** labelled at creation
-  (`gh pr create --label ssa-ask`). The stack exists because the change was too
-  big to take in at once, so each stage is its own gate and approval on one
-  says nothing about the next. See `ship-show-ask`.
+- **Label each stage on its own,** at creation, by what that stage does (see
+  `ssa-apply`): a stage that moves a migration is `ssa-ask`, a mechanical
+  rename above it can be `ssa-ship`. Being in a stack doesn't make a stage an
+  Ask. Each stage still needs its own approval and merge label, and approval
+  on one says nothing about the next.
 - **Release metadata lands once, in the top PR:** a version bump, a changelog
   heading, a tag. The stack merges as one set of changes, so doing it per
   stage publishes versions nobody ever ran. Lower stages leave the version
@@ -120,8 +121,8 @@ stack tracked on this machine. For a stack opened elsewhere, use
   ```
   This merges everything up to and including that PR, all or nothing. **So
   `<pr-number>` has to be the top of an unbroken run, from the bottom, of
-  stages that are approved and carry `merge-auto`.** Every stage is
-  `ssa-ask`, so an unapproved stage 3 means merging stage 2 and stopping —
+  stages that are approved and carry `merge-auto`.** Every stage needs that,
+  whatever its label, so an unapproved stage 3 means merging stage 2 and stopping —
   picking stage 4 would carry stage 3 in with it and merge straight past its
   gate. Walk up from the bottom with
   `gh pr view <number> --json reviewDecision,labels` and stop at the first
@@ -147,10 +148,10 @@ adds.
 **By default, put the whole stack up for review.** Open every stage's PR as
 ready for review, not as a draft.
 
-Putting the stack up is how review is **requested**; the `ssa-ask` label on
-each stage is what gates that stage's **merge**. They read as a contradiction
+Putting the stack up is how review is **requested**; each stage's own approval
+and merge label are what gate that stage's **merge**. They read as a contradiction
 and aren't: a reviewer can start on any stage, and no stage lands before its
-own approval arrives (see `ship-show-ask`).
+own approval arrives (see `ssa-apply`).
 
 If the user didn't name a reviewer, check for a `CODEOWNERS` file (in
 `.github/`, the repo root or `docs/`):
@@ -174,7 +175,7 @@ Use this only if the user asks for it. Review the stack one stage at a time,
 starting from the bottom PR:
 
 1. Request review on that one stage.
-2. Address every finding (see below).
+2. Address every finding (see `ssa-reply`).
 3. Re-request review, and repeat until the stage is **approved**.
 4. Only then request review on the next stage up.
 
@@ -182,17 +183,6 @@ In a repo with `CODEOWNERS`, open the higher stages as drafts, since GitHub
 doesn't add code owners to a draft. `gh pr ready <number>` puts up the next
 stage, and takes the place of steps 1 and 4 unless the user named a reviewer.
 
-## Handling review findings (any PR, stacked or not)
+## Handling review findings
 
-- **Verify each finding technically** before acting on it. Read the code it
-  points at, and reproduce the issue if you can.
-- **Fix it, or push back with reasoning.** Reviewers, human or bot, are
-  confidently wrong as a normal event. Making a bad change to look agreeable is
-  worse than arguing. No performative agreement.
-- **Judge findings by real-world probability.** Push back on fixes for
-  scenarios that can't realistically happen, and on suggestions that add
-  complexity for no real gain.
-- **Don't add tests that can't fail.** A test that passes whether or not the
-  bug exists is noise. Run it against the broken code first (see `testing`).
-- Reply to each finding so the reviewer can see what happened to it: fixed in
-  which commit, or why not.
+Answering findings on any PR, stacked or not, is `ssa-reply`.

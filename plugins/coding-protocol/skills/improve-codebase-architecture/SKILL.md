@@ -111,7 +111,7 @@ building (see `coding-process`):
 4. **Get explicit approval** of one. It covers the seam.
 
 **Ask list.** If the deepening touches anything on the ask list (see
-`ship-show-ask`, plus the `Ask list` line in Project gates), the design is
+`ssa-apply`, plus the `Ask list` line in Project gates), the design is
 the user's decision, not yours. A deepened interface that is a package
 export or an endpoint is public API shape. The PR is `ssa-ask`.
 

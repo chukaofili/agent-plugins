@@ -27,7 +27,7 @@ merge by itself, however green it is.
 
 ## Who sets them
 
-- **The author sets `ssa-*`** (what review the PR wants). See `ship-show-ask`.
+- **The author sets `ssa-*`** (what review the PR wants). See `ssa-apply`.
 - **The reviewer sets `merge-*`** (who may land it).
 - **The author never sets a `merge-*` label,** on their own PR or anyone
   else's. An author who can open the gate has no gate.
@@ -176,7 +176,7 @@ push. A missed event can't leave an old clearance standing.
 ## Stacks
 
 Each stage carries its own merge label, the same way each carries its own
-`ssa-ask`. Approval and `merge-auto` on stage 2 say nothing about stage 3.
+`ssa-*` label. Approval and `merge-auto` on stage 2 say nothing about stage 3.
 
 A stack merge takes everything up to the PR you name, so that PR has to be
 the top of an unbroken run of stages that are **approved and carry

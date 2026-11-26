@@ -28,9 +28,10 @@ changes mid-way (an investigation turns into a fix), match again.
 | Choosing, adopting or upgrading a dependency or API | `docs-before-memory` |
 | A decision that's hard to reverse, or naming a new domain concept | `domain-docs`, plus the row for the task |
 | Anything a user sees | The row for the task, plus `verify-ui` |
-| Opening a PR | `code-review`, `stacked-prs`, `ship-show-ask`, `sync-docs` |
+| Opening a PR | `code-review`, `stacked-prs`, `ssa-apply`, `sync-docs` |
 | Reviewing your own branch, or a whole spec once it's built | `code-review` |
-| Reviewing a PR, or answering review findings | `ssa-review`, `ship-show-ask`, `merge-gate`, `stacked-prs` |
+| Reviewing a PR, or answering review findings | `ssa-review`, `ssa-reply`, `merge-gate`, `stacked-prs` |
+| Replying in a PR's threads without a review | `ssa-reply` |
 | Unattended run | `unattended-run`, `delegate`, `usage-limits`, `handoff`, plus the row for the task |
 | Context running long, or picking up from a handoff file | `handoff` |
 

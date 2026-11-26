@@ -1,9 +1,12 @@
 ---
-name: ship-show-ask
-description: Use when opening a pull request and choosing its review intent, when reviewing anyone's PR, when deciding whether a finding blocks a merge or ships as a follow-up, or when a PR's scope changes mid-review. Covers the three review-intent labels, what belongs under each, the project ask list that always forces ssa-ask, setting exactly one label at creation, the Show note an ssa-show description carries and the Ask question an ssa-ask one carries, what a reviewer does with each label, and what the author owes a finding that arrives after an ssa-show has merged.
+name: ssa-apply
+description: Use before opening a pull request, to audit the change and pick its review intent, when writing a PR's description, when a PR's scope changes after it opened, and when a finding arrives after an ssa-show has merged. Covers the three review-intent labels and what belongs under each, the ask list that always forces ssa-ask, auditing the diff to classify it, the matching ## Show note or ## Ask question in the description, setting exactly one label at creation, relabelling, and what the author owes a finding after an ssa-show merges. Reviewing someone else's PR is ssa-review.
 ---
 
-# Ship / Show / Ask
+# SSA apply
+
+The author's half of Ship / Show / Ask: decide what review a PR needs, and
+say so on the PR. The reviewer's half is `ssa-review`.
 
 Every change still goes through a PR. The label says what to **do** with the
 PR, not whether to open one.
@@ -15,11 +18,13 @@ behind a migration, and how the migration gets the same skim as the docs fix.
 
 ## The three intents
 
-| Label | Author | Reviewer |
-|---|---|---|
-| `ssa-ship` | Nobody needs to look. Merges once CI is green, approval lands and the reviewer clears it to merge. | Scan the diff for what would make approving it wrong (a secret, a stray file, the ask list), then approve. No review. |
-| `ssa-show` | Feedback welcome, not blocking. Merges once CI is green, approval lands and the reviewer clears it to merge; act on findings afterwards. | Review, then approve, or comment until it matches its Show note. Never changes-requested. |
-| `ssa-ask` | Pause before it goes live. Wait for approval, and address every finding first. | Review, and block if warranted. Request changes when something must be fixed before merge. |
+| Label | What you're asking for |
+|---|---|
+| `ssa-ship` | Nobody needs to look. Merges once CI is green, approval lands and the reviewer clears it to merge. |
+| `ssa-show` | Feedback welcome, not blocking. Merges once CI is green, approval lands and the reviewer clears it to merge; act on findings afterwards. |
+| `ssa-ask` | Pause before it goes live. Wait for approval, and address every finding first. |
+
+What the reviewer does with each is in `ssa-review`.
 
 Approval still lands on all three. `ssa-ship` buys a reviewer who scans the
 diff instead of reviewing it, not a merge without a reviewer.
@@ -37,7 +42,7 @@ to catch. If that's the repo, say so in Project gates and treat
 ## What goes where
 
 **`ssa-ship`** — a feature on an established pattern, an unremarkable bug fix,
-a docs or rules update, a follow-up applying review feedback, a lockfile bump.
+a docs or rules update that changes no behaviour, a follow-up applying review feedback, a lockfile bump.
 None of these hold when the change touches the ask list below.
 
 **`ssa-show`** — a new approach or pattern worth seeing, a refactor, an
@@ -82,6 +87,32 @@ by how routine it looks or where it came from. A one-line change to an
 authorization check is an Ask; so is the follow-up that fixes it. Where
 `ssa-ship` is off the table entirely because approval is an audit control, the
 floor for everything is `ssa-show`.
+
+## Audit the change
+
+Before `gh pr create`, decide the label from the diff, not from how the work
+felt. Read it whole first (`git diff <base>...HEAD`), then go through these in
+order and stop at the first that applies:
+
+1. **The ask list.** `git diff --name-only <base>...HEAD`, checked against
+   the areas above, the `Ask list` line in Project gates and `ask_paths` in
+   `.github/coding-protocol.json`, which is what `label-check` reads. A
+   match is `ssa-ask`, however small the change. No `ask_paths` or `Ask
+   list` line in the repo means the areas above are the whole list.
+2. **A question you need answered before it merges** is `ssa-ask`: "will this
+   hold under load?", "is this the right seam?".
+3. **Something a reviewer should see:** a new pattern, a refactor, a
+   trade-off, an interesting fix. That's `ssa-show`, and it's the default
+   for ordinary feature work.
+4. **Routine and unremarkable** (see What goes where) is `ssa-ship`. A change
+   past the size budget in `stacked-prs` is never one, and neither is a docs
+   or rules change that alters what people or agents do: that's a Show.
+
+Torn between two? Take the more cautious. Then write the section the label
+needs (see Show and Ask in the PR body), drawn from the same audit: the
+part you found worth seeing, or the question you couldn't settle. Then say
+which label you chose and why, in a line, in your message to whoever asked
+for the PR.
 
 ## Setting it
 
@@ -159,37 +190,11 @@ Put it after the template's own sections. Without label permission, the
 
 ## Reviewing
 
-- **`ssa-ship`:** scan it, then approve it. The scan looks only for what CI
-  can't catch and what would make approving it wrong; correctness is CI's job.
-  If you find yourself wanting to review it, the label is wrong — say that,
-  rather than reviewing it quietly.
-- **`ssa-show`:** review it properly. Approve when it does what its `Show`
-  note says and nothing needs to change first, with findings as comments on
-  the approval. Otherwise comment, saying what would make it an approval.
-  Requesting changes on a Show is the one move the label exists to prevent.
-- **`ssa-ask`:** review it, and block when something must be fixed first.
-  Approving an Ask you have doubts about throws away the only gate the author
-  explicitly asked for.
-
-**Found something blocking on an `ssa-show`? Say so in the comment.** Spell out
-what you think breaks and that you'd hold the merge for it. Silently
-requesting changes is worse than either option: the author set out to merge,
-and reads a process failure instead of your actual concern.
-
-**Answer the section in your review,** best effort. On a `Show`, say whether
-the part the author pointed at holds up. On an `Ask`, answer the question,
-and where you can't settle it, say what would. A Show or Ask missing its
-section gets a comment asking for it. `ssa-review` is the procedure for all
-of this.
-
-**Every review ends with a merge label as well as a verdict.** Which one, and
-what an `ssa-ship` reviewer checks before approving, is in
-`merge-gate`.
-
-Verifying a finding, then fixing it or pushing back, works the same under all
-three labels — see Handling review findings in `stacked-prs`. The label
-changes **when** a finding gets handled, never whether it gets taken
-seriously.
+Reviewing someone else's PR at the depth its label asks for is
+`ssa-review`. Its verdict and the merge label that follows it are the
+reviewer's, never the author's (see `merge-gate`). Answering the findings
+works the same under all three labels: verify each, then fix it or push back
+(see `ssa-reply`).
 
 ## After an `ssa-show` merges
 
@@ -208,9 +213,12 @@ answered:
 
 ## Stacks
 
-**Every stage of a stack is `ssa-ask`.** The stack exists because the change
-was too big to take in at once, so each stage is its own gate, and a reviewer
-who approved stage 2 has said nothing about stage 3.
+**Label each stage on its own,** with the audit above run on that stage's
+diff alone (against the stage below it, not the default branch). Being in a stack doesn't
+make a stage an Ask: the stage that adds the migration is, and the stage that
+moves callers onto the new interface may be a Show or a Ship. Each stage is
+still its own gate. A reviewer who approved stage 2 has said nothing about
+stage 3, and each needs its own approval and merge label.
 
 Putting the whole stack up for review and gating each stage are two different
 things, and both are true at once. `stacked-prs` covers the request side and

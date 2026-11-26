@@ -6,7 +6,7 @@ description: Use when reviewing someone else's pull request, when asked to revie
 # SSA review
 
 Review someone else's PR at the depth its label asks for, and post one
-review. The label's meaning is in `ship-show-ask`; the merge label that
+review. The label's meaning is in `ssa-apply`; the merge label that
 follows every verdict is in `merge-gate`. Your own branch, before a PR
 exists, is `code-review`.
 
@@ -185,11 +185,10 @@ that as a finding under the usual rules.
 
 ## Re-reviews
 
-After a push, check each of your open threads. A fix that demonstrably
-resolves it: say so and resolve the thread. Incomplete: reply with what's
-missing. Pushback: decide on the merits, and either withdraw the finding or
-reply with the scenario that still goes wrong. Respond only to what is new
-in the Show note or Ask question, and say the rest stands.
+After a push, check each of your open threads and answer each as
+`ssa-reply` says: confirm a fix, say what's missing, or decide pushback on
+its merits. Only a re-review clears a `**Blocking:**` thread. Respond only
+to what is new in the Show note or Ask question, and say the rest stands.
 
 ## The review
 
