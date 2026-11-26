@@ -7,6 +7,16 @@ that major. The version appears in
 `.claude-plugin/plugin.json`, the marketplace entry and the header comment in
 `AGENTS.md`. CI checks that they match each other and this file.
 
+## 2.4.1 — 2026-11-26
+
+### Fixed
+- The Show and Ask sections must use the headings exactly as written,
+  `## Show` and `## Ask`, because reviewers and review agents find them by
+  that heading. `### Show`, `**Show:**` or `## Show (note)` won't be found.
+  `code-review` and `AGENTS.md` rule 3 name the exact headings too; rerun
+  `setup` to pick up the new rule 3 wording (optional).
+  ([#63](https://github.com/chukaofili/agent-plugins/pull/63))
+
 ## 2.4.0 — 2026-11-26
 
 ### Upgrading from 2.3
