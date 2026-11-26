@@ -42,7 +42,7 @@ to catch. If that's the repo, say so in Project gates and treat
 ## What goes where
 
 **`ssa-ship`** — a feature on an established pattern, an unremarkable bug fix,
-a docs or rules update, a follow-up applying review feedback, a lockfile bump.
+a docs or rules update that changes no behaviour, a follow-up applying review feedback, a lockfile bump.
 None of these hold when the change touches the ask list below.
 
 **`ssa-show`** — a new approach or pattern worth seeing, a refactor, an
@@ -214,7 +214,7 @@ answered:
 ## Stacks
 
 **Label each stage on its own,** with the audit above run on that stage's
-diff alone (against the stage below it, not `main`). Being in a stack doesn't
+diff alone (against the stage below it, not the default branch). Being in a stack doesn't
 make a stage an Ask: the stage that adds the migration is, and the stage that
 moves callers onto the new interface may be a Show or a Ship. Each stage is
 still its own gate. A reviewer who approved stage 2 has said nothing about
