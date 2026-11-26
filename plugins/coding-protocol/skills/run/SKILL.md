@@ -30,7 +30,7 @@ changes mid-way (an investigation turns into a fix), match again.
 | Anything a user sees | The row for the task, plus `verify-ui` |
 | Opening a PR | `code-review`, `stacked-prs`, `ssa-apply`, `sync-docs` |
 | Reviewing your own branch, or a whole spec once it's built | `code-review` |
-| Reviewing a PR, or answering review findings | `ssa-review`, `ssa-reply`, `merge-gate`, `stacked-prs` |
+| Reviewing a PR, or answering review findings | `ssa-review`, `ssa-reply`, `ssa-lessons`, `merge-gate`, `stacked-prs` |
 | Replying in a PR's threads without a review | `ssa-reply` |
 | Unattended run | `unattended-run`, `delegate`, `usage-limits`, `handoff`, plus the row for the task |
 | Context running long, or picking up from a handoff file | `handoff` |

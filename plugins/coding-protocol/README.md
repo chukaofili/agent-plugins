@@ -30,7 +30,7 @@ It is deliberately opinionated. If you disagree with a rule, fork it.
 |---|---|---|
 | [`AGENTS.md`](AGENTS.md) | Every session | Ten guardrails plus your project gates |
 | [`skills/run`](skills/run) | When code changes, or on `/coding-protocol:run` | The ten working rules, and a table that matches the task to the skills below |
-| [`skills/`](skills) | When relevant | `coding-process`, `tdd`, `codebase-design`, `improve-codebase-architecture`, `code-review`, `ssa-review`, `ssa-reply`, `to-spec`, `to-tickets`, `domain-docs`, `docs-before-memory`, `unattended-run`, `stacked-prs`, `ssa-apply`, `merge-gate`, `delegate`, `usage-limits`, `handoff`, `testing`, `verify-ui`, `sync-docs`, `setup`, `uninstall` |
+| [`skills/`](skills) | When relevant | `coding-process`, `tdd`, `codebase-design`, `improve-codebase-architecture`, `code-review`, `ssa-review`, `ssa-reply`, `ssa-lessons`, `to-spec`, `to-tickets`, `domain-docs`, `docs-before-memory`, `unattended-run`, `stacked-prs`, `ssa-apply`, `merge-gate`, `delegate`, `usage-limits`, `handoff`, `testing`, `verify-ui`, `sync-docs`, `setup`, `uninstall` |
 
 The guardrails are the rules that have to hold when nobody typed a command:
 who can give instructions, how commits are made, that behaviour is built test-first, the review label on every PR,
