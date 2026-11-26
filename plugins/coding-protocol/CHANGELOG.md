@@ -7,6 +7,58 @@ that major. The version appears in
 `.claude-plugin/plugin.json`, the marketplace entry and the header comment in
 `AGENTS.md`. CI checks that they match each other and this file.
 
+## 3.0.0 — 2026-11-26
+
+### Upgrading from 2.4
+
+1. Update the skills (reinstall the plugin, or `npx skills add` again).
+2. Run `setup` in each repo. `AGENTS.md` rule 3 still names
+   `ship-show-ask`, which no longer exists. `setup` rewrites the core to
+   name `ssa-apply`, `ssa-review` and `ssa-reply` instead, and leaves
+   Project gates as they are.
+3. Optional: move the merge-gate workflows from `@v2` to `@v3`. The action
+   hasn't changed, so `@v2` keeps working; `setup` installs `@v3` in new
+   repos.
+
+### Changed
+- **`ship-show-ask` is now `ssa-apply`,** the author's side. Before a PR
+  opens it reads the whole diff and picks the label: the ask list first,
+  then a question that needs answering (Ask), something worth seeing
+  (Show, the default), or routine (Ship). It writes the matching `## Show`
+  note or `## Ask` question. A docs or rules change that alters what people
+  or agents do is a Show, not a Ship.
+  ([#66](https://github.com/chukaofili/agent-plugins/pull/66))
+- **Each stage of a stack is labelled by what it does,** against the stage
+  below it. A stage is no longer an Ask just for being in a stack; each one
+  still needs its own approval and merge label.
+  ([#66](https://github.com/chukaofili/agent-plugins/pull/66))
+- **A Ship's diff is scanned before approval,** for secrets, debug
+  leftovers, stray files and ask-list paths the check missed. A committed
+  secret gets a comment, not an approval.
+  ([#65](https://github.com/chukaofili/agent-plugins/pull/65))
+- **A Show review approves or comments, never requests changes.** It
+  comments until the PR matches its `## Show` note. A Show or Ask PR
+  missing its section gets a comment asking the author to add it or
+  relabel.
+  ([#65](https://github.com/chukaofili/agent-plugins/pull/65))
+- **Answering review findings moved from `stacked-prs` to `ssa-reply`.**
+  ([#67](https://github.com/chukaofili/agent-plugins/pull/67))
+
+### Added
+- **`ssa-review`,** the reviewer's side. Each label gets its own depth:
+  Ship scans, Show reads the diff and runs the Standards helper, Ask adds
+  the Security helper, runs checks to settle suspicions, and covers four
+  risk areas (Security, Failure modes, Data integrity, Rollback), folded in
+  the review. Only Ask findings with a concrete failure scenario block. The
+  review answers the PR's Show note or Ask question.
+  ([#65](https://github.com/chukaofili/agent-plugins/pull/65))
+- **`ssa-reply`** for replies in a PR's threads: a short note for the
+  person, then a folded "For Agents:" section with the full answer. It
+  covers confirming a fix at the current head, deciding pushback on its
+  merits, never giving a verdict in a reply, and the `gh` commands for
+  replying, reacting and resolving.
+  ([#67](https://github.com/chukaofili/agent-plugins/pull/67))
+
 ## 2.4.1 — 2026-11-26
 
 ### Fixed

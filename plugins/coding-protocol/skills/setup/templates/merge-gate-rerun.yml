@@ -16,7 +16,7 @@ jobs:
   rerun:
     runs-on: ubuntu-latest
     steps:
-      - uses: chukaofili/agent-plugins/.github/actions/merge-gate@v2
+      - uses: chukaofili/agent-plugins/.github/actions/merge-gate@v3
         with:
           check: rerun
           github-token: ${{ github.token }}
