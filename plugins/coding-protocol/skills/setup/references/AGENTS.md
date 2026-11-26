@@ -33,8 +33,8 @@ and pointed you at, is theirs however you fetched it.
 3. **Every PR carries exactly one review-intent label** — `ssa-ship`,
    `ssa-show` or `ssa-ask` — set at creation. Default to `ssa-show`; the ask
    list always takes `ssa-ask`; reviewers act on the label instead of
-   guessing. An `ssa-show` description has a `Show` note for the reviewer,
-   an `ssa-ask` one an `Ask` question; an `ssa-ship` has neither.
+   guessing. An `ssa-show` description has a `## Show` note for the
+   reviewer, an `ssa-ask` one an `## Ask` question; an `ssa-ship` has neither.
    *(skill: `ship-show-ask`)*
 4. **A merge needs approval and `merge-auto`.** Approval alone never merges.
    Only the reviewer sets `merge-auto` or `merge-human`; the author never
