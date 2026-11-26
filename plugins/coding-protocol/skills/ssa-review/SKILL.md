@@ -185,11 +185,10 @@ that as a finding under the usual rules.
 
 ## Re-reviews
 
-After a push, check each of your open threads. A fix that demonstrably
-resolves it: say so and resolve the thread. Incomplete: reply with what's
-missing. Pushback: decide on the merits, and either withdraw the finding or
-reply with the scenario that still goes wrong. Respond only to what is new
-in the Show note or Ask question, and say the rest stands.
+After a push, check each of your open threads and answer each as
+`ssa-reply` says: confirm a fix, say what's missing, or decide pushback on
+its merits. Only a re-review clears a `**Blocking:**` thread. Respond only
+to what is new in the Show note or Ask question, and say the rest stands.
 
 ## The review
 
