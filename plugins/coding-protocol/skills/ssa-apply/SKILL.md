@@ -97,20 +97,25 @@ order and stop at the first that applies:
 1. **The ask list.** `git diff --name-only <base>...HEAD`, checked against
    the areas above, the `Ask list` line in Project gates and `ask_paths` in
    `.github/coding-protocol.json`, which is what `label-check` reads. A
-   match is `ssa-ask`, however small the change.
-2. **A stage of a stack** is `ssa-ask` (see Stacks below).
+   match is `ssa-ask`, however small the change. No `ask_paths` or `Ask
+   list` line in the repo means the areas above are the whole list.
+2. **A stage of a stack** is `ssa-ask` (see Stacks below): its base is
+   another PR's branch, not `main`. Its `## Ask` names what this stage
+   decides that the next one builds on.
 3. **A question you need answered before it merges** is `ssa-ask`: "will this
    hold under load?", "is this the right seam?".
 4. **Something a reviewer should see:** a new pattern, a refactor, a
    trade-off, an interesting fix. That's `ssa-show`, and it's the default
    for ordinary feature work.
 5. **Routine and unremarkable** (see What goes where) is `ssa-ship`. A change
-   past the size budget in `stacked-prs` is never one.
+   past the size budget in `stacked-prs` is never one, and neither is a docs
+   or rules change that alters what people or agents do: that's a Show.
 
 Torn between two? Take the more cautious. Then write the section the label
 needs (see Show and Ask in the PR body), drawn from the same audit: the
-part you found worth seeing, or the question you couldn't settle. Say in a
-line, to whoever asked for the PR, which label you chose and why.
+part you found worth seeing, or the question you couldn't settle. Then say
+which label you chose and why, in a line, in your message to whoever asked
+for the PR.
 
 ## Setting it
 
