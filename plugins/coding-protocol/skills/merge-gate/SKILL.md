@@ -53,9 +53,10 @@ check says so.
 - Red: the PR touches the ask list, so the label is wrong. Say so and stop.
   Don't approve, and don't quietly review it as an Ask.
 
-**`ssa-show`:** review, approve, add `merge-auto`. If a finding would make
-you hold the merge, say that in the comment (see `ship-show-ask`) and leave
-the merge label off.
+**`ssa-show`:** review, approve, add `merge-auto`. If the PR doesn't match
+its Show note yet, or a finding would make you hold the merge, comment
+instead of approving (see `ssa-review`) and leave the merge label off. A
+comment is never an approval, so the PR waits for the next round.
 
 **`ssa-ask`:** review it by running it, then pick one:
 

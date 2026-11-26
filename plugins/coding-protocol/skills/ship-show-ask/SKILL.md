@@ -18,7 +18,7 @@ behind a migration, and how the migration gets the same skim as the docs fix.
 | Label | Author | Reviewer |
 |---|---|---|
 | `ssa-ship` | Nobody needs to look. Merges once CI is green, approval lands and the reviewer clears it to merge. | Approve without reviewing. No findings, no comments. |
-| `ssa-show` | Feedback welcome, not blocking. Merges once CI is green, approval lands and the reviewer clears it to merge; act on findings afterwards. | Review, then approve. Findings are comments on an **approving** review, never changes-requested. |
+| `ssa-show` | Feedback welcome, not blocking. Merges once CI is green, approval lands and the reviewer clears it to merge; act on findings afterwards. | Review, then approve, or comment until it matches its Show note. Never changes-requested. |
 | `ssa-ask` | Pause before it goes live. Wait for approval, and address every finding first. | Review, and block if warranted. Request changes when something must be fixed before merge. |
 
 Approval still lands on all three. `ssa-ship` buys a reviewer who doesn't read
@@ -162,9 +162,10 @@ Put it after the template's own sections. Without label permission, the
 - **`ssa-ship`:** approve it. Reading it isn't the job; CI is. If you find
   yourself wanting to review it, the label is wrong — say that, rather than
   reviewing it quietly.
-- **`ssa-show`:** review it properly, and approve it anyway. Findings go in as
-  comments on the approving review. Requesting changes on a Show is the one
-  move the label exists to prevent.
+- **`ssa-show`:** review it properly. Approve when it does what its `Show`
+  note says and nothing needs to change first, with findings as comments on
+  the approval. Otherwise comment, saying what would make it an approval.
+  Requesting changes on a Show is the one move the label exists to prevent.
 - **`ssa-ask`:** review it, and block when something must be fixed first.
   Approving an Ask you have doubts about throws away the only gate the author
   explicitly asked for.
@@ -177,8 +178,8 @@ and reads a process failure instead of your actual concern.
 **Answer the section in your review,** best effort. On a `Show`, say whether
 the part the author pointed at holds up. On an `Ask`, answer the question,
 and where you can't settle it, say what would. A Show or Ask missing its
-section gets a comment asking for it. `code-review` does this when it
-reviews a PR.
+section gets a comment asking for it. `ssa-review` is the procedure for all
+of this.
 
 **Every review ends with a merge label as well as a verdict.** Which one, and
 what an `ssa-ship` reviewer checks before approving unread, is in
