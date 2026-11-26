@@ -46,8 +46,8 @@ testing past the interface.
   `ssa-apply`), or `ssa-ask` if it touches the ask list. A candidate
   the agent picked itself, with nobody to approve the design, is always
   `ssa-ask`.
-- **Doesn't fit?** Stage it as a stack, one or more slices per stage, every
-  stage `ssa-ask` (see `stacked-prs`).
+- **Doesn't fit?** Stage it as a stack, one or more slices per stage, each
+  stage labelled by what it does (see `stacked-prs`).
 - **Many callers?** Use the wide-change pattern in `stacked-prs`: the new
   interface beside the old, callers moved over in batches, then the old
   shallow modules and their tests removed. Each step stays green.

@@ -99,15 +99,12 @@ order and stop at the first that applies:
    `.github/coding-protocol.json`, which is what `label-check` reads. A
    match is `ssa-ask`, however small the change. No `ask_paths` or `Ask
    list` line in the repo means the areas above are the whole list.
-2. **A stage of a stack** is `ssa-ask` (see Stacks below): its base is
-   another PR's branch, not `main`. Its `## Ask` names what this stage
-   decides that the next one builds on.
-3. **A question you need answered before it merges** is `ssa-ask`: "will this
+2. **A question you need answered before it merges** is `ssa-ask`: "will this
    hold under load?", "is this the right seam?".
-4. **Something a reviewer should see:** a new pattern, a refactor, a
+3. **Something a reviewer should see:** a new pattern, a refactor, a
    trade-off, an interesting fix. That's `ssa-show`, and it's the default
    for ordinary feature work.
-5. **Routine and unremarkable** (see What goes where) is `ssa-ship`. A change
+4. **Routine and unremarkable** (see What goes where) is `ssa-ship`. A change
    past the size budget in `stacked-prs` is never one, and neither is a docs
    or rules change that alters what people or agents do: that's a Show.
 
@@ -216,9 +213,12 @@ answered:
 
 ## Stacks
 
-**Every stage of a stack is `ssa-ask`.** The stack exists because the change
-was too big to take in at once, so each stage is its own gate, and a reviewer
-who approved stage 2 has said nothing about stage 3.
+**Label each stage on its own,** with the audit above run on that stage's
+diff alone (against the stage below it, not `main`). Being in a stack doesn't
+make a stage an Ask: the stage that adds the migration is, and the stage that
+moves callers onto the new interface may be a Show or a Ship. Each stage is
+still its own gate. A reviewer who approved stage 2 has said nothing about
+stage 3, and each needs its own approval and merge label.
 
 Putting the whole stack up for review and gating each stage are two different
 things, and both are true at once. `stacked-prs` covers the request side and

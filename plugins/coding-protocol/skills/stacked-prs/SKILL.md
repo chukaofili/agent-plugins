@@ -61,10 +61,11 @@ reverted on its own.
   `Closes #<n>`. For a ticket a stack delivers, the reference goes on the
   top PR, and the stages below say `Part of #<n>`, so the ticket closes when
   the work it describes has all landed.
-- **Every stage is `ssa-ask`,** labelled at creation
-  (`gh pr create --label ssa-ask`). The stack exists because the change was too
-  big to take in at once, so each stage is its own gate and approval on one
-  says nothing about the next. See `ssa-apply`.
+- **Label each stage on its own,** at creation, by what that stage does (see
+  `ssa-apply`): a stage that moves a migration is `ssa-ask`, a mechanical
+  rename above it can be `ssa-ship`. Being in a stack doesn't make a stage an
+  Ask. Each stage still needs its own approval and merge label, and approval
+  on one says nothing about the next.
 - **Release metadata lands once, in the top PR:** a version bump, a changelog
   heading, a tag. The stack merges as one set of changes, so doing it per
   stage publishes versions nobody ever ran. Lower stages leave the version
@@ -120,8 +121,8 @@ stack tracked on this machine. For a stack opened elsewhere, use
   ```
   This merges everything up to and including that PR, all or nothing. **So
   `<pr-number>` has to be the top of an unbroken run, from the bottom, of
-  stages that are approved and carry `merge-auto`.** Every stage is
-  `ssa-ask`, so an unapproved stage 3 means merging stage 2 and stopping —
+  stages that are approved and carry `merge-auto`.** Every stage needs that,
+  whatever its label, so an unapproved stage 3 means merging stage 2 and stopping —
   picking stage 4 would carry stage 3 in with it and merge straight past its
   gate. Walk up from the bottom with
   `gh pr view <number> --json reviewDecision,labels` and stop at the first
@@ -147,8 +148,8 @@ adds.
 **By default, put the whole stack up for review.** Open every stage's PR as
 ready for review, not as a draft.
 
-Putting the stack up is how review is **requested**; the `ssa-ask` label on
-each stage is what gates that stage's **merge**. They read as a contradiction
+Putting the stack up is how review is **requested**; each stage's own approval
+and merge label are what gate that stage's **merge**. They read as a contradiction
 and aren't: a reviewer can start on any stage, and no stage lands before its
 own approval arrives (see `ssa-apply`).
 

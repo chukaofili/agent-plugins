@@ -143,9 +143,9 @@ by slice, not by layer: each stage is one or more tracer bullets, with all
 their tests (unit, integration, and E2E for anything a user sees). Docs sync
 with the stage they describe.
 
-Each stage is a PR in a stack, and every stage is labelled `ssa-ask`, because
-a stack is a sequence of gates. See the `stacked-prs` and `ssa-apply`
-skills.
+Each stage is a PR in a stack, labelled by what that stage does, and each is
+its own gate: approval on one says nothing about the next. See the
+`stacked-prs` and `ssa-apply` skills.
 
 ## Commits
 
