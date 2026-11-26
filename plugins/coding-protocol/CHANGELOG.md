@@ -7,6 +7,26 @@ that major. The version appears in
 `.claude-plugin/plugin.json`, the marketplace entry and the header comment in
 `AGENTS.md`. CI checks that they match each other and this file.
 
+## 2.4.0 — 2026-11-26
+
+### Upgrading from 2.3
+
+1. Update the skills (reinstall the plugin, or `npx skills add` again).
+2. Run `setup` in each repo to refresh the `AGENTS.md` core, whose rule 3
+   now names the Show and Ask sections. Project gates are left as they are.
+
+### Added
+- A PR's description carries a section matching its label: an `ssa-show`
+  PR has a `## Show` note pointing the reviewer at what's worth seeing, an
+  `ssa-ask` PR has a `## Ask` question, and an `ssa-ship` has neither.
+  Relabelling swaps the section. Reviewers answer it best effort, and ask
+  for it when a Show or Ask PR leaves it out.
+  ([#61](https://github.com/chukaofili/agent-plugins/pull/61))
+- `code-review`, reviewing an `ssa-show` or `ssa-ask` PR, replies to its
+  Show or Ask section after the two axes, outside the finding counts, and
+  flags the section when it's missing.
+  ([#61](https://github.com/chukaofili/agent-plugins/pull/61))
+
 ## 2.3.0 — 2026-11-22
 
 ### Upgrading from 2.2

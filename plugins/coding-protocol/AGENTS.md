@@ -1,4 +1,4 @@
-<!-- coding-protocol v2.3.0 — https://github.com/chukaofili/agent-plugins
+<!-- coding-protocol v2.4.0 — https://github.com/chukaofili/agent-plugins
      To upgrade: run the `setup` skill. It replaces everything above the "Project" divider and never edits below it. -->
 
 # Coding protocol
