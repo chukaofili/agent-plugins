@@ -207,7 +207,7 @@ below. Show and Ask bodies:
 
 <Ask: | Suspected problem | Check | Confirmed, disproved or couldn't run |, or "No checks needed.">
 
-Standards: <n> findings kept, <n> dropped (by you, for any reason); helpers that didn't run: <names, or "none">
+Standards: <n> findings kept, <n> dropped (by you, for any reason)<Ask: ; Security: <n> kept, <n> dropped>; helpers that didn't run: <names, or "none">
 
 <Ask: the four risk areas, each folded>
 ```
