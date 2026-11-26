@@ -1,6 +1,6 @@
 ---
 name: ssa-reply
-description: Use when replying in a pull request's conversation or review threads without posting a review, such as answering a question about your review, a reviewer's pushback on a finding, an author saying "fixed", or someone asking for approval in a comment. Covers the shape every reply takes (a short note for the person, then a folded "For Agents:" section with the full answer), what to read before answering, confirming a fix at the current head, deciding pushback on its merits, why a reply never gives a verdict or clears a blocking finding, and the gh commands for replying, reacting and resolving.
+description: Use when replying in a pull request's conversation or review threads without posting a review, such as answering a question about your review, a reviewer's pushback on a finding, an author saying "fixed", answering findings on your own PR, or someone asking for approval in a comment. Covers the shape every reply takes (a short note for the person, then a folded "For Agents:" section with the full answer), what to read before answering, confirming a fix at the current head, deciding pushback on its merits, verifying a finding before fixing it or pushing back, why a reply never gives a verdict or clears a blocking finding, and the gh commands for replying, reacting and resolving.
 ---
 
 # SSA reply
@@ -73,6 +73,22 @@ fixes it.").
   re-requests it or the person running you asks.
 
 Resolve only threads you started. Never resolve someone else's.
+
+## As the author
+
+- **Verify each finding** before acting on it. Read the code it points at,
+  and reproduce the issue if you can.
+- **Fix it, or push back with the reason.** Reviewers, people and bots, are
+  confidently wrong often enough that it's normal. A bad change made to seem
+  agreeable is worse than an argument.
+- **Weigh it by how likely it is to happen.** Push back on fixes for
+  scenarios that can't realistically occur, and on suggestions that add
+  complexity for no real gain.
+- **Don't add a test that can't fail.** Run it against the broken code first
+  (see `testing`).
+- **Reply to every finding,** so the reviewer sees what happened to it: the
+  note says fixed or not, and the fold names the commit, or the reason.
+  Leave resolving to whoever started the thread.
 
 ## Commands
 

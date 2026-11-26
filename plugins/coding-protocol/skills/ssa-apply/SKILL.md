@@ -194,7 +194,7 @@ Reviewing someone else's PR at the depth its label asks for is
 `ssa-review`. Its verdict and the merge label that follows it are the
 reviewer's, never the author's (see `merge-gate`). Answering the findings
 works the same under all three labels: verify each, then fix it or push back
-(see Handling review findings in `stacked-prs`).
+(see `ssa-reply`).
 
 ## After an `ssa-show` merges
 

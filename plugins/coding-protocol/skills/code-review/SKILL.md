@@ -120,7 +120,7 @@ Reviewing someone else's PR, including its Show note or Ask question, is
 ## 6. Fix
 
 A finding is a claim. Check each one against the code before acting on it,
-the same way as any review finding (see `stacked-prs`). Then fix or push
+the same way as any review finding (see `ssa-reply`). Then fix or push
 back, in one pass:
 
 - **A Standards finding or a smell you agree with:** a `refactor` commit,

@@ -1,6 +1,6 @@
 ---
 name: stacked-prs
-description: Use when a change is likely to exceed ~300 changed lines, when work spans several commits or stages, when opening a pull request, when receiving or responding to review feedback on any pull request, or when rebasing or landing a stack of dependent PRs. Covers the PR size budget and what counts toward it, how to split and stack PRs, landing stacks made with gh stack, how to request review on a stack (CODEOWNERS, or stage by stage when asked), and how to handle review findings by verifying each one, then fixing it or pushing back.
+description: Use when a change is likely to exceed ~300 changed lines, when work spans several commits or stages, when opening a pull request, or when rebasing or landing a stack of dependent PRs. Covers the PR size budget and what counts toward it, how to split and stack PRs, landing stacks made with gh stack, how to request review on a stack (CODEOWNERS, or stage by stage when asked). Answering review findings is ssa-reply.
 ---
 
 # Stacked PRs
@@ -175,7 +175,7 @@ Use this only if the user asks for it. Review the stack one stage at a time,
 starting from the bottom PR:
 
 1. Request review on that one stage.
-2. Address every finding (see below).
+2. Address every finding (see `ssa-reply`).
 3. Re-request review, and repeat until the stage is **approved**.
 4. Only then request review on the next stage up.
 
@@ -183,17 +183,6 @@ In a repo with `CODEOWNERS`, open the higher stages as drafts, since GitHub
 doesn't add code owners to a draft. `gh pr ready <number>` puts up the next
 stage, and takes the place of steps 1 and 4 unless the user named a reviewer.
 
-## Handling review findings (any PR, stacked or not)
+## Handling review findings
 
-- **Verify each finding technically** before acting on it. Read the code it
-  points at, and reproduce the issue if you can.
-- **Fix it, or push back with reasoning.** Reviewers, human or bot, are
-  confidently wrong as a normal event. Making a bad change to look agreeable is
-  worse than arguing. No performative agreement.
-- **Judge findings by real-world probability.** Push back on fixes for
-  scenarios that can't realistically happen, and on suggestions that add
-  complexity for no real gain.
-- **Don't add tests that can't fail.** A test that passes whether or not the
-  bug exists is noise. Run it against the broken code first (see `testing`).
-- Reply to each finding so the reviewer can see what happened to it: fixed in
-  which commit, or why not.
+Answering findings on any PR, stacked or not, is `ssa-reply`.
