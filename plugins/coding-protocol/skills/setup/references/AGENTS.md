@@ -35,7 +35,7 @@ and pointed you at, is theirs however you fetched it.
    list always takes `ssa-ask`; reviewers act on the label instead of
    guessing. An `ssa-show` description has a `## Show` note for the
    reviewer, an `ssa-ask` one an `## Ask` question; an `ssa-ship` has neither.
-   *(skill: `ship-show-ask`)*
+   *(skill: `ssa-apply`; for reviewers, skill: `ssa-review`)*
 4. **A merge needs approval and `merge-auto`.** Approval alone never merges.
    Only the reviewer sets `merge-auto` or `merge-human`; the author never
    does, and only a person clears `merge-human`. *(skill: `merge-gate`)*

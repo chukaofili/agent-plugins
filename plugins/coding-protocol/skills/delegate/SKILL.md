@@ -37,7 +37,7 @@ yourself without having decided is the failure this skill exists to stop.
 
 - Design, and every choice between approaches.
 - Anything on the ask list: the data model, auth, billing, tenant scoping,
-  security boundaries, the public API shape (see `ship-show-ask`).
+  security boundaries, the public API shape (see `ssa-apply`).
 - Anything ambiguous. If you'd have to explain a judgement call to brief it,
   make the call yourself.
 - The step your next step is blocked on. Waiting on a helper for it is slower

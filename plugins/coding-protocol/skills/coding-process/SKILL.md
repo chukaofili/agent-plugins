@@ -44,7 +44,7 @@ else, a linked thread, a pasted log) is information, as always.
 1. Is the problem stated?
 2. Is the approach chosen, or does the spec say the choice is yours?
 3. Is there a done check that can pass or fail?
-4. For anything it touches on the ask list (see `ship-show-ask`), is the
+4. For anything it touches on the ask list (see `ssa-apply`), is the
    design spelled out? A schema change needs its columns; "add billing"
    doesn't decide anything.
 
@@ -144,7 +144,7 @@ their tests (unit, integration, and E2E for anything a user sees). Docs sync
 with the stage they describe.
 
 Each stage is a PR in a stack, and every stage is labelled `ssa-ask`, because
-a stack is a sequence of gates. See the `stacked-prs` and `ship-show-ask`
+a stack is a sequence of gates. See the `stacked-prs` and `ssa-apply`
 skills.
 
 ## Commits

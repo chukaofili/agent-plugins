@@ -39,7 +39,7 @@ Leave this section out when `Domain docs` is `declined` or `none`.
 
 ## Ask-list design
 
-For anything on the ask list (see `ship-show-ask`, plus the `Ask list` line
+For anything on the ask list (see `ssa-apply`, plus the `Ask list` line
 in Project gates): the design, spelled out. A schema change names its
 columns. Or: "Touches nothing on the ask list."
 

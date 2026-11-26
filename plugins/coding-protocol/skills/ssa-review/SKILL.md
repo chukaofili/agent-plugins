@@ -6,7 +6,7 @@ description: Use when reviewing someone else's pull request, when asked to revie
 # SSA review
 
 Review someone else's PR at the depth its label asks for, and post one
-review. The label's meaning is in `ship-show-ask`; the merge label that
+review. The label's meaning is in `ssa-apply`; the merge label that
 follows every verdict is in `merge-gate`. Your own branch, before a PR
 exists, is `code-review`.
 

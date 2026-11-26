@@ -64,7 +64,7 @@ reverted on its own.
 - **Every stage is `ssa-ask`,** labelled at creation
   (`gh pr create --label ssa-ask`). The stack exists because the change was too
   big to take in at once, so each stage is its own gate and approval on one
-  says nothing about the next. See `ship-show-ask`.
+  says nothing about the next. See `ssa-apply`.
 - **Release metadata lands once, in the top PR:** a version bump, a changelog
   heading, a tag. The stack merges as one set of changes, so doing it per
   stage publishes versions nobody ever ran. Lower stages leave the version
@@ -150,7 +150,7 @@ ready for review, not as a draft.
 Putting the stack up is how review is **requested**; the `ssa-ask` label on
 each stage is what gates that stage's **merge**. They read as a contradiction
 and aren't: a reviewer can start on any stage, and no stage lands before its
-own approval arrives (see `ship-show-ask`).
+own approval arrives (see `ssa-apply`).
 
 If the user didn't name a reviewer, check for a `CODEOWNERS` file (in
 `.github/`, the repo root or `docs/`):

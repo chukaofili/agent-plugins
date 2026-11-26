@@ -45,7 +45,7 @@ Each candidate is one `<article>`:
 
 - **Title**: short, names the deepening (e.g. "Collapse the Order intake pipeline").
 - **Badge row**: recommendation strength (`Strong` = emerald, `Worth exploring` = amber, `Speculative` = slate), plus a tag for the dependency category (`in-process`, `local-substitutable`, `ports & adapters`, `mock`).
-- **Ask-list badge** (if applicable): a red-tinted badge naming the ask-list area it touches (see `ship-show-ask`, plus the `Ask list` line in Project gates), with "needs `ssa-ask` and your decision".
+- **Ask-list badge** (if applicable): a red-tinted badge naming the ask-list area it touches (see `ssa-apply`, plus the `Ask list` line in Project gates), with "needs `ssa-ask` and your decision".
 - **Files**: monospaced list, `font-mono text-sm`.
 - **Before / After diagram**: the centrepiece. Two columns, side by side. See patterns below.
 - **Problem**: one sentence. What hurts.

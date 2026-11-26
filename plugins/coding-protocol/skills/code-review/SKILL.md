@@ -18,7 +18,7 @@ the other.
 
 This is the author's own review, before a reviewer sees the PR. It doesn't
 replace review on the PR, and approval stays with the reviewer (see
-`ship-show-ask` and `merge-gate`).
+`ssa-review` and `merge-gate`).
 
 ## When
 
@@ -111,7 +111,7 @@ findings on each axis and the worst one on each. Don't pick a single winner
 across the axes; that is the reranking the separation prevents.
 
 **About to open an `ssa-show` or `ssa-ask` PR?** Check its description has
-the `## Show` note or `## Ask` question (see `ship-show-ask`), and add a
+the `## Show` note or `## Ask` question (see `ssa-apply`), and add a
 finding if it doesn't.
 
 Reviewing someone else's PR, including its Show note or Ask question, is

@@ -27,7 +27,7 @@ merge by itself, however green it is.
 
 ## Who sets them
 
-- **The author sets `ssa-*`** (what review the PR wants). See `ship-show-ask`.
+- **The author sets `ssa-*`** (what review the PR wants). See `ssa-apply`.
 - **The reviewer sets `merge-*`** (who may land it).
 - **The author never sets a `merge-*` label,** on their own PR or anyone
   else's. An author who can open the gate has no gate.
