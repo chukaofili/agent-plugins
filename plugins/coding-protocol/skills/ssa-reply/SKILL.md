@@ -124,8 +124,8 @@ gh api repos/OWNER/REPO/pulls/PR/comments/COMMENT_ID/replies -F body=@reply.md
 # Reply in the PR's conversation
 gh pr comment PR --body-file reply.md
 
-# React 👍 to a review comment
-gh api repos/OWNER/REPO/pulls/comments/COMMENT_ID/reactions -f content=+1
+# React 👍 to the author's reply (its own databaseId, not the thread's first)
+gh api repos/OWNER/REPO/pulls/comments/REPLY_ID/reactions -f content=+1
 
 # Resolve a thread (THREAD_ID is the PRRT_… id above)
 gh api graphql -F id=THREAD_ID -f query='
