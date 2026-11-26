@@ -110,9 +110,9 @@ lightly tidied. Don't merge or rerank them. End with one line: the number of
 findings on each axis and the worst one on each. Don't pick a single winner
 across the axes; that is the reranking the separation prevents.
 
-**Reviewing a PR whose description has a `Show` or `Ask` section** (see
-`ship-show-ask`)? Add a part under the same heading after the two axes, kept
-out of the counts:
+**Reviewing an `ssa-show` or `ssa-ask` PR?** Its description carries a
+`Show` or an `Ask` section (see `ship-show-ask`). Add a part under the same
+heading after the two axes, kept out of the counts:
 
 - **Show:** say whether the part the author pointed at holds up, and why.
 - **Ask:** answer the question, best effort, from the diff, the spec and the
@@ -120,7 +120,8 @@ out of the counts:
   to the reviewer rather than guessing.
 
 Post it as the reply to the author's section when the review goes on the
-PR. No PR yet, or no such section? Leave the part out.
+PR. An `ssa-show` or `ssa-ask` PR without its section gets a line asking the
+author to add it. No PR yet, or an `ssa-ship`? Leave the part out.
 
 ## 6. Fix
 
